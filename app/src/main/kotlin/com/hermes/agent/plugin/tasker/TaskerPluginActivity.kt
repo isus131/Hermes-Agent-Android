@@ -151,10 +151,10 @@ fun TaskerPluginConfigScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Tasker Hermes Action") },
+                title = { Text("Действие Hermes для Tasker") },
                 navigationIcon = {
                     IconButton(onClick = onCancel) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Cancel")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Отмена")
                     }
                 },
             )
@@ -173,7 +173,7 @@ fun TaskerPluginConfigScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    Text("Select Agent", style = MaterialTheme.typography.titleMedium)
+                    Text("Выберите агента", style = MaterialTheme.typography.titleMedium)
 
                     ExposedDropdownMenuBox(
                         expanded = dropdownExpanded,
@@ -183,7 +183,7 @@ fun TaskerPluginConfigScreen(
                             value = selectedRole.displayName,
                             onValueChange = {},
                             readOnly = true,
-                            label = { Text("Agent") },
+                            label = { Text("Агент") },
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpanded) },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -212,17 +212,17 @@ fun TaskerPluginConfigScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    Text("Prompt Template", style = MaterialTheme.typography.titleMedium)
+                    Text("Шаблон запроса", style = MaterialTheme.typography.titleMedium)
                     Text(
-                        "Enter the prompt for Hermes. You can use Tasker variables like %BATT or %TIME.",
+                        "Введите запрос для Hermes. Можно использовать переменные Tasker, например %BATT или %TIME.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     OutlinedTextField(
                         value = promptTemplate,
                         onValueChange = { promptTemplate = it },
-                        label = { Text("Prompt") },
-                        placeholder = { Text("e.g. Battery is at %BATT%, optimize power") },
+                        label = { Text("Запрос") },
+                        placeholder = { Text("например: Заряд батареи %BATT%, оптимизируй питание") },
                         minLines = 3,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -240,9 +240,9 @@ fun TaskerPluginConfigScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("Speak Response aloud", style = MaterialTheme.typography.bodyLarge)
+                            Text("Озвучивать ответ", style = MaterialTheme.typography.bodyLarge)
                             Text(
-                                "Read agent response via TTS upon completion",
+                                "Прочитать ответ агента вслух по завершении",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -269,12 +269,12 @@ fun TaskerPluginConfigScreen(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = promptTemplate.isNotBlank(),
             ) {
-                Text("Save Action")
+                Text("Сохранить действие")
             }
 
             if (hostLabel.isNotBlank()) {
                 Text(
-                    "$hostLabel is allowed to run Hermes tasks.",
+                    "$hostLabel разрешено запускать задачи Hermes.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -284,7 +284,7 @@ fun TaskerPluginConfigScreen(
                     onClick = onRevokeHost,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text("Stop allowing $hostLabel", color = MaterialTheme.colorScheme.error)
+                    Text("Запретить $hostLabel", color = MaterialTheme.colorScheme.error)
                 }
             }
         }
@@ -310,10 +310,10 @@ private fun HostApprovalScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Allow $label?") },
+                title = { Text("Разрешить $label?") },
                 navigationIcon = {
                     IconButton(onClick = onCancel) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Cancel")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Отмена")
                     }
                 },
             )
@@ -328,9 +328,9 @@ private fun HostApprovalScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
-                "$label wants to run Hermes agent tasks on your behalf. Anything it " +
-                    "triggers runs with the same access you have in the app — including " +
-                    "tools that read and change things on this phone.",
+                "$label хочет запускать задачи агента Hermes от вашего имени. Всё, что оно " +
+                    "запустит, работает с теми же правами, что и у вас в приложении, включая " +
+                    "инструменты, которые читают и меняют данные на этом телефоне.",
                 style = MaterialTheme.typography.bodyMedium,
             )
 
@@ -339,20 +339,20 @@ private fun HostApprovalScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text("App", style = MaterialTheme.typography.labelMedium)
+                    Text("Приложение", style = MaterialTheme.typography.labelMedium)
                     Text(packageName, style = MaterialTheme.typography.bodySmall)
-                    Text("Signing certificate (SHA-256)", style = MaterialTheme.typography.labelMedium)
+                    Text("Сертификат подписи (SHA-256)", style = MaterialTheme.typography.labelMedium)
                     Text(
-                        fingerprint ?: "Unavailable — the app could not be inspected",
+                        fingerprint ?: "Недоступно — не удалось проверить приложение",
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
             }
 
             Text(
-                "Only allow this if you installed $label yourself and recognise it. " +
-                    "You can withdraw it later from this screen, and Hermes withdraws it " +
-                    "automatically if the app is ever replaced by a build from a different signer.",
+                "Разрешайте, только если вы сами установили $label и знаете его. " +
+                    "Разрешение можно отозвать позже на этом экране, а Hermes отзовёт его " +
+                    "автоматически, если приложение будет заменено сборкой с другой подписью.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -364,12 +364,12 @@ private fun HostApprovalScreen(
                 Button(
                     onClick = onCancel,
                     modifier = Modifier.weight(1f),
-                ) { Text("Not now") }
+                ) { Text("Не сейчас") }
                 Button(
                     onClick = onApprove,
                     enabled = fingerprint != null,
                     modifier = Modifier.weight(1f),
-                ) { Text("Allow") }
+                ) { Text("Разрешить") }
             }
         }
     }
@@ -384,7 +384,7 @@ private fun HostApprovalScreen(
 @Composable
 private fun UnknownHostScreen(onClose: () -> Unit) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Tasker Hermes Action") }) },
+        topBar = { TopAppBar(title = { Text("Действие Hermes для Tasker") }) },
     ) { padding ->
         Column(
             modifier = Modifier
@@ -394,17 +394,17 @@ private fun UnknownHostScreen(onClose: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
-                "Open this from your automation app instead.",
+                "Откройте этот экран из своего приложения автоматизации.",
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                "Hermes could not tell which app opened this screen, so there is nothing " +
-                    "it can ask you to approve. Add the Hermes action from inside Tasker " +
-                    "(or whichever automation app you use) and this screen will open with " +
-                    "that app's identity attached.",
+                "Hermes не смог определить, какое приложение открыло этот экран, поэтому " +
+                    "нечего предложить вам для одобрения. Добавьте действие Hermes в Tasker " +
+                    "(или в другом приложении автоматизации), и этот экран откроется с " +
+                    "данными этого приложения.",
                 style = MaterialTheme.typography.bodyMedium,
             )
-            Button(onClick = onClose, modifier = Modifier.fillMaxWidth()) { Text("Close") }
+            Button(onClick = onClose, modifier = Modifier.fillMaxWidth()) { Text("Закрыть") }
         }
     }
 }

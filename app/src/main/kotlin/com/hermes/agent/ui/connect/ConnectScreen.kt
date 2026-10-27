@@ -47,12 +47,12 @@ fun ConnectScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("Connect") },
+                title = { Text("Подключения") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back"
+                            contentDescription = "Назад"
                         )
                     }
                 },
@@ -68,7 +68,7 @@ fun ConnectScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
             ) {
-                Icon(Icons.Outlined.Add, contentDescription = "Add connector")
+                Icon(Icons.Outlined.Add, contentDescription = "Добавить подключение")
             }
         },
     ) { padding ->
@@ -82,14 +82,14 @@ fun ConnectScreen(
         ) {
             item {
                 Text(
-                    "Messaging",
+                    "Мессенджеры",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    "One agent, one memory, every surface. Link a platform and Hermes shows up there.",
+                    "Один агент, одна память, везде. Подключите платформу — и Hermes появится там.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -122,9 +122,9 @@ fun ConnectScreen(
 
     if (deleteTarget != null) {
         DestructiveActionDialog(
-            title = "Delete Integration",
-            message = "Are you sure you want to delete this integration?",
-            confirmLabel = "Delete",
+            title = "Удалить интеграцию",
+            message = "Вы уверены, что хотите удалить эту интеграцию?",
+            confirmLabel = "Удалить",
             onConfirm = {
                 deleteTarget?.let { viewModel.delete(it) }
                 deleteTarget = null
@@ -185,7 +185,7 @@ private fun ConnectorCard(
             )
         }
         Text(
-            text = if (connector.isEnabled) "Connected" else "Connect",
+            text = if (connector.isEnabled) "Подключено" else "Подключить",
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.SemiBold,
             color = if (connector.isEnabled) scheme.tertiary else scheme.primary,
@@ -193,7 +193,7 @@ private fun ConnectorCard(
         IconButton(onClick = onDelete) {
             Icon(
                 Icons.Outlined.Delete,
-                contentDescription = "Delete",
+                contentDescription = "Удалить",
                 tint = scheme.outline,
             )
         }
@@ -219,11 +219,11 @@ private fun AddConnectorDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Integration") },
+        title = { Text("Добавить интеграцию") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(value = name, onValueChange = { name = it },
-                    label = { Text("Name") }, singleLine = true,
+                    label = { Text("Имя") }, singleLine = true,
                     modifier = Modifier.fillMaxWidth())
 
                 ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
@@ -231,7 +231,7 @@ private fun AddConnectorDialog(
                         value = type.displayName,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Type") },
+                        label = { Text("Тип") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                         modifier = Modifier.fillMaxWidth().menuAnchor(),
                     )
@@ -247,18 +247,18 @@ private fun AddConnectorDialog(
                 when (type) {
                     ConnectorType.WEBHOOK -> {
                         OutlinedTextField(value = url, onValueChange = { url = it },
-                            label = { Text("Webhook URL") }, singleLine = true,
+                            label = { Text("URL вебхука") }, singleLine = true,
                             modifier = Modifier.fillMaxWidth())
                         OutlinedTextField(value = secret, onValueChange = { secret = it },
-                            label = { Text("Signing secret (optional)") },
-                            placeholder = { Text("HMAC-SHA256 shared secret") },
+                            label = { Text("Секрет подписи (необязательно)") },
+                            placeholder = { Text("Общий секрет HMAC-SHA256") },
                             singleLine = true, modifier = Modifier.fillMaxWidth(),
                             visualTransformation = if (secretVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
                                 IconButton(onClick = { secretVisible = !secretVisible }) {
                                     Icon(
                                         if (secretVisible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                                        contentDescription = "Toggle visibility"
+                                        contentDescription = "Показать или скрыть"
                                     )
                                 }
                             }
@@ -266,62 +266,62 @@ private fun AddConnectorDialog(
                     }
                     ConnectorType.TELEGRAM -> {
                         OutlinedTextField(value = botToken, onValueChange = { botToken = it },
-                            label = { Text("Bot Token") }, singleLine = true,
+                            label = { Text("Токен бота") }, singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             visualTransformation = if (botTokenVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
                                 IconButton(onClick = { botTokenVisible = !botTokenVisible }) {
                                     Icon(
                                         if (botTokenVisible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                                        contentDescription = "Toggle visibility"
+                                        contentDescription = "Показать или скрыть"
                                     )
                                 }
                             }
                         )
                         OutlinedTextField(value = chatId, onValueChange = { chatId = it },
-                            label = { Text("Chat ID") }, singleLine = true,
+                            label = { Text("ID чата") }, singleLine = true,
                             modifier = Modifier.fillMaxWidth())
                     }
                     ConnectorType.DISCORD -> {
                         OutlinedTextField(value = url, onValueChange = { url = it },
-                            label = { Text("Webhook URL") }, singleLine = true,
+                            label = { Text("URL вебхука") }, singleLine = true,
                             modifier = Modifier.fillMaxWidth())
                     }
                     ConnectorType.SIGNAL -> {
                         OutlinedTextField(value = url, onValueChange = { url = it },
-                            label = { Text("signal-cli REST API URL") },
+                            label = { Text("URL REST API signal-cli") },
                             placeholder = { Text("http://localhost:8080") },
                             singleLine = true, modifier = Modifier.fillMaxWidth())
                         OutlinedTextField(value = chatId, onValueChange = { chatId = it },
-                            label = { Text("Recipient (phone number)") },
+                            label = { Text("Получатель (номер телефона)") },
                             placeholder = { Text("+15551234567") },
                             singleLine = true, modifier = Modifier.fillMaxWidth())
                     }
                     ConnectorType.WHATSAPP -> {
                         OutlinedTextField(value = chatId, onValueChange = { chatId = it },
-                            label = { Text("Phone Number ID") }, singleLine = true,
+                            label = { Text("ID номера телефона") }, singleLine = true,
                             modifier = Modifier.fillMaxWidth())
                         OutlinedTextField(value = botToken, onValueChange = { botToken = it },
-                            label = { Text("Access Token") }, singleLine = true,
+                            label = { Text("Токен доступа") }, singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             visualTransformation = if (botTokenVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
                                 IconButton(onClick = { botTokenVisible = !botTokenVisible }) {
                                     Icon(
                                         if (botTokenVisible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                                        contentDescription = "Toggle visibility"
+                                        contentDescription = "Показать или скрыть"
                                     )
                                 }
                             }
                         )
                         OutlinedTextField(value = url, onValueChange = { url = it },
-                            label = { Text("Recipient number") },
+                            label = { Text("Номер получателя") },
                             placeholder = { Text("+15551234567") },
                             singleLine = true, modifier = Modifier.fillMaxWidth())
                     }
                     ConnectorType.SMS -> {
                         OutlinedTextField(value = chatId, onValueChange = { chatId = it },
-                            label = { Text("Recipient Phone Number") },
+                            label = { Text("Номер телефона получателя") },
                             placeholder = { Text("+15551234567") },
                             singleLine = true, modifier = Modifier.fillMaxWidth())
                     }
@@ -345,9 +345,9 @@ private fun AddConnectorDialog(
                     onAdd(name.ifBlank { type.displayName }, type, config)
                 },
                 enabled = name.isNotBlank() || url.isNotBlank() || botToken.isNotBlank(),
-            ) { Text("Add") }
+            ) { Text("Добавить") }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Отмена") } },
     )
 }
 
@@ -367,11 +367,11 @@ private fun EmptyConnectState(modifier: Modifier = Modifier) {
             modifier = Modifier.size(40.dp),
             tint = scheme.outline)
         Spacer(Modifier.height(14.dp))
-        Text("No integrations yet", style = MaterialTheme.typography.titleMedium,
+        Text("Интеграций пока нет", style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             color = scheme.onSurface)
         Spacer(Modifier.height(6.dp))
-        Text("Tap + to connect Telegram, Discord, Signal, WhatsApp, or a custom webhook.",
+        Text("Нажмите +, чтобы подключить Telegram, Discord, Signal, WhatsApp или свой вебхук.",
             style = MaterialTheme.typography.bodyMedium,
             color = scheme.onSurfaceVariant,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center)

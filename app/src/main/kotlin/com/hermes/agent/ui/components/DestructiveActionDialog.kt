@@ -25,7 +25,7 @@ fun DestructiveActionDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text("Отмена") }
         },
     )
 }

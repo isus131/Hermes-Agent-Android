@@ -47,17 +47,17 @@ class ShareTargetActivity : ComponentActivity() {
                             .padding(24.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text(text = "Share to Hermes", style = androidx.compose.material3.MaterialTheme.typography.titleLarge)
+                        Text(text = "Отправить в Hermes", style = androidx.compose.material3.MaterialTheme.typography.titleLarge)
                         Text(text = sharedText, maxLines = 3, style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
                         
                         Button(onClick = { handleAction("summarize") }, modifier = Modifier.fillMaxWidth()) {
-                            Text("Summarize")
+                            Text("Кратко пересказать")
                         }
                         Button(onClick = { handleAction("save_note") }, modifier = Modifier.fillMaxWidth()) {
-                            Text("Save as Note")
+                            Text("Сохранить как заметку")
                         }
                         Button(onClick = { handleAction("remind_me") }, modifier = Modifier.fillMaxWidth()) {
-                            Text("Remind Me")
+                            Text("Напомнить мне")
                         }
                     }
                 }

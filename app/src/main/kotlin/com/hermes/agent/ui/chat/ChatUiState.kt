@@ -23,7 +23,7 @@ data class ChatUiState(
     val errorMessage: String? = null,
     /** Transient confirmation, e.g. after a rewind. Not an error. */
     val notice: String? = null,
-    val title: String = "New conversation",
+    val title: String = "Новый разговор",
     /** Most recent execution plan (Phase 2). Null when no plan has been
      *  emitted for the current turn. */
     val currentPlan: PlanSummary? = null,

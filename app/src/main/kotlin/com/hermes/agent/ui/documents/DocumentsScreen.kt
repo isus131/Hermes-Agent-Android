@@ -62,12 +62,12 @@ fun DocumentsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Knowledge Base & RAG") },
+                title = { Text("База знаний и RAG") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back",
+                            contentDescription = "Назад",
                         )
                     }
                 },
@@ -75,7 +75,7 @@ fun DocumentsScreen(
                     IconButton(onClick = { filePicker.launch("*/*") }) {
                         Icon(
                             imageVector = Icons.Outlined.FileOpen,
-                            contentDescription = "Import file from device",
+                            contentDescription = "Импортировать файл с устройства",
                         )
                     }
                 },
@@ -91,7 +91,7 @@ fun DocumentsScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
             ) {
-                Icon(Icons.Outlined.PostAdd, contentDescription = "Manually add document")
+                Icon(Icons.Outlined.PostAdd, contentDescription = "Добавить документ вручную")
             }
         },
     ) { innerPadding ->
@@ -106,12 +106,12 @@ fun DocumentsScreen(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = viewModel::onSearchQueryChanged,
-                placeholder = { Text("Search knowledge base / test retrieval…") },
+                placeholder = { Text("Поиск по базе знаний / проверка поиска…") },
                 leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
                 trailingIcon = {
                     if (searchQuery.isNotBlank()) {
                         IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                            Icon(Icons.Outlined.Close, contentDescription = "Clear search")
+                            Icon(Icons.Outlined.Close, contentDescription = "Очистить поиск")
                         }
                     }
                 },
@@ -122,7 +122,7 @@ fun DocumentsScreen(
             if (searchQuery.isNotBlank()) {
                 // Showing Search Results
                 Text(
-                    text = "Semantic Search Results (${searchResults.size})",
+                    text = "Результаты смыслового поиска (${searchResults.size})",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
@@ -134,7 +134,7 @@ fun DocumentsScreen(
                     }
                 } else if (searchResults.isEmpty()) {
                     Text(
-                        "No matching chunks found for \"$searchQuery\"",
+                        "Для «$searchQuery» подходящих фрагментов не найдено",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -151,8 +151,8 @@ fun DocumentsScreen(
             } else {
                 // Showing Document List
                 Text(
-                    text = "${documents.size} documents · " +
-                        "${documents.sumOf { it.chunkCount }} chunks indexed in vector store",
+                    text = "Документов: ${documents.size} · " +
+                        "фрагментов в векторном хранилище: ${documents.sumOf { it.chunkCount }}",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -171,13 +171,13 @@ fun DocumentsScreen(
                             )
                             Spacer(Modifier.height(12.dp))
                             Text(
-                                "No documents indexed yet.",
+                                "Документов пока нет.",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             Spacer(Modifier.height(4.dp))
                             Text(
-                                "Tap + to add text or the file icon above to import a file.",
+                                "Нажмите +, чтобы добавить текст, или значок файла вверху, чтобы импортировать файл.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                             )
@@ -212,9 +212,9 @@ fun DocumentsScreen(
 
     if (deleteTarget != null) {
         DestructiveActionDialog(
-            title = "Delete Document",
-            message = "Are you sure you want to delete this document from the knowledge base?",
-            confirmLabel = "Delete",
+            title = "Удалить документ",
+            message = "Вы уверены, что хотите удалить этот документ из базы знаний?",
+            confirmLabel = "Удалить",
             onConfirm = {
                 deleteTarget?.let { viewModel.delete(it) }
                 deleteTarget = null
@@ -245,7 +245,7 @@ private fun SearchResultCard(result: RetrievedChunk) {
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
-                    text = "Score: ${"%.3f".format(result.score)}",
+                    text = "Оценка: ${"%.3f".format(result.score)}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -280,8 +280,8 @@ private fun DocumentRow(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "${document.chunkCount} chunks · " +
-                        "${document.content.length} chars · " +
+                    text = "Фрагментов: ${document.chunkCount} · " +
+                        "символов: ${document.content.length} · " +
                         DateFormat.getDateInstance().format(Date(document.createdAt)),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -297,7 +297,7 @@ private fun DocumentRow(
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
-                    contentDescription = "Delete",
+                    contentDescription = "Удалить",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 )
             }
@@ -315,20 +315,20 @@ private fun AddDocumentDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Document to Knowledge Base") },
+        title = { Text("Добавить документ в базу знаний") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Title") },
+                    label = { Text("Заголовок") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = content,
                     onValueChange = { content = it },
-                    label = { Text("Content") },
+                    label = { Text("Содержимое") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp),
@@ -339,10 +339,10 @@ private fun AddDocumentDialog(
             TextButton(
                 onClick = { onAdd(title, content) },
                 enabled = title.isNotBlank() && content.isNotBlank(),
-            ) { Text("Ingest & Embed") }
+            ) { Text("Загрузить и проиндексировать") }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text("Отмена") }
         },
     )
 }

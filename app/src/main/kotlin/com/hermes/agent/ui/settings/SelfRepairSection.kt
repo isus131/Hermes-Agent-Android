@@ -89,7 +89,7 @@ class SelfRepairViewModel @Inject constructor(
         val result = reporter.file(ReportRedactor.redact(title), body)
         _state.value = _state.value.copy(
             sending = false,
-            message = result.fold({ "Sent: $it" }, { "Could not send: ${it.message}" }),
+            message = result.fold({ "Отправлено: $it" }, { "Не удалось отправить: ${it.message}" }),
         )
     }
 }
@@ -106,19 +106,19 @@ fun SelfRepairSection(viewModel: SelfRepairViewModel = hiltViewModel()) {
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("Problem reports", style = MaterialTheme.typography.bodyLarge)
+            Text("Отчёты о проблемах", style = MaterialTheme.typography.bodyLarge)
             InfoNote(
-                "How reports are used",
-                "Reports go to the private GitHub repo ${RepairReporter.REPO}. Emails, numbers, keys, " +
-                    "addresses and query strings are removed first, and you see the exact text before " +
-                    "it is sent. With auto-repair on, your PC tries a fix and opens a draft pull " +
-                    "request for you to review. Nothing is merged or installed without you.",
+                "Как используются отчёты",
+                "Отчёты попадают в приватный репозиторий GitHub ${RepairReporter.REPO}. Почта, номера, ключи, " +
+                    "адреса и параметры запросов сначала удаляются, и вы видите точный текст до " +
+                    "отправки. Если автоисправление включено, ваш ПК пробует исправить ошибку и открывает черновой " +
+                    "pull request для вашей проверки. Без вас ничего не принимается и не устанавливается.",
             )
             OutlinedTextField(
                 value = token,
                 onValueChange = { token = it },
-                label = { Text(if (state.configured) "GitHub token (saved)" else "GitHub token for ${RepairReporter.REPO}") },
-                placeholder = { Text("Fine-grained token: Issues read/write on that repo only") },
+                label = { Text(if (state.configured) "Токен GitHub (сохранён)" else "Токен GitHub для ${RepairReporter.REPO}") },
+                placeholder = { Text("Детальный токен: Issues чтение/запись только для этого репозитория") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
@@ -126,17 +126,17 @@ fun SelfRepairSection(viewModel: SelfRepairViewModel = hiltViewModel()) {
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { viewModel.saveToken(token); token = "" }, enabled = token.isNotBlank()) {
-                    Text("Save token")
+                    Text("Сохранить токен")
                 }
                 if (state.configured) {
-                    OutlinedButton(onClick = { viewModel.saveToken("") }) { Text("Remove token") }
+                    OutlinedButton(onClick = { viewModel.saveToken("") }) { Text("Удалить токен") }
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Start a repair automatically", style = MaterialTheme.typography.bodyMedium)
+                    Text("Автоматически запускать исправление", style = MaterialTheme.typography.bodyMedium)
                     Text(
-                        "Adds the repair label, so the PC starts working on it.",
+                        "Добавляет метку repair, чтобы ПК взялся за работу.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -145,9 +145,9 @@ fun SelfRepairSection(viewModel: SelfRepairViewModel = hiltViewModel()) {
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Send crash reports automatically", style = MaterialTheme.typography.bodyMedium)
+                    Text("Автоматически отправлять отчёты о сбоях", style = MaterialTheme.typography.bodyMedium)
                     Text(
-                        "Redacted, at the next launch, without asking. Turn on for devices that take test builds.",
+                        "В обезличенном виде, при следующем запуске, без вопросов. Включайте на устройствах с тестовыми сборками.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -155,7 +155,7 @@ fun SelfRepairSection(viewModel: SelfRepairViewModel = hiltViewModel()) {
                 Switch(checked = state.autoSendCrashes, onCheckedChange = viewModel::setAutoSendCrashes, enabled = state.configured)
             }
             Button(onClick = { reporting = true }, enabled = state.configured && !state.sending) {
-                Text(if (state.sending) "Sending…" else "Report a problem")
+                Text(if (state.sending) "Отправка…" else "Сообщить о проблеме")
             }
             state.message?.let {
                 Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
@@ -184,7 +184,7 @@ private fun ReportProblemDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (reviewing == null) "Report a problem" else "This will be sent") },
+        title = { Text(if (reviewing == null) "Сообщить о проблеме" else "Будет отправлено вот это") },
         text = {
             val shown = reviewing
             if (shown == null) {
@@ -192,13 +192,13 @@ private fun ReportProblemDialog(
                     OutlinedTextField(
                         value = description,
                         onValueChange = { description = it },
-                        label = { Text("What went wrong?") },
+                        label = { Text("Что пошло не так?") },
                         minLines = 3,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(checked = includeLogs, onCheckedChange = { includeLogs = it })
-                        Text("Include recent app log lines", style = MaterialTheme.typography.bodyMedium)
+                        Text("Приложить последние строки журнала", style = MaterialTheme.typography.bodyMedium)
                     }
                 }
             } else {
@@ -213,12 +213,12 @@ private fun ReportProblemDialog(
             val shown = reviewing
             if (shown == null) {
                 TextButton(onClick = { reviewing = preview(description, includeLogs) }, enabled = description.isNotBlank()) {
-                    Text("Review")
+                    Text("Проверить")
                 }
             } else {
-                TextButton(onClick = { onSend(description.lineSequence().first().take(100), shown) }) { Text("Send") }
+                TextButton(onClick = { onSend(description.lineSequence().first().take(100), shown) }) { Text("Отправить") }
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Отмена") } },
     )
 }

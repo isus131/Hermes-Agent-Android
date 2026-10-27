@@ -42,9 +42,9 @@ class OtaUpdateWorker @AssistedInject constructor(
                 val m = decision.offer.manifest
                 Timber.tag("OtaWorker").i("fix #%d available for %s", m.patchVersion, m.baseTinkerId)
                 postNotification(
-                    title = "A fix for Hermes is available",
-                    text = "Open Hermes to apply it — no reinstall, just a restart.",
-                    bigText = m.notes.ifBlank { "Open Hermes to apply it — no reinstall, just a restart." },
+                    title = "Доступно исправление для Hermes",
+                    text = "Откройте Hermes, чтобы применить его, — без переустановки, только перезапуск.",
+                    bigText = m.notes.ifBlank { "Откройте Hermes, чтобы применить его, — без переустановки, только перезапуск." },
                     releaseUrl = "",
                 )
             }
@@ -52,9 +52,9 @@ class OtaUpdateWorker @AssistedInject constructor(
                 val update = decision.update
                 Timber.tag("OtaWorker").i("update available: ${update.version}")
                 postNotification(
-                    title = "Hermes ${update.version} available",
-                    text = "Tap to open Hermes and install the update.",
-                    bigText = update.releaseNotes.ifBlank { "Tap to open Hermes and install the update." },
+                    title = "Доступен Hermes ${update.version}",
+                    text = "Нажмите, чтобы открыть Hermes и установить обновление.",
+                    bigText = update.releaseNotes.ifBlank { "Нажмите, чтобы открыть Hermes и установить обновление." },
                     releaseUrl = update.releaseUrl,
                 )
             }
@@ -70,9 +70,9 @@ class OtaUpdateWorker @AssistedInject constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "App Updates",
+                "Обновления приложения",
                 NotificationManager.IMPORTANCE_DEFAULT,
-            ).apply { description = "Hermes update availability notifications" }
+            ).apply { description = "Уведомления о доступных обновлениях Hermes" }
             nm.createNotificationChannel(channel)
         }
 

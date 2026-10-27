@@ -63,10 +63,10 @@ fun AboutSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("About, permissions & security") },
+                title = { Text("О приложении, разрешения и безопасность") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Navigate back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
             )
@@ -80,10 +80,10 @@ fun AboutSettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            SectionHeader(text = "App permissions")
+            SectionHeader(text = "Разрешения приложения")
             PermissionsCard()
 
-            SectionHeader(text = "Companion apps")
+            SectionHeader(text = "Сопутствующие приложения")
             CompanionAppsCard()
 
             SectionHeader(text = stringResource(R.string.settings_section_security))
@@ -91,12 +91,12 @@ fun AboutSettingsScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     InfoRow(
                         title = stringResource(R.string.settings_keystore_status),
-                        value = "Hardware-backed (Android Keystore)",
+                        value = "Аппаратная защита (Android Keystore)",
                     )
                 }
             }
             ExpandableCard(
-                title = "Security audit",
+                title = "Проверка безопасности",
                 subtitle = securityAuditSummary,
             ) {
                 SecurityAuditRows()
@@ -105,17 +105,17 @@ fun AboutSettingsScreen(
             SectionHeader(text = stringResource(R.string.settings_section_about))
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    InfoRow(title = "Application", value = "Hermes")
+                    InfoRow(title = "Приложение", value = "Hermes")
                     InfoRow(
                         title = stringResource(R.string.settings_app_version),
                         value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
                     )
-                    InfoRow(title = "Build type", value = BuildConfig.BUILD_TYPE)
+                    InfoRow(title = "Тип сборки", value = BuildConfig.BUILD_TYPE)
                 }
             }
 
             if (BuildConfig.OTA_ENABLED) {
-                SectionHeader(text = "Updates")
+                SectionHeader(text = "Обновления")
                 UpdateSection(
                     state = updateState,
                     canInstall = viewModel.canInstallPackages(),
@@ -145,10 +145,10 @@ fun AboutSettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(Modifier.weight(1f)) {
-                            Text("Test builds", style = MaterialTheme.typography.bodyLarge)
+                            Text("Тестовые сборки", style = MaterialTheme.typography.bodyLarge)
                             Text(
-                                "Also offer fixes the self-repair pipeline released as test builds, before they " +
-                                    "reach everyone. A crash reported from a test build rolls it back.",
+                                "Также предлагать исправления, которые система самовосстановления выпустила как тестовые сборки, до того как они " +
+                                    "дойдут до всех. Сбой в тестовой сборке откатывает её.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -190,17 +190,17 @@ private fun runtimeGranted(context: Context, permission: String): Boolean =
 
 private val PERMISSION_ENTRIES: List<PermissionEntry> = listOf(
     PermissionEntry(
-        "Microphone", "Voice input and hands-free Talk mode.",
+        "Микрофон", "Голосовой ввод и режим разговора без рук.",
         "android.permission.RECORD_AUDIO", "android.permission.RECORD_AUDIO",
         { runtimeGranted(it, "android.permission.RECORD_AUDIO") }, ::appDetailsIntent,
     ),
     PermissionEntry(
-        "Camera", "Let the agent take or attach photos.",
+        "Камера", "Позволяет агенту делать или прикреплять фото.",
         "android.permission.CAMERA", "android.permission.CAMERA",
         { runtimeGranted(it, "android.permission.CAMERA") }, ::appDetailsIntent,
     ),
     PermissionEntry(
-        "Show notifications", "Replies, task results, and proactive nudges.",
+        "Показ уведомлений", "Ответы, результаты задач и напоминания.",
         "android.permission.POST_NOTIFICATIONS", "android.permission.POST_NOTIFICATIONS",
         {
             Build.VERSION.SDK_INT < 33 ||
@@ -209,27 +209,27 @@ private val PERMISSION_ENTRIES: List<PermissionEntry> = listOf(
         ::appDetailsIntent,
     ),
     PermissionEntry(
-        "Precise location", "Ambient presence and location-aware answers.",
+        "Точное местоположение", "Определение присутствия и ответы с учётом местоположения.",
         "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_FINE_LOCATION",
         { runtimeGranted(it, "android.permission.ACCESS_FINE_LOCATION") }, ::appDetailsIntent,
     ),
     PermissionEntry(
-        "Read contacts", "Resolve names when calling or messaging.",
+        "Чтение контактов", "Поиск имён при звонках и сообщениях.",
         "android.permission.READ_CONTACTS", "android.permission.READ_CONTACTS",
         { runtimeGranted(it, "android.permission.READ_CONTACTS") }, ::appDetailsIntent,
     ),
     PermissionEntry(
-        "Calendar", "Read and create calendar events.",
+        "Календарь", "Чтение и создание событий календаря.",
         "android.permission.READ_CALENDAR", "android.permission.READ_CALENDAR",
         { runtimeGranted(it, "android.permission.READ_CALENDAR") }, ::appDetailsIntent,
     ),
     PermissionEntry(
-        "Send SMS", "Send text messages you ask the agent to send.",
+        "Отправка SMS", "Отправка сообщений, которые вы поручили агенту.",
         "android.permission.SEND_SMS", "android.permission.SEND_SMS",
         { runtimeGranted(it, "android.permission.SEND_SMS") }, ::appDetailsIntent,
     ),
     PermissionEntry(
-        "All files access", "Save downloaded models into a folder you can browse.",
+        "Доступ ко всем файлам", "Сохранять скачанные модели в папку, которую можно открыть.",
         "android.permission.MANAGE_EXTERNAL_STORAGE",
         isGranted = { Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager() },
         grantIntent = {
@@ -240,7 +240,7 @@ private val PERMISSION_ENTRIES: List<PermissionEntry> = listOf(
         },
     ),
     PermissionEntry(
-        "Draw over other apps", "Show the assistant overlay on top of other apps.",
+        "Поверх других приложений", "Показывать окно ассистента поверх других приложений.",
         "android.permission.SYSTEM_ALERT_WINDOW",
         isGranted = { Settings.canDrawOverlays(it) },
         grantIntent = {
@@ -251,7 +251,7 @@ private val PERMISSION_ENTRIES: List<PermissionEntry> = listOf(
         },
     ),
     PermissionEntry(
-        "Modify system settings", "Change brightness, volume, and similar device settings.",
+        "Изменение системных настроек", "Менять яркость, громкость и похожие настройки устройства.",
         "android.permission.WRITE_SETTINGS",
         isGranted = { Settings.System.canWrite(it) },
         grantIntent = {
@@ -262,7 +262,7 @@ private val PERMISSION_ENTRIES: List<PermissionEntry> = listOf(
         },
     ),
     PermissionEntry(
-        "Ignore battery optimisation", "Keep the background heartbeat running reliably.",
+        "Без оптимизации батареи", "Надёжная работа фоновых задач.",
         "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
         isGranted = {
             (it.getSystemService(Context.POWER_SERVICE) as PowerManager)
@@ -271,7 +271,7 @@ private val PERMISSION_ENTRIES: List<PermissionEntry> = listOf(
         grantIntent = { Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS) },
     ),
     PermissionEntry(
-        "Install unknown apps", "Install OTA updates downloaded from GitHub.",
+        "Установка неизвестных приложений", "Установка обновлений, скачанных с GitHub.",
         "android.permission.REQUEST_INSTALL_PACKAGES",
         isGranted = { it.packageManager.canRequestPackageInstalls() },
         grantIntent = {
@@ -282,7 +282,7 @@ private val PERMISSION_ENTRIES: List<PermissionEntry> = listOf(
         },
     ),
     PermissionEntry(
-        "Do Not Disturb control", "Let the agent silence or restore notifications.",
+        "Управление режимом «Не беспокоить»", "Позволяет агенту отключать и возвращать уведомления.",
         "android.permission.ACCESS_NOTIFICATION_POLICY",
         isGranted = {
             (it.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
@@ -341,8 +341,8 @@ private fun PermissionsCard() {
             }
             HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             InfoNote(
-                "How toggling works",
-                "Toggling opens the system screen where the grant is made — Android never lets an app change its own permissions directly.",
+                "Как работают переключатели",
+                "Переключатель открывает системный экран, где выдаётся разрешение, — Android не даёт приложению менять собственные разрешения напрямую.",
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
         }
@@ -401,21 +401,21 @@ private fun CompanionAppsCard() {
         Column(modifier = Modifier.padding(vertical = 4.dp)) {
             CompanionToggleRow(
                 "Termux",
-                "Local Linux shell — powers the termux tool (packages, python, git).",
+                "Локальная оболочка Linux — работает инструмент termux (пакеты, python, git).",
                 remember(refresh) { installed(TERMUX_PKG) },
                 { openOrGet(TERMUX_PKG) },
             )
             HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             CompanionToggleRow(
                 "Shizuku",
-                "ADB-privileged bridge — lets the shell tool run with elevated privileges.",
+                "Мост с правами ADB — позволяет инструменту shell работать с повышенными правами.",
                 remember(refresh) { installed(SHIZUKU_PKG) },
                 { openOrGet(SHIZUKU_PKG) },
             )
             HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             InfoNote(
-                "How toggling works",
-                "On → opens the app. Off → opens its F-Droid page to install. Uninstall from the launcher.",
+                "Как работают переключатели",
+                "Вкл. → открывает приложение. Выкл. → открывает его страницу в F-Droid для установки. Удаляется через лаунчер.",
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
         }

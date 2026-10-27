@@ -79,7 +79,7 @@ fun KanbanBoardScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Kanban Board",
+                        "Канбан-доска",
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                     )
@@ -92,7 +92,7 @@ fun KanbanBoardScreen(
                     }) {
                         Icon(
                             if (serviceRunning) Icons.Filled.Stop else Icons.Filled.PlayArrow,
-                            contentDescription = if (serviceRunning) "Stop agent" else "Start agent",
+                            contentDescription = if (serviceRunning) "Остановить агента" else "Запустить агента",
                             tint = if (serviceRunning) MaterialTheme.colorScheme.error
                             else MaterialTheme.colorScheme.primary,
                         )
@@ -101,11 +101,11 @@ fun KanbanBoardScreen(
                         Icon(
                             if (uiState.viewMode == KanbanViewMode.BOARD) Icons.Outlined.ViewAgenda
                             else Icons.Outlined.ViewColumn,
-                            contentDescription = "Toggle view",
+                            contentDescription = "Сменить вид",
                         )
                     }
                     IconButton(onClick = viewModel::showCreateDialog) {
-                        Icon(Icons.Filled.Add, contentDescription = "Create ticket")
+                        Icon(Icons.Filled.Add, contentDescription = "Создать задачу")
                     }
                 },
             )
@@ -133,13 +133,13 @@ fun KanbanBoardScreen(
 @Composable
 private fun StatusTabRow(selected: KanbanStatus?, onSelect: (KanbanStatus?) -> Unit) {
     val tabs: List<Pair<String, KanbanStatus?>> = listOf(
-        "All" to null,
-        "Todo" to KanbanStatus.TODO,
-        "In Progress" to KanbanStatus.IN_PROGRESS,
-        "Review" to KanbanStatus.REVIEW,
-        "Blocked" to KanbanStatus.BLOCKED,
-        "Done" to KanbanStatus.DONE,
-        "Cancelled" to KanbanStatus.CANCELLED,
+        "Все" to null,
+        "К выполнению" to KanbanStatus.TODO,
+        "В работе" to KanbanStatus.IN_PROGRESS,
+        "На проверке" to KanbanStatus.REVIEW,
+        "Заблокировано" to KanbanStatus.BLOCKED,
+        "Готово" to KanbanStatus.DONE,
+        "Отменено" to KanbanStatus.CANCELLED,
     )
     val index = tabs.indexOfFirst { it.second == selected }.coerceAtLeast(0)
     ScrollableTabRow(selectedTabIndex = index, edgePadding = 0.dp, modifier = Modifier.fillMaxWidth()) {
@@ -271,7 +271,7 @@ private fun TicketList(tickets: List<KanbanTicket>, onTicketClick: (String) -> U
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
             )
             Spacer(Modifier.height(16.dp))
-            Text("No tickets found", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Задачи не найдены", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         return
     }
@@ -311,26 +311,26 @@ private fun CreateTicketDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("New ticket") },
+        title = { Text("Новая задача") },
         text = {
             Column {
                 OutlinedTextField(
                     value = title, onValueChange = { title = it },
-                    label = { Text("Title") }, singleLine = true, modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Название") }, singleLine = true, modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = body, onValueChange = { body = it },
-                    label = { Text("Description") }, modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Описание") }, modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = tags, onValueChange = { tags = it },
-                    label = { Text("Tags (comma-separated)") }, singleLine = true,
+                    label = { Text("Теги (через запятую)") }, singleLine = true,
                     keyboardOptions = KeyboardOptions.Default, modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(12.dp))
-                Text("Priority", style = MaterialTheme.typography.labelMedium)
+                Text("Приоритет", style = MaterialTheme.typography.labelMedium)
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     TicketPriority.entries.forEach { p ->
                         TextButton(onClick = { priority = p }) {
@@ -354,17 +354,17 @@ private fun CreateTicketDialog(
                     )
                 },
                 enabled = title.isNotBlank(),
-            ) { Text("Create") }
+            ) { Text("Создать") }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Отмена") } },
     )
 }
 
 private fun KanbanStatus.label() = when (this) {
-    KanbanStatus.TODO -> "Todo"
-    KanbanStatus.IN_PROGRESS -> "In Progress"
-    KanbanStatus.REVIEW -> "Review"
-    KanbanStatus.BLOCKED -> "Blocked"
-    KanbanStatus.DONE -> "Done"
-    KanbanStatus.CANCELLED -> "Cancelled"
+    KanbanStatus.TODO -> "К выполнению"
+    KanbanStatus.IN_PROGRESS -> "В работе"
+    KanbanStatus.REVIEW -> "На проверке"
+    KanbanStatus.BLOCKED -> "Заблокировано"
+    KanbanStatus.DONE -> "Готово"
+    KanbanStatus.CANCELLED -> "Отменено"
 }

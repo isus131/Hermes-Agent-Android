@@ -83,7 +83,7 @@ class OnboardingViewModel @Inject constructor(
                 _error.value = null
                 _device.value = deviceProfiler.profile()
             } catch (e: Exception) {
-                _error.value = e.message ?: "Failed to profile device"
+                _error.value = e.message ?: "Не удалось определить параметры устройства"
             }
             _scanning.value = false
         }
@@ -100,7 +100,7 @@ class OnboardingViewModel @Inject constructor(
                 settings.setOnboardingCompleted(true)
                 _completed.value = true
             } catch (e: Exception) {
-                _error.value = e.message ?: "Failed to save to memory"
+                _error.value = e.message ?: "Не удалось сохранить в память"
             } finally {
                 _saving.value = false
             }
@@ -128,19 +128,19 @@ class OnboardingViewModel @Inject constructor(
                     // JSON: it failed here with "Unexpected JSON token ... 'H'". It is staged like
                     // Settings does and applied on the next start (Android 15 blocks relaunching
                     // from the background, so the user reopens the app).
-                    val secret = password ?: error("This is a full backup: enter its password first.")
+                    val secret = password ?: error("Это полная резервная копия: сначала введите её пароль.")
                     appContext.contentResolver.openInputStream(uri)?.use { fullBackupManager.stageRestore(it, secret) }
-                        ?: error("Could not open that file.")
-                    _notice.value = "Backup verified. Close Hermes and open it again to finish the restore."
+                        ?: error("Не удалось открыть этот файл.")
+                    _notice.value = "Копия проверена. Закройте Hermes и откройте снова, чтобы завершить восстановление."
                     return@runCatching
                 }
                 val text = appContext.contentResolver.openInputStream(uri)?.use { input ->
                     input.readBytes().toString(Charsets.UTF_8)
-                } ?: error("Could not open that file.")
+                } ?: error("Не удалось открыть этот файл.")
                 val backup = jsonBackupManager.decode(text, password)
                 jsonBackupManager.import(backup, ImportMode.OVERWRITE_EXISTING)
             }.onFailure {
-                _error.value = it.message ?: "Failed to restore backup"
+                _error.value = it.message ?: "Не удалось восстановить резервную копию"
             }
             _saving.value = false
         }

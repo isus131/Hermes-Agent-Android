@@ -105,7 +105,7 @@ class RefinePromptViewModel @Inject constructor(
                     _state.value = PromptUiState.Applied
                     loadRoles()
                 }
-                .onFailure { _state.value = PromptUiState.Error(it.message ?: "Failed to apply") }
+                .onFailure { _state.value = PromptUiState.Error(it.message ?: "Не удалось применить") }
         }
     }
 
@@ -113,13 +113,13 @@ class RefinePromptViewModel @Inject constructor(
     fun clear(role: AgentRole) {
         viewModelScope.launch {
             runCatching {
-                promptRepository.put(role, content = "", version = "1.0.0", revisionNote = "Cleared")
+                promptRepository.put(role, content = "", version = "1.0.0", revisionNote = "Очищено")
             }
                 .onSuccess {
                     _state.value = PromptUiState.Applied
                     loadRoles()
                 }
-                .onFailure { _state.value = PromptUiState.Error(it.message ?: "Failed to clear") }
+                .onFailure { _state.value = PromptUiState.Error(it.message ?: "Не удалось очистить") }
         }
     }
 
@@ -154,7 +154,7 @@ class RefinePromptViewModel @Inject constructor(
             runCatching { promptRepository.restore(revision.id) }
                 .onSuccess { restored ->
                     if (restored == null) {
-                        _state.value = PromptUiState.Error("That revision is no longer available.")
+                        _state.value = PromptUiState.Error("Эта версия больше недоступна.")
                         _history.value = null
                     } else {
                         _state.value = PromptUiState.Restored(revision.version)
@@ -164,7 +164,7 @@ class RefinePromptViewModel @Inject constructor(
                         showHistory(open.role)
                     }
                 }
-                .onFailure { _state.value = PromptUiState.Error(it.message ?: "Restore failed") }
+                .onFailure { _state.value = PromptUiState.Error(it.message ?: "Не удалось восстановить") }
         }
     }
 

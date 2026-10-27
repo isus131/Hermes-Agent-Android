@@ -52,10 +52,10 @@ fun RefineSkillScreen(
     Scaffold(
         topBar = {
             SlimTopBar(
-                title = "Refine skills from usage",
+                title = "Улучшение навыков по использованию",
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Назад")
                     }
                 },
             )
@@ -70,10 +70,10 @@ fun RefineSkillScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
-                "Reflects on how each skill was actually used in your recent chats and " +
-                    "proposes an improved version — both the instructions and the " +
-                    "description that decides when the skill gets loaded. Nothing changes " +
-                    "until you approve it, and every version is kept so you can roll back.",
+                "Анализирует, как каждый навык на самом деле использовался в ваших недавних чатах, и " +
+                    "предлагает улучшенную версию — и инструкции, и " +
+                    "описание, от которого зависит, когда навык загружается. Ничего не изменится, " +
+                    "пока вы не одобрите, а каждая версия сохраняется, чтобы можно было откатиться.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -87,24 +87,24 @@ fun RefineSkillScreen(
                 is RefineUiState.Running -> StatusCard {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
-                        Text("Refining ${s.skillName}…", style = MaterialTheme.typography.bodyMedium)
+                        Text("Улучшаю ${s.skillName}…", style = MaterialTheme.typography.bodyMedium)
                     }
                 }
                 is RefineUiState.Applied -> StatusCard {
-                    Text("✓ Skill updated.", color = MaterialTheme.colorScheme.primary)
-                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Done") }
+                    Text("✓ Навык обновлён.", color = MaterialTheme.colorScheme.primary)
+                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Готово") }
                 }
                 is RefineUiState.Restored -> StatusCard {
-                    Text("✓ Restored v${s.version}.", color = MaterialTheme.colorScheme.primary)
-                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Done") }
+                    Text("✓ Восстановлена v${s.version}.", color = MaterialTheme.colorScheme.primary)
+                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Готово") }
                 }
                 is RefineUiState.NoChange -> StatusCard {
                     Text(s.message, style = MaterialTheme.typography.bodyMedium)
-                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("OK") }
+                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("ОК") }
                 }
                 is RefineUiState.Error -> StatusCard {
                     Text(s.message, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
-                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Dismiss") }
+                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Скрыть") }
                 }
                 is RefineUiState.Idle -> Unit
             }
@@ -120,8 +120,8 @@ fun RefineSkillScreen(
             if (state is RefineUiState.Idle && history == null) {
                 if (skills.isEmpty()) {
                     Text(
-                        "No user-created skills yet. Skills are auto-created as the agent " +
-                            "completes multi-tool tasks; built-in skills can't be refined.",
+                        "Пользовательских навыков пока нет. Навыки создаются автоматически, когда агент " +
+                            "выполняет задачи с несколькими инструментами; встроенные навыки улучшать нельзя.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -141,10 +141,10 @@ fun RefineSkillScreen(
                                     Button(
                                         onClick = { viewModel.refine(skill.name) },
                                         modifier = Modifier.weight(1f),
-                                    ) { Text("Refine from usage") }
+                                    ) { Text("Улучшить по использованию") }
                                     OutlinedButton(
                                         onClick = { viewModel.showHistory(skill.name) },
-                                    ) { Text("History") }
+                                    ) { Text("История") }
                                 }
                             }
                         }
@@ -182,8 +182,8 @@ private fun ProposalCard(
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-                "Based on ${proposal.traceCount} usage trace(s) · " +
-                    "${originalBody.length} → ${proposedBody.length} chars",
+                "На основе трасс использования: ${proposal.traceCount} · " +
+                    "${originalBody.length} → ${proposedBody.length} символов",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -199,7 +199,7 @@ private fun ProposalCard(
             // a change to it deserves as much scrutiny as the body.
             if (proposal.descriptionChanged) {
                 HorizontalDivider()
-                Text("Description (drives when this skill loads):", style = MaterialTheme.typography.labelLarge)
+                Text("Описание (определяет, когда загружается навык):", style = MaterialTheme.typography.labelLarge)
                 Text(
                     proposal.originalDescription,
                     style = MaterialTheme.typography.bodySmall.copy(
@@ -216,7 +216,7 @@ private fun ProposalCard(
 
             if (proposal.bodyChanged) {
                 HorizontalDivider()
-                Text("Proposed body:", style = MaterialTheme.typography.labelLarge)
+                Text("Предлагаемый текст:", style = MaterialTheme.typography.labelLarge)
                 Text(
                     proposedBody,
                     style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
@@ -229,8 +229,8 @@ private fun ProposalCard(
                     onClick = onApply,
                     enabled = proposal.constraintsPass,
                     modifier = Modifier.weight(1f),
-                ) { Text(if (proposal.constraintsPass) "Apply" else "Failed gates") }
-                OutlinedButton(onClick = onDiscard, modifier = Modifier.weight(1f)) { Text("Discard") }
+                ) { Text(if (proposal.constraintsPass) "Применить" else "Проверки не пройдены") }
+                OutlinedButton(onClick = onDiscard, modifier = Modifier.weight(1f)) { Text("Отбросить") }
             }
         }
     }
@@ -251,7 +251,7 @@ private fun HistoryCard(
         ),
     ) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("${history.skillName} — version history", style = MaterialTheme.typography.titleMedium)
+            Text("${history.skillName} — история версий", style = MaterialTheme.typography.titleMedium)
 
             when {
                 history.loading -> Row(
@@ -259,12 +259,12 @@ private fun HistoryCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
-                    Text("Loading…", style = MaterialTheme.typography.bodySmall)
+                    Text("Загрузка…", style = MaterialTheme.typography.bodySmall)
                 }
 
                 history.revisions.isEmpty() -> Text(
-                    "No earlier versions yet. A snapshot is kept every time this skill " +
-                        "is refined, improved, or edited.",
+                    "Более ранних версий пока нет. Снимок сохраняется каждый раз, когда навык " +
+                        "улучшается, дорабатывается или редактируется.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -283,17 +283,17 @@ private fun HistoryCard(
                         )
                         if (rev.description.isNotBlank()) {
                             Text(
-                                "Description: ${rev.description}",
+                                "Описание: ${rev.description}",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
-                        TextButton(onClick = { onRestore(rev) }) { Text("Restore this version") }
+                        TextButton(onClick = { onRestore(rev) }) { Text("Восстановить эту версию") }
                     }
                 }
             }
 
-            OutlinedButton(onClick = onClose, modifier = Modifier.fillMaxWidth()) { Text("Close") }
+            OutlinedButton(onClick = onClose, modifier = Modifier.fillMaxWidth()) { Text("Закрыть") }
         }
     }
 }

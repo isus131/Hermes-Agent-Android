@@ -67,7 +67,7 @@ class SessionSnapshotService @Inject constructor(
         filename: String? = null,
     ): String = withContext(Dispatchers.IO) {
         val session = sessionRepository.getSessionById(sessionId)
-            ?: throw IllegalArgumentException("Session not found: $sessionId")
+            ?: throw IllegalArgumentException("Сессия не найдена: $sessionId")
 
         val snapshot = SessionSnapshot(
             schemaVersion = 1,
@@ -106,7 +106,7 @@ class SessionSnapshotService @Inject constructor(
     suspend fun importSession(filePath: String): String = withContext(Dispatchers.IO) {
         val file = File(filePath)
         if (!file.exists()) {
-            throw IllegalArgumentException("File not found: $filePath")
+            throw IllegalArgumentException("Файл не найден: $filePath")
         }
 
         val json = file.readText()
@@ -114,7 +114,7 @@ class SessionSnapshotService @Inject constructor(
 
         // Validate schema version
         if (snapshot.schemaVersion != 1) {
-            throw IllegalStateException("Unsupported schema version: ${snapshot.schemaVersion}")
+            throw IllegalStateException("Неподдерживаемая версия схемы: ${snapshot.schemaVersion}")
         }
 
         // Import as a brand-new conversation (new id, not the original) so
@@ -204,7 +204,7 @@ class SessionSnapshotService @Inject constructor(
      */
     suspend fun exportToDownloads(sessionId: String): String? = withContext(Dispatchers.IO) {
         val session = sessionRepository.getSessionById(sessionId)
-            ?: throw IllegalArgumentException("Session not found: $sessionId")
+            ?: throw IllegalArgumentException("Сессия не найдена: $sessionId")
 
         val snapshot = SessionSnapshot(
             schemaVersion = 1,

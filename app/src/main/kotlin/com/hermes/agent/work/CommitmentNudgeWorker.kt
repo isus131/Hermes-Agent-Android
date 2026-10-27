@@ -36,7 +36,7 @@ class CommitmentNudgeWorker @AssistedInject constructor(
         if (commitment != null) {
             proactiveNotifier.post(
                 ProactiveSource.NUDGE,
-                "A commitment you made",
+                "Ваше обещание",
                 commitment.content.removePrefix(MemoryConsolidator.COMMITMENT_PREFIX),
             )
         } else {

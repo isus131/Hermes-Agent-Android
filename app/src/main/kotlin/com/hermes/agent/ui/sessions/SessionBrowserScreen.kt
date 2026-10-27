@@ -98,7 +98,7 @@ fun SessionBrowserScreen(
                 .padding(innerPadding),
         ) {
             Text(
-                text = "Conversations",
+                text = "Разговоры",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.statusBarsPadding().padding(start = 24.dp, end = 16.dp, top = 20.dp, bottom = 8.dp),
             )
@@ -112,7 +112,7 @@ fun SessionBrowserScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                placeholder = { Text("Search chats (by phrase or keyword)…") },
+                placeholder = { Text("Поиск по чатам (фраза или ключевое слово)…") },
                 singleLine = true,
                 shape = RoundedCornerShape(32.dp),
                 colors = TextFieldDefaults.colors(
@@ -130,7 +130,7 @@ fun SessionBrowserScreen(
                             searchQuery = ""
                             viewModel.browseRecent()
                         }) {
-                            Icon(Icons.Outlined.Close, contentDescription = "Clear")
+                            Icon(Icons.Outlined.Close, contentDescription = "Очистить")
                         }
                     }
                 },
@@ -191,7 +191,7 @@ fun SessionBrowserScreen(
                                                     putExtra(Intent.EXTRA_TEXT, markdown)
                                                     type = "text/plain"
                                                 }
-                                                val shareIntent = Intent.createChooser(sendIntent, "Export Chat Transcript")
+                                                val shareIntent = Intent.createChooser(sendIntent, "Экспорт переписки")
                                                 context.startActivity(shareIntent)
                                             }
                                         },
@@ -210,7 +210,7 @@ fun SessionBrowserScreen(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "Error: ${state.message}",
+                                text = "Ошибка: ${state.message}",
                                 color = MaterialTheme.colorScheme.error,
                             )
                             Spacer(modifier = Modifier.height(16.dp))
@@ -221,7 +221,7 @@ fun SessionBrowserScreen(
                                     viewModel.browseRecent()
                                 }
                             }) {
-                                Text("Retry")
+                                Text("Повторить")
                             }
                         }
                     }
@@ -231,11 +231,11 @@ fun SessionBrowserScreen(
     }
 
     pendingDelete?.let { item ->
-        val name = item.session.title.ifBlank { "this conversation" }
+        val name = item.session.title.ifBlank { "этот разговор" }
         DestructiveActionDialog(
-            title = "Delete \"$name\"?",
-            message = "This permanently removes the conversation and its messages. This action cannot be undone.",
-            confirmLabel = "Delete conversation",
+            title = "Удалить «$name»?",
+            message = "Разговор и все его сообщения будут удалены навсегда. Это действие нельзя отменить.",
+            confirmLabel = "Удалить разговор",
             onConfirm = {
                 viewModel.deleteSession(item.session.id)
                 pendingDelete = null
@@ -288,7 +288,7 @@ private fun SessionRow(
             Spacer(modifier = Modifier.height(4.dp))
             
             Text(
-                text = item.session.lastMessagePreview.ifEmpty { "No messages yet" },
+                text = item.session.lastMessagePreview.ifEmpty { "Сообщений пока нет" },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 2,
@@ -312,14 +312,14 @@ private fun SessionRow(
                     IconButton(onClick = onExport) {
                         Icon(
                             imageVector = Icons.Outlined.Share,
-                            contentDescription = "Export & Share",
+                            contentDescription = "Экспорт и отправка",
                             tint = MaterialTheme.colorScheme.primary,
                         )
                     }
                     IconButton(onClick = onDelete) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
-                            contentDescription = "Delete session",
+                            contentDescription = "Удалить сессию",
                             tint = MaterialTheme.colorScheme.error.copy(alpha = 0.6f),
                         )
                     }
@@ -337,7 +337,7 @@ private fun EmptyState(
     Column(
         modifier = modifier
             .padding(32.dp)
-            .semantics { contentDescription = if (isSearching) "No sessions match your search" else "No sessions yet" },
+            .semantics { contentDescription = if (isSearching) "По вашему запросу ничего не найдено" else "Сессий пока нет" },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -349,13 +349,13 @@ private fun EmptyState(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = if (isSearching) "No sessions match your search" else "No sessions yet",
+            text = if (isSearching) "По вашему запросу ничего не найдено" else "Сессий пока нет",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = if (isSearching) "Try different keywords" else "Create your first session",
+            text = if (isSearching) "Попробуйте другие слова" else "Начните первую сессию",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
         )

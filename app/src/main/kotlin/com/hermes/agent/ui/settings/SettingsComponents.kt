@@ -60,7 +60,7 @@ fun RevealToggle(visible: Boolean, onToggle: () -> Unit) {
     IconButton(onClick = onToggle) {
         Icon(
             imageVector = if (visible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-            contentDescription = if (visible) "Hide" else "Show",
+            contentDescription = if (visible) "Скрыть" else "Показать",
         )
     }
 }
@@ -112,7 +112,7 @@ fun DescribedTitle(
             IconButton(onClick = { open = !open }, modifier = Modifier.size(32.dp)) {
                 Icon(
                     imageVector = Icons.Outlined.Info,
-                    contentDescription = if (open) "Hide details about $title" else "Show details about $title",
+                    contentDescription = if (open) "Скрыть подробности: $title" else "Показать подробности: $title",
                     tint = if (open) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(18.dp),
                 )
@@ -240,7 +240,7 @@ fun ExpandableCard(
                 }
                 Icon(
                     imageVector = if (expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
-                    contentDescription = if (expanded) "Collapse" else "Expand",
+                    contentDescription = if (expanded) "Свернуть" else "Развернуть",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }

@@ -40,7 +40,7 @@ class AgentTaskWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val taskId = inputData.getString(KEY_TASK_ID)     ?: return Result.failure()
         val prompt = inputData.getString(KEY_TASK_PROMPT)  ?: return Result.failure()
-        val label  = inputData.getString(KEY_TASK_LABEL)   ?: "Delegated task"
+        val label  = inputData.getString(KEY_TASK_LABEL)   ?: "Поручённая задача"
 
         Timber.d("AgentTaskWorker: running '$label'")
         agentTaskRepository.markRunning(taskId)
@@ -64,7 +64,7 @@ class AgentTaskWorker @AssistedInject constructor(
                     }
                 }
             failure?.let { error(it) }
-            val result = (finalText ?: sb.toString()).take(300).ifBlank { "Task completed." }
+            val result = (finalText ?: sb.toString()).take(300).ifBlank { "Задача выполнена." }
             agentTaskRepository.markCompleted(taskId, result)
             activityLedger.record(
                 ActivityEntry(
@@ -81,7 +81,7 @@ class AgentTaskWorker @AssistedInject constructor(
             Result.success()
         } catch (e: Exception) {
             Timber.e(e, "AgentTaskWorker failed: $taskId")
-            val reason = e.message ?: "Unknown error"
+            val reason = e.message ?: "Неизвестная ошибка"
             agentTaskRepository.markFailed(taskId, reason)
             activityLedger.record(
                 ActivityEntry(
@@ -106,10 +106,10 @@ class AgentTaskWorker @AssistedInject constructor(
         val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             nm.createNotificationChannel(
-                NotificationChannel(CHANNEL_ID, "Delegated Tasks", NotificationManager.IMPORTANCE_DEFAULT)
+                NotificationChannel(CHANNEL_ID, "Поручённые задачи", NotificationManager.IMPORTANCE_DEFAULT)
             )
         }
-        val title = if (success) "✓ $label" else "✗ $label failed"
+        val title = if (success) "✓ $label" else "✗ $label: ошибка"
         nm.notify(
             label.hashCode() + 1000,
             NotificationCompat.Builder(applicationContext, CHANNEL_ID)

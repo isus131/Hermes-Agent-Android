@@ -83,14 +83,14 @@ fun CronScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back"
+                            contentDescription = "Назад"
                         )
                     }
                 },
                 actions = {
                     if (remoteConfigured) {
                         IconButton(onClick = { viewModel.refreshRemoteJobs() }) {
-                            Icon(Icons.Filled.Refresh, contentDescription = "Refresh PC bots")
+                            Icon(Icons.Filled.Refresh, contentDescription = "Обновить ботов на ПК")
                         }
                     }
                 },
@@ -102,7 +102,7 @@ fun CronScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Add scheduled task")
+                Icon(Icons.Default.Add, contentDescription = "Добавить задачу по расписанию")
             }
         },
     ) { padding ->
@@ -118,7 +118,7 @@ fun CronScreen(
                 if (remoteConfigured) {
                     item {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("PC bots", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                            Text("Боты на ПК", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
                             if (remoteLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
                         }
                     }
@@ -128,7 +128,7 @@ fun CronScreen(
                     if (remoteJobs.isEmpty() && !remoteLoading) {
                         item {
                             Text(
-                                "No scheduled bots on the PC gateway.",
+                                "На шлюзе ПК нет ботов по расписанию.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -154,7 +154,7 @@ fun CronScreen(
                 if (tasks.isEmpty()) {
                     item {
                         Text(
-                            "No on-device scheduled tasks. Tap + to add one.",
+                            "Нет задач по расписанию на устройстве. Нажмите +, чтобы добавить.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -184,9 +184,9 @@ fun CronScreen(
 
     if (deleteTarget != null) {
         DestructiveActionDialog(
-            title = "Delete Task",
-            message = "Are you sure you want to delete this scheduled task?",
-            confirmLabel = "Delete",
+            title = "Удалить задачу",
+            message = "Вы уверены, что хотите удалить эту задачу по расписанию?",
+            confirmLabel = "Удалить",
             onConfirm = {
                 deleteTarget?.let { viewModel.delete(it) }
                 deleteTarget = null
@@ -233,7 +233,7 @@ private fun TaskCard(
                     IconButton(onClick = onDelete) {
                         Icon(
                             Icons.Default.Delete,
-                            contentDescription = "Delete",
+                            contentDescription = "Удалить",
                             tint = MaterialTheme.colorScheme.error,
                         )
                     }
@@ -253,7 +253,7 @@ private fun TaskCard(
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 task.lastRunAt?.let { ts ->
                     Text(
-                        text = "Last run: ${SimpleDateFormat("MMM d, h:mm a", Locale.getDefault()).format(Date(ts))}",
+                        text = "Последний запуск: ${SimpleDateFormat("MMM d, h:mm a", Locale.getDefault()).format(Date(ts))}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -290,7 +290,7 @@ private fun AddTaskDialog(
     if (showTimePicker) {
         AlertDialog(
             onDismissRequest = { showTimePicker = false },
-            title = { Text("Daily at…") },
+            title = { Text("Ежедневно в…") },
             text = { TimePicker(state = timePickerState) },
             confirmButton = {
                 TextButton(
@@ -299,32 +299,32 @@ private fun AddTaskDialog(
                         useCustom = false
                         showTimePicker = false
                     },
-                ) { Text("Set") }
+                ) { Text("Готово") }
             },
             dismissButton = {
-                TextButton(onClick = { showTimePicker = false }) { Text("Cancel") }
+                TextButton(onClick = { showTimePicker = false }) { Text("Отмена") }
             },
         )
     }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("New Scheduled Task") },
+        title = { Text("Новая задача по расписанию") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = label,
                     onValueChange = { label = it },
-                    label = { Text("Name") },
-                    placeholder = { Text("Daily weather summary") },
+                    label = { Text("Имя") },
+                    placeholder = { Text("Ежедневная сводка погоды") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = prompt,
                     onValueChange = { prompt = it },
-                    label = { Text("Prompt") },
-                    placeholder = { Text("What's the weather today and any notable news?") },
+                    label = { Text("Запрос") },
+                    placeholder = { Text("Какая сегодня погода и есть ли важные новости?") },
                     maxLines = 4,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -336,7 +336,7 @@ private fun AddTaskDialog(
                         value = CronPresets.labelFor(selectedCron),
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Frequency") },
+                        label = { Text("Частота") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpanded) },
                         modifier = Modifier.menuAnchor().fillMaxWidth(),
                     )
@@ -355,14 +355,14 @@ private fun AddTaskDialog(
                             )
                         }
                         DropdownMenuItem(
-                            text = { Text("Daily at a custom time…") },
+                            text = { Text("Ежедневно в выбранное время…") },
                             onClick = {
                                 showTimePicker = true
                                 dropdownExpanded = false
                             },
                         )
                         DropdownMenuItem(
-                            text = { Text("Custom cron expression…") },
+                            text = { Text("Своё cron-выражение…") },
                             onClick = {
                                 useCustom = true
                                 dropdownExpanded = false
@@ -375,16 +375,16 @@ private fun AddTaskDialog(
                     OutlinedTextField(
                         value = customCron,
                         onValueChange = { customCron = it },
-                        label = { Text("Cron expression") },
+                        label = { Text("Cron-выражение") },
                         placeholder = { Text("0 9 * * 1-5") },
                         singleLine = true,
                         isError = isError,
                         modifier = Modifier.fillMaxWidth(),
                         supportingText = {
                             if (isError) {
-                                Text("Invalid 5-field cron expression")
+                                Text("Неверное cron-выражение из 5 полей")
                             } else {
-                                Text("5-field cron: min hour dom month dow")
+                                Text("Cron из 5 полей: минута час день месяц день_недели")
                             }
                         },
                     )
@@ -397,10 +397,10 @@ private fun AddTaskDialog(
             TextButton(
                 onClick = { onConfirm(label.trim(), prompt.trim(), finalCron) },
                 enabled = label.isNotBlank() && prompt.isNotBlank() && isCronValid,
-            ) { Text("Schedule") }
+            ) { Text("Запланировать") }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text("Отмена") }
         },
     )
 }
@@ -419,13 +419,13 @@ private fun EmptyCronState(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(bottom = 16.dp),
         )
         Text(
-            text = "No scheduled tasks",
+            text = "Нет задач по расписанию",
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "Tap + to schedule a recurring prompt.\nHermes will run it and notify you.",
+            text = "Нажмите +, чтобы запланировать повторяющийся запрос.\nHermes выполнит его и пришлёт уведомление.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,

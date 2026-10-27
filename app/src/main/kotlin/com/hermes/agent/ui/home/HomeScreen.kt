@@ -165,10 +165,10 @@ fun HomeScreen(
                 .background(modelCardGradient)
                 .padding(18.dp),
         ) {
-            Text("Active model", color = modelCardInk.copy(alpha = 0.85f), style = MaterialTheme.typography.labelSmall)
+            Text("Активная модель", color = modelCardInk.copy(alpha = 0.85f), style = MaterialTheme.typography.labelSmall)
             Spacer(Modifier.height(4.dp))
             Text(
-                model.ifBlank { "not configured" },
+                model.ifBlank { "не настроена" },
                 fontFamily = GeistMono,
                 color = modelCardInk,
                 style = MaterialTheme.typography.titleMedium,
@@ -181,7 +181,7 @@ fun HomeScreen(
         Spacer(Modifier.height(16.dp))
 
         // Agent Superpower Hub Grid
-        SectionLabel("Agent Superpowers")
+        SectionLabel("Суперспособности агента")
         Spacer(Modifier.height(10.dp))
 
         // Two columns is right on a phone and wrong on a tablet: at 1100dp the
@@ -195,19 +195,19 @@ fun HomeScreen(
                 else -> 4
             }
             val tiles = buildList {
-                add(SuperpowerTile("New Chat", "Ask or delegate", Icons.AutoMirrored.Filled.Chat, 0) {
+                add(SuperpowerTile("Новый чат", "Спросить или поручить", Icons.AutoMirrored.Filled.Chat, 0) {
                     viewModel.createNewConversation(onNewChat)
                 })
-                add(SuperpowerTile("Kanban Board", "Task queue", Icons.Filled.ViewKanban, 1, onOpenKanban))
-                add(SuperpowerTile("Starmap Memory", "Knowledge graph", Icons.Filled.Hub, 2, onOpenMemory))
-                add(SuperpowerTile("Skill Studio", "Custom tools", Icons.Filled.Psychology, 3, onOpenSkills))
-                add(SuperpowerTile("CRON Routines", "Scheduled triggers", Icons.Filled.Schedule, 4, onOpenSchedule))
-                add(SuperpowerTile("Post Office", "Cross-agent mail", Icons.Filled.Markunread, 0, onOpenPostOffice))
-                add(SuperpowerTile("Bots", "PC bots & chat", Icons.Filled.SmartToy, 1, onOpenBots))
-                add(SuperpowerTile("Messaging", "Telegram gateway", Icons.Filled.Forum, 1, onOpenConnections))
-                add(SuperpowerTile("A/B Benchmark", "Latency & tok/s", Icons.Filled.Bolt, 2, onOpenExperiment))
-                add(SuperpowerTile("Knowledge Base", "Documents & RAG", Icons.AutoMirrored.Filled.LibraryBooks, 3, onOpenDocuments))
-                if (showHa) add(SuperpowerTile("Home Assistant", "Smart-home dashboard", Icons.Filled.Dashboard, 4, onOpenHaDashboard))
+                add(SuperpowerTile("Канбан-доска", "Очередь задач", Icons.Filled.ViewKanban, 1, onOpenKanban))
+                add(SuperpowerTile("Звёздная память", "Граф знаний", Icons.Filled.Hub, 2, onOpenMemory))
+                add(SuperpowerTile("Студия навыков", "Свои инструменты", Icons.Filled.Psychology, 3, onOpenSkills))
+                add(SuperpowerTile("CRON-задачи", "Запуски по расписанию", Icons.Filled.Schedule, 4, onOpenSchedule))
+                add(SuperpowerTile("Почта агентов", "Переписка между агентами", Icons.Filled.Markunread, 0, onOpenPostOffice))
+                add(SuperpowerTile("Боты", "Боты на ПК и чат", Icons.Filled.SmartToy, 1, onOpenBots))
+                add(SuperpowerTile("Мессенджеры", "Шлюз Telegram", Icons.Filled.Forum, 1, onOpenConnections))
+                add(SuperpowerTile("Сравнение A/B", "Задержка и ток/с", Icons.Filled.Bolt, 2, onOpenExperiment))
+                add(SuperpowerTile("База знаний", "Документы и RAG", Icons.AutoMirrored.Filled.LibraryBooks, 3, onOpenDocuments))
+                if (showHa) add(SuperpowerTile("Home Assistant", "Панель умного дома", Icons.Filled.Dashboard, 4, onOpenHaDashboard))
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -240,10 +240,10 @@ fun HomeScreen(
         Spacer(Modifier.height(20.dp))
 
         // Recent threads
-        SectionHeader("Recent threads", action = "Open", onAction = onOpenConversations)
+        SectionHeader("Недавние разговоры", action = "Открыть", onAction = onOpenConversations)
         Spacer(Modifier.height(11.dp))
         if (threads.isEmpty()) {
-            EmptyHint("No conversations yet — start a new chat.")
+            EmptyHint("Разговоров пока нет — начните новый чат.")
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
                 threads.forEachIndexed { index, thread ->

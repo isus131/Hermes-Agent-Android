@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hermes</string>
+    <string name="app_tagline">Ваш интеллектуальный помощник на устройстве</string>
+
+    <!-- Navigation -->
+    <string name="nav_conversations">Разговоры</string>
+    <string name="nav_chat">Чат</string>
+    <string name="nav_settings">Настройки</string>
+
+    <!-- Chat -->
+    <string name="chat_placeholder">Спросите Hermes</string>
+    <string name="chat_send">Отправить</string>
+    <string name="chat_typing">Hermes думает…</string>
+    <string name="chat_new_conversation">Новый разговор</string>
+    <string name="chat_empty_title">Начните новый разговор</string>
+    <string name="chat_empty_body">Ради приватности Hermes работает на устройстве, а сложные задачи может передавать в облако.</string>
+
+    <!-- Conversations list -->
+    <string name="conversations_empty">Разговоров пока нет. Нажмите +, чтобы начать.</string>
+    <string name="conversations_delete">Удалить</string>
+    <string name="conversations_title_default">Новый разговор</string>
+
+    <!-- Settings -->
+    <string name="settings_section_inference">Работа модели</string>
+    <string name="settings_section_cloud">Облачная модель</string>
+    <string name="settings_section_security">Безопасность и приватность</string>
+    <string name="settings_section_about">О приложении</string>
+
+    <string name="settings_on_device_enabled">Модель на устройстве</string>
+    <string name="settings_on_device_enabled_subtitle">Запускать сжатую модель локально (приватно)</string>
+    <string name="settings_cloud_enabled">Запасной вариант в облаке</string>
+    <string name="settings_cloud_enabled_subtitle">Передавать сложные задачи удалённой модели</string>
+    <string name="settings_cloud_api_key">API-ключ облака</string>
+    <string name="settings_cloud_api_key_subtitle">Токен Bearer, совместимый с OpenAI</string>
+    <string name="settings_cloud_base_url">Базовый URL облака</string>
+    <string name="settings_cloud_model">Облачная модель</string>
+    <string name="settings_specialised_model">Модель-специалист</string>
+    <string name="settings_specialised_model_hint">Вторая облачная модель для простых задач. Использует тот же API-ключ и базовый URL.</string>
+    <string name="settings_complexity_threshold">Порог передачи в облако</string>
+    <string name="settings_idle_unload">Выгружать модель при простое (минуты)</string>
+    <string name="settings_keystore_status">Android Keystore</string>
+    <string name="settings_app_version">Версия</string>
+
+    <!-- Errors -->
+    <string name="error_no_provider">Нет доступной модели. Включите модель на устройстве или облако в настройках.</string>
+    <string name="error_cloud_unconfigured">Облачная модель включена, но API-ключ не задан.</string>
+    <string name="error_generic">Что-то пошло не так: %1$s</string>
+
+    <!-- Accessibility -->
+    <string name="a11y_stop_generating">Остановить ответ</string>
+    <string name="a11y_voice_input">Голосовой ввод</string>
+    <string name="a11y_listening">Слушаю. Нажмите, чтобы остановить.</string>
+    <string name="a11y_start_voice_chat">Начать голосовой чат</string>
+    <string name="a11y_end_voice_chat">Завершить голосовой чат</string>
+    <string name="a11y_send_button">Отправить сообщение</string>
+    <string name="a11y_back">Назад</string>
+    <string name="a11y_view_plan">Показать план выполнения</string>
+    <string name="a11y_user_message">Сообщение пользователя</string>
+    <string name="a11y_assistant_message">Ответ ассистента</string>
+    <string name="a11y_tool_call_running">Инструмент %1$s выполняется</string>
+    <string name="a11y_tool_call_success">Инструмент %1$s выполнен</string>
+    <string name="a11y_tool_call_failed">Инструмент %1$s завершился ошибкой: %2$s</string>
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_new_note_short">Заметка</string>
+    <string name="shortcut_new_note_long">Создать заметку</string>
+    <string name="shortcut_set_alarm_short">Будильник</string>
+    <string name="shortcut_set_alarm_long">Поставить будильник</string>
+    <string name="shortcut_ask_hermes_short">Спросить Hermes</string>
+    <string name="shortcut_ask_hermes_long">Поговорить с ассистентом</string>
+    <string name="shortcut_briefing_short">Сводка</string>
+    <string name="shortcut_briefing_long">Включить утреннюю сводку</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Далее</string>
+    <string name="onboarding_skip">Пропустить знакомство</string>
+    <string name="onboarding_get_started">Начать</string>
+    <string name="onboarding_back">Назад</string>
+    <string name="onboarding_welcome_title">Hermes</string>
+    <string name="onboarding_privacy_title">Приватность прежде всего</string>
+    <string name="onboarding_permissions_title">Разрешения</string>
+    <string name="onboarding_perm_mic">Микрофон</string>
+    <string name="onboarding_perm_mic_rationale">Для голосового ввода. Можно отказаться и пользоваться клавиатурой.</string>
+    <string name="onboarding_perm_notifications">Уведомления</string>
+    <string name="onboarding_perm_notifications_rationale">Для агента уведомлений. Необязательно.</string>
+    <string name="onboarding_perm_granted">Разрешено</string>
+    <string name="onboarding_perm_allow">Разрешить</string>
+
+    <!-- AppAgent -->
+    <string name="accessibility_service_description">Hermes Agent нужен доступ к спец. возможностям, чтобы работать с приложениями от вашего имени.</string>
+</resources>

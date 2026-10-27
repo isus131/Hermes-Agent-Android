@@ -44,7 +44,7 @@ class ScheduledTaskWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val taskId     = inputData.getString(KEY_TASK_ID)     ?: return Result.failure()
         val prompt     = inputData.getString(KEY_TASK_PROMPT)  ?: return Result.failure()
-        val label      = inputData.getString(KEY_TASK_LABEL)   ?: "Scheduled task"
+        val label      = inputData.getString(KEY_TASK_LABEL)   ?: "Задача по расписанию"
         val cron       = inputData.getString(KEY_TASK_CRON)
 
         // Day-of-week gate: a 24h WorkManager period can't express
@@ -76,7 +76,7 @@ class ScheduledTaskWorker @AssistedInject constructor(
                     else -> Unit
                 }
             }
-            val result = (finalText ?: tokens.toString()).take(200).ifBlank { "Task completed." }
+            val result = (finalText ?: tokens.toString()).take(200).ifBlank { "Задача выполнена." }
 
             cronRepository.recordRun(taskId, result)
             // Route through the proactive gate (roadmap v0.12): the annoyance

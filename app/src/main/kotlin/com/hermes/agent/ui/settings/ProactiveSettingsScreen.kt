@@ -50,10 +50,10 @@ fun ProactiveSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Proactive") },
+                title = { Text("Проактивность") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Назад")
                     }
                 },
             )
@@ -67,11 +67,11 @@ fun ProactiveSettingsScreen(
                 .padding(16.dp),
         ) {
             InfoNote(
-                "When Hermes pings",
-                "Hermes only pings when a capability below is on, outside quiet hours " +
-                    "(${state.quietLabel}), within ${state.dailyCap} pings a day, and never " +
-                    "during Do Not Disturb. Every ping — sent or suppressed — is listed under " +
-                    "\"What Hermes did\".",
+                "Когда Hermes пишет сам",
+                "Hermes пишет сам, только если ниже включена соответствующая функция, вне тихих часов " +
+                    "(${state.quietLabel}), не больше ${state.dailyCap} раз в день и никогда " +
+                    "в режиме «Не беспокоить». Каждое такое сообщение — отправленное или подавленное — видно в разделе " +
+                    "«Что сделал Hermes».",
             )
             Spacer(Modifier.height(16.dp))
 
@@ -89,12 +89,12 @@ fun ProactiveSettingsScreen(
                         )
                         Text(
                             text = when {
-                                row.muted -> "Muted by \"Less of this\""
+                                row.muted -> "Отключено кнопкой «Поменьше такого»"
                                 row.source == ProactiveSource.SCHEDULED_TASK ->
-                                    "Results of your CRON tasks"
+                                    "Результаты ваших задач CRON"
                                 row.source == ProactiveSource.DIGEST ->
-                                    "One morning summary (weather, calendar, todos)"
-                                else -> "Reminds you of commitments you made in chat"
+                                    "Одна утренняя сводка (погода, календарь, дела)"
+                                else -> "Напоминает об обещаниях, которые вы дали в чате"
                             },
                             style = MaterialTheme.typography.bodySmall,
                             color = if (row.muted) {
@@ -105,7 +105,7 @@ fun ProactiveSettingsScreen(
                         )
                     }
                     if (row.muted) {
-                        TextButton(onClick = { viewModel.unmute(row.source) }) { Text("Restore") }
+                        TextButton(onClick = { viewModel.unmute(row.source) }) { Text("Вернуть") }
                     }
                     Switch(
                         checked = row.consented,
@@ -123,10 +123,10 @@ fun ProactiveSettingsScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 DescribedTitle(
-                    title = "Notification summary in digest",
-                    description = "Also needs notification access granted to Hermes in system " +
-                        "settings. Captured text appears only in your digest — it is " +
-                        "never shown to the AI. Turning this off deletes captured data.",
+                    title = "Сводка уведомлений в дайджесте",
+                    description = "Также нужно выдать Hermes доступ к уведомлениям в настройках " +
+                        "системы. Захваченный текст попадает только в ваш дайджест — " +
+                        "ИИ его никогда не видит. При выключении захваченные данные удаляются.",
                     modifier = Modifier.weight(1f),
                 )
                 Switch(
@@ -141,7 +141,7 @@ fun ProactiveSettingsScreen(
                         Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS),
                     )
                 },
-            ) { Text("Open system notification access") }
+            ) { Text("Открыть доступ к уведомлениям") }
             HorizontalDivider()
         }
     }

@@ -34,7 +34,7 @@ fun DelegateScreen(viewModel: DelegateViewModel = hiltViewModel()) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Delegate") },
+                title = { Text("Поручение") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                 ),
@@ -42,7 +42,7 @@ fun DelegateScreen(viewModel: DelegateViewModel = hiltViewModel()) {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAdd = true }) {
-                Icon(Icons.Outlined.Add, contentDescription = "Delegate task")
+                Icon(Icons.Outlined.Add, contentDescription = "Поручить задачу")
             }
         },
     ) { padding ->
@@ -116,7 +116,7 @@ private fun TaskCard(task: AgentTask, onDelete: () -> Unit) {
                         style = MaterialTheme.typography.labelSmall)
                 }
                 IconButton(onClick = onDelete, modifier = Modifier.size(36.dp)) {
-                    Icon(Icons.Outlined.Delete, contentDescription = "Delete",
+                    Icon(Icons.Outlined.Delete, contentDescription = "Удалить",
                         tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(18.dp))
                 }
             }
@@ -145,29 +145,29 @@ private fun AddTaskDialog(onDismiss: () -> Unit, onDelegate: (String, String) ->
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Delegate Task") },
+        title = { Text("Поручить задачу") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(value = label, onValueChange = { label = it },
-                    label = { Text("Task name") }, singleLine = true,
+                    label = { Text("Название задачи") }, singleLine = true,
                     modifier = Modifier.fillMaxWidth())
                 OutlinedTextField(value = prompt, onValueChange = { prompt = it },
-                    label = { Text("Prompt / instructions") },
+                    label = { Text("Запрос / инструкции") },
                     modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp),
                     maxLines = 5)
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { onDelegate(label.ifBlank { "Task" }, prompt) },
+                onClick = { onDelegate(label.ifBlank { "Задача" }, prompt) },
                 enabled = prompt.isNotBlank(),
             ) {
                 Icon(Icons.Outlined.Send, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(4.dp))
-                Text("Delegate")
+                Text("Поручить")
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Отмена") } },
     )
 }
 
@@ -182,10 +182,10 @@ private fun EmptyDelegateState(modifier: Modifier = Modifier) {
             modifier = Modifier.size(48.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
         Spacer(Modifier.height(16.dp))
-        Text("No delegated tasks", style = MaterialTheme.typography.titleMedium,
+        Text("Нет поручённых задач", style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onBackground)
         Spacer(Modifier.height(8.dp))
-        Text("Tap + to fire off a background task. Hermes will run it and report back.",
+        Text("Нажмите +, чтобы запустить фоновую задачу. Hermes выполнит её и отчитается.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center)

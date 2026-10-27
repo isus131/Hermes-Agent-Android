@@ -71,10 +71,10 @@ fun AssistantSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Assistant") },
+                title = { Text("Ассистент") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Navigate back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 }
             )
@@ -88,48 +88,48 @@ fun AssistantSettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            SectionHeader(text = "Models")
+            SectionHeader(text = "Модели")
             Card(modifier = Modifier.fillMaxWidth()) {
                 NavRow(
                     icon = Icons.Outlined.Cloud,
-                    title = "Providers",
-                    subtitle = "Cloud API keys, available models, and automatic fallback",
+                    title = "Провайдеры",
+                    subtitle = "Облачные API-ключи, доступные модели и автоматическое переключение",
                     onClick = onOpenProviders,
                 )
             }
 
-            SectionHeader(text = "On-Device AI (Local Engine)")
+            SectionHeader(text = "ИИ на устройстве (локальный движок)")
             OnDeviceAiCard(settings = settings, viewModel = viewModel)
             ToolCallerCard(settings = settings, viewModel = viewModel)
 
-            SectionHeader(text = "Chat")
+            SectionHeader(text = "Чат")
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     ToggleRow(
-                        title = "Show tool call details",
-                        subtitle = "See what the agent does mid-reply (web search, calendar, etc.) " +
-                            "instead of just the final answer",
+                        title = "Показывать вызовы инструментов",
+                        subtitle = "Видеть, что агент делает по ходу ответа (поиск в интернете, календарь и т. п.), " +
+                            "а не только итоговый ответ",
                         checked = settings.showToolCalls,
                         onCheckedChange = viewModel::setShowToolCalls,
                     )
                 }
             }
 
-            SectionHeader(text = "Voice")
+            SectionHeader(text = "Голос")
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     TextButton(onClick = onOpenTalk) {
-                        Text("Open hands-free Talk mode")
+                        Text("Открыть режим разговора без рук")
                     }
                     InfoNote(
-                        "About Talk mode",
-                        "Continuous voice conversation: it listens, answers aloud, and stops " +
-                            "speaking the moment you talk over it.",
+                        "О режиме разговора",
+                        "Непрерывный голосовой разговор: слушает, отвечает вслух и замолкает, " +
+                            "как только вы начинаете говорить.",
                     )
                 }
             }
 
-            SectionHeader(text = "Standing instructions")
+            SectionHeader(text = "Постоянные инструкции")
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     val standingTextField = rememberSettingText(settings.standingInstructions)
@@ -140,9 +140,9 @@ fun AssistantSettingsScreen(
                             standingText = it
                             viewModel.setStandingInstructions(it)
                         },
-                        label = { Text("Always follow these") },
+                        label = { Text("Всегда соблюдать") },
                         supportingText = {
-                            Text("Added to every conversation, e.g. \"answer in metric\". Context only — it cannot grant tools. Max 4000 characters.")
+                            Text("Добавляются в каждый разговор, например «отвечай по-русски». Только контекст — инструментов не даёт. Не больше 4000 символов.")
                         },
                         minLines = 3,
                         colors = hermesFieldColors(),
@@ -151,28 +151,28 @@ fun AssistantSettingsScreen(
                 }
             }
 
-            SectionHeader(text = "Notifications")
+            SectionHeader(text = "Уведомления")
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     ToggleRow(
-                        title = "Let the agent read my notifications",
-                        subtitle = "Needed on top of the system notification-access grant. " +
-                            "Text is screened and truncated before the model sees it, and any " +
-                            "notification that looks like an injection attempt is dropped.",
+                        title = "Разрешить агенту читать мои уведомления",
+                        subtitle = "Нужно в дополнение к системному доступу к уведомлениям. " +
+                            "Текст проверяется и обрезается до того, как его увидит модель, а " +
+                            "уведомления, похожие на попытку внедрения команд, отбрасываются.",
                         checked = settings.notificationsAgentReadEnabled,
                         onCheckedChange = viewModel::setNotificationsAgentReadEnabled,
                     )
                 }
             }
 
-            SectionHeader(text = "Presence")
+            SectionHeader(text = "Присутствие")
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     ToggleRow(
-                        title = "Ambient presence",
-                        subtitle = "Lets the agent know roughly where you are (by your own place " +
-                            "labels), whether you're moving, and your power state. Coordinates are " +
-                            "never stored or sent — only the label. Checked every 15 minutes.",
+                        title = "Фоновое присутствие",
+                        subtitle = "Агент примерно знает, где вы находитесь (по вашим собственным названиям " +
+                            "мест), двигаетесь ли вы и состояние питания. Координаты " +
+                            "никогда не сохраняются и не отправляются — только название. Проверка каждые 15 минут.",
                         checked = settings.presenceEnabled,
                         onCheckedChange = viewModel::setPresenceEnabled,
                     )
@@ -182,7 +182,7 @@ fun AssistantSettingsScreen(
                         OutlinedTextField(
                             value = placeLabel,
                             onValueChange = { placeLabel = it },
-                            label = { Text("Label this location (e.g. Home)") },
+                            label = { Text("Название этого места (например, Дом)") },
                             colors = hermesFieldColors(),
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -192,26 +192,26 @@ fun AssistantSettingsScreen(
                                 viewModel.addCurrentLocationAsPlace(placeLabel.trim())
                                 placeLabel = ""
                             },
-                        ) { Text("Save my current location as this place") }
+                        ) { Text("Сохранить текущее местоположение как это место") }
                         placeFeedback?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
                     }
                 }
             }
 
-            SectionHeader(text = "Heartbeat")
+            SectionHeader(text = "Фоновая проверка")
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     ToggleRow(
-                        title = "Background heartbeat",
-                        subtitle = "Wakes the agent on a schedule to run your standing orders. " +
-                            "Skips a cycle under Battery Saver or below 15% battery, and stays " +
-                            "silent when there is nothing to report.",
+                        title = "Фоновая проверка",
+                        subtitle = "Будит агента по расписанию, чтобы выполнять ваши постоянные поручения. " +
+                            "Пропускает цикл в режиме энергосбережения или при заряде ниже 15% и " +
+                            "молчит, когда сообщать нечего.",
                         checked = settings.heartbeatEnabled,
                         onCheckedChange = viewModel::setHeartbeatEnabled,
                     )
                     if (settings.heartbeatEnabled) {
                         HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-                        Text("Check every ${settings.heartbeatIntervalMinutes} minutes", style = MaterialTheme.typography.bodyMedium)
+                        Text("Проверять каждые ${settings.heartbeatIntervalMinutes} мин", style = MaterialTheme.typography.bodyMedium)
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             listOf(15, 30, 60, 180).forEach { minutes ->
                                 FilterChip(
@@ -225,32 +225,32 @@ fun AssistantSettingsScreen(
                 }
             }
 
-            SectionHeader(text = "Actions & approvals")
+            SectionHeader(text = "Действия и одобрения")
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     ToggleRow(
-                        title = "Auto-approve phone actions",
-                        subtitle = "Run alarms, navigation, calls, media, calendar, app launches, " +
-                            "device controls, and the Chief of Bots' create/remove bots " +
-                            "without asking each time. Shell, Termux, raw settings, " +
-                            "and background actions stay protected.",
+                        title = "Автоодобрение действий на телефоне",
+                        subtitle = "Будильники, навигация, звонки, медиа, календарь, запуск приложений, " +
+                            "управление устройством, а также создание и удаление ботов главным ботом " +
+                            "без вопросов каждый раз. Shell, Termux, системные настройки " +
+                            "и фоновые действия остаются защищёнными.",
                         checked = settings.autoApprovePhoneActions,
                         onCheckedChange = viewModel::setAutoApprovePhoneActions,
                     )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     ToggleRow(
-                        title = "Auto-approve Home Assistant control",
-                        subtitle = "Turn lights, switches, and climate on or off without asking each " +
-                            "time. Reading state never asks. Locks, alarm panels, covers, and vacuums " +
-                            "always ask, even with this on.",
+                        title = "Автоодобрение управления Home Assistant",
+                        subtitle = "Включать и выключать свет, розетки и климат без вопросов каждый " +
+                            "раз. Чтение состояния не спрашивает никогда. Замки, сигнализации, шторы и пылесосы " +
+                            "всегда спрашивают, даже если это включено.",
                         checked = settings.autoApproveHomeAssistantControl,
                         onCheckedChange = viewModel::setAutoApproveHomeAssistantControl,
                     )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     ToggleRow(
-                        title = "Trusted background actions",
-                        subtitle = "Allow scheduled/background calendar, alarm, communication, media, " +
-                            "and device-control actions. Fingerprint or phone passcode is required to enable it.",
+                        title = "Доверенные фоновые действия",
+                        subtitle = "Разрешить по расписанию и в фоне действия с календарём, будильниками, связью, медиа " +
+                            "и управлением устройством. Для включения нужен отпечаток пальца или код телефона.",
                         checked = settings.trustedBackgroundPhoneActions,
                         onCheckedChange = viewModel::setTrustedBackgroundPhoneActions,
                     )
@@ -301,9 +301,9 @@ private fun OnDeviceAiCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 DescribedTitle(
-                    title = "Local model",
-                    description = "Off skips the on-device fallback entirely — cloud-only, and a clear error " +
-                        "instead of a silent switch to local when cloud is unreachable.",
+                    title = "Локальная модель",
+                    description = "Если выключено, запасной вариант на устройстве не используется — только облако и понятная ошибка " +
+                        "вместо тихого перехода на локальную модель, когда облако недоступно.",
                     modifier = Modifier.weight(1f),
                     titleStyle = MaterialTheme.typography.titleSmall,
                 )
@@ -316,9 +316,9 @@ private fun OnDeviceAiCard(
             if (!settings.localLlmEnabled) return@Column
 
             InfoNote(
-                "How the local model is used",
-                "Cloud models are preferred when enabled. This on-device model is the private " +
-                    "offline fallback — pick a model, choose where to save it, and download.",
+                "Как используется локальная модель",
+                "Если облачные модели включены, используются они. Эта модель на устройстве — приватный " +
+                    "офлайн-запасной вариант: выберите модель, место сохранения и скачайте её.",
             )
 
             // ── Model dropdown ──────────────────────────────────────────────
@@ -332,7 +332,7 @@ private fun OnDeviceAiCard(
                     onValueChange = {},
                     readOnly = true,
                     enabled = !isDownloading,
-                    label = { Text("Model") },
+                    label = { Text("Модель") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     colors = hermesFieldColors(),
                     modifier = Modifier
@@ -359,14 +359,14 @@ private fun OnDeviceAiCard(
             when (preflight.level) {
                 com.hermes.agent.data.llm.PreflightLevel.BLOCKED -> {
                     Text(
-                        text = "⚠️ Preflight: ${preflight.detail}",
+                        text = "⚠️ Предварительная проверка: ${preflight.detail}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
                     )
                 }
                 com.hermes.agent.data.llm.PreflightLevel.WARNING -> {
                     Text(
-                        text = "ℹ️ Preflight: ${preflight.detail}",
+                        text = "ℹ️ Предварительная проверка: ${preflight.detail}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.tertiary,
                     )
@@ -385,10 +385,10 @@ private fun OnDeviceAiCard(
                 value = dirText,
                 onValueChange = { dirText = it },
                 enabled = !isDownloading,
-                label = { Text("Download folder") },
+                label = { Text("Папка для загрузки") },
                 placeholder = { Text("/storage/emulated/0/${viewModel.defaultModelDirName}") },
                 supportingText = {
-                    Text("Leave blank to use the default \"${viewModel.defaultModelDirName}\" folder in internal storage.")
+                    Text("Оставьте пустым, чтобы использовать папку по умолчанию «${viewModel.defaultModelDirName}» во внутренней памяти.")
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -406,8 +406,8 @@ private fun OnDeviceAiCard(
             // ── Storage permission gate ─────────────────────────────────────
             if (!hasStorage) {
                 Text(
-                    text = "Storage access is needed to save the model into a folder you can see. " +
-                        "Without it, downloads can't be saved there.",
+                    text = "Чтобы сохранить модель в папку, которую вы видите, нужен доступ к хранилищу. " +
+                        "Без него загрузки туда сохранить нельзя.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
                 )
@@ -415,7 +415,7 @@ private fun OnDeviceAiCard(
                     onClick = { requestStorageAccess() },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text("Grant storage access")
+                    Text("Выдать доступ к хранилищу")
                 }
             }
 
@@ -427,7 +427,7 @@ private fun OnDeviceAiCard(
                     color = MaterialTheme.colorScheme.error,
                 )
                 androidx.compose.material3.TextButton(onClick = { viewModel.clearModelDownloadError() }) {
-                    Text("Dismiss")
+                    Text("Скрыть")
                 }
             }
 
@@ -435,7 +435,7 @@ private fun OnDeviceAiCard(
             when {
                 settings.localModelUri.isNotBlank() -> {
                     Text(
-                        text = "Using a custom model from device storage.",
+                        text = "Используется своя модель из памяти устройства.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -445,7 +445,7 @@ private fun OnDeviceAiCard(
                         colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.error,
                         ),
-                    ) { Text("Clear custom model") }
+                    ) { Text("Убрать свою модель") }
                 }
                 isDownloading -> {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -455,7 +455,7 @@ private fun OnDeviceAiCard(
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Text(
-                                text = "Downloading… (${(downloadProgress * 100).toInt()}%)",
+                                text = "Загрузка… (${(downloadProgress * 100).toInt()}%)",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.primary,
                             )
@@ -465,7 +465,7 @@ private fun OnDeviceAiCard(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
-                                    contentDescription = "Cancel download",
+                                    contentDescription = "Отменить загрузку",
                                     tint = MaterialTheme.colorScheme.error,
                                     modifier = Modifier.size(18.dp),
                                 )
@@ -479,25 +479,25 @@ private fun OnDeviceAiCard(
                 }
                 isDownloaded -> {
                     Text(
-                        text = "${selectedModel.displayName} is downloaded and ready.",
+                        text = "${selectedModel.displayName} скачана и готова.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
                     androidx.compose.material3.OutlinedButton(
                         onClick = { customPicker.launch(arrayOf("application/octet-stream")) },
                         modifier = Modifier.fillMaxWidth(),
-                    ) { Text("Pick a custom model (.gguf) instead") }
+                    ) { Text("Выбрать свою модель (.gguf)") }
                 }
                 else -> {
                     androidx.compose.material3.Button(
                         onClick = { viewModel.downloadLocalModel(dirText) },
                         enabled = hasStorage,
                         modifier = Modifier.fillMaxWidth(),
-                    ) { Text("Download ${selectedModel.displayName} (${selectedModel.sizeLabel})") }
+                    ) { Text("Скачать ${selectedModel.displayName} (${selectedModel.sizeLabel})") }
                     androidx.compose.material3.OutlinedButton(
                         onClick = { customPicker.launch(arrayOf("application/octet-stream")) },
                         modifier = Modifier.fillMaxWidth(),
-                    ) { Text("Pick a custom model (.gguf) instead") }
+                    ) { Text("Выбрать свою модель (.gguf)") }
                 }
             }
         }
@@ -561,9 +561,9 @@ private fun ToolCallerCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 DescribedTitle(
-                    title = "Tool caller (experimental)",
-                    description = "A ${model.sizeLabel} model that runs device commands on the phone, ahead " +
-                        "of the cloud, and passes the turn on when it isn't confident.",
+                    title = "Исполнитель команд (экспериментально)",
+                    description = "Модель на ${model.sizeLabel}, которая выполняет команды устройства прямо на телефоне, раньше " +
+                        "облака, и передаёт ход дальше, если не уверена.",
                     modifier = Modifier.weight(1f),
                     titleStyle = MaterialTheme.typography.titleSmall,
                 )
@@ -575,11 +575,11 @@ private fun ToolCallerCard(
 
             if (settings.onDeviceToolCallerEnabled) {
                 InfoNote(
-                    "What it handles",
-                    "Only tool turns — asking for the torch, a timer, a note. Ordinary " +
-                        "conversation is untouched and still goes to your usual model. A command " +
-                        "it gets wrong or is unsure about falls through to the cloud, so the cost " +
-                        "of a miss is latency, not a wrong action.",
+                    "Что она делает",
+                    "Только команды с инструментами — включить фонарик, таймер, заметку. Обычный " +
+                        "разговор не затрагивается и идёт к вашей основной модели. Команда, " +
+                        "которую она поняла неверно или в которой не уверена, уходит в облако, так что цена " +
+                        "ошибки — задержка, а не неправильное действие.",
                 )
             }
 
@@ -590,12 +590,12 @@ private fun ToolCallerCard(
             val preflight = remember(model.id) { viewModel.evaluateToolCallerPreflight() }
             when (preflight.level) {
                 com.hermes.agent.data.llm.PreflightLevel.BLOCKED -> Text(
-                    text = "⚠️ Preflight: ${preflight.detail}",
+                    text = "⚠️ Предварительная проверка: ${preflight.detail}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
                 )
                 com.hermes.agent.data.llm.PreflightLevel.WARNING -> Text(
-                    text = "ℹ️ Preflight: ${preflight.detail}",
+                    text = "ℹ️ Предварительная проверка: ${preflight.detail}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.tertiary,
                 )
@@ -604,7 +604,7 @@ private fun ToolCallerCard(
 
             when {
                 isDownloaded -> Text(
-                    text = "${model.displayName} is downloaded and ready.",
+                    text = "${model.displayName} скачана и готова.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -613,7 +613,7 @@ private fun ToolCallerCard(
                     // share one download coordinator, so this flag cannot say
                     // which fetch is running.
                     Text(
-                        text = "A model download is in progress… (${(downloadProgress * 100).toInt()}%)",
+                        text = "Идёт загрузка модели… (${(downloadProgress * 100).toInt()}%)",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -624,26 +624,26 @@ private fun ToolCallerCard(
                 }
                 !storage.granted -> {
                     Text(
-                        text = "Storage access is needed to save the model into a folder you can see.",
+                        text = "Чтобы сохранить модель в папку, которую вы видите, нужен доступ к хранилищу.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
                     )
                     androidx.compose.material3.OutlinedButton(
                         onClick = { storage.request() },
                         modifier = Modifier.fillMaxWidth(),
-                    ) { Text("Grant storage access") }
+                    ) { Text("Выдать доступ к хранилищу") }
                 }
                 else -> {
                     androidx.compose.material3.Button(
                         onClick = { viewModel.downloadToolCaller() },
                         modifier = Modifier.fillMaxWidth(),
-                    ) { Text("Download ${model.displayName} (${model.sizeLabel})") }
+                    ) { Text("Скачать ${model.displayName} (${model.sizeLabel})") }
                     InfoNote(
-                        "About this download",
-                        "Saved to the same \"${viewModel.defaultModelDirName}\" folder as " +
-                            "the local chat model. Switching the tool caller on starts this " +
-                            "download by itself — ${model.sizeLabel}, so prefer wifi. Until it " +
-                            "finishes, device commands keep going where they do today.",
+                        "Об этой загрузке",
+                        "Сохраняется в ту же папку «${viewModel.defaultModelDirName}», что и " +
+                            "локальная модель чата. Включение исполнителя команд само запускает " +
+                            "загрузку — ${model.sizeLabel}, так что лучше через Wi-Fi. Пока она не " +
+                            "закончится, команды устройства обрабатываются как сейчас.",
                     )
                 }
             }
@@ -665,14 +665,14 @@ private fun LegacyCloudSectionRemoved(
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             ToggleRow(
                 title = stringResource(R.string.settings_cloud_enabled),
-                subtitle = "Cloud is tried first when configured; the on-device model is the offline fallback.",
+                subtitle = "Если облако настроено, сначала используется оно; модель на устройстве — офлайн-запасной вариант.",
                 checked = settings.cloudEnabled,
                 onCheckedChange = viewModel::setCloudEnabled,
             )
             HorizontalDivider()
 
             Text(
-                "Custom endpoint — primary",
+                "Свой сервер — основной",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -686,7 +686,7 @@ private fun LegacyCloudSectionRemoved(
                     viewModel.setCloudBaseUrl(it)
                 },
                 label = { Text(stringResource(R.string.settings_cloud_base_url)) },
-                supportingText = { Text("Models load automatically from this URL's /models endpoint.") },
+                supportingText = { Text("Модели загружаются автоматически с адреса /models этого URL.") },
                 singleLine = true,
                 colors = hermesFieldColors(),
                 modifier = Modifier.fillMaxWidth().settingFocus(baseUrlField),
@@ -719,7 +719,7 @@ private fun LegacyCloudSectionRemoved(
             HorizontalDivider()
 
             Text(
-                "Custom endpoint — specialist",
+                "Свой сервер — специалист",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -732,8 +732,8 @@ private fun LegacyCloudSectionRemoved(
                     auxBaseUrl = it
                     viewModel.setAuxBaseUrl(it)
                 },
-                label = { Text("Specialist base URL (optional)") },
-                supportingText = { Text("Leave blank to reuse the primary provider and its model list.") },
+                label = { Text("Базовый URL специалиста (необязательно)") },
+                supportingText = { Text("Оставьте пустым, чтобы использовать основного провайдера и его список моделей.") },
                 singleLine = true,
                 colors = hermesFieldColors(),
                 modifier = Modifier.fillMaxWidth().settingFocus(auxBaseUrlField),
@@ -747,8 +747,8 @@ private fun LegacyCloudSectionRemoved(
                     auxApiKey = it
                     viewModel.setAuxApiKey(it)
                 },
-                label = { Text("Specialist API key (optional)") },
-                supportingText = { Text("Leave blank to reuse the primary provider's key.") },
+                label = { Text("API-ключ специалиста (необязательно)") },
+                supportingText = { Text("Оставьте пустым, чтобы использовать ключ основного провайдера.") },
                 visualTransformation = PasswordVisualTransformation(),
                 singleLine = true,
                 colors = hermesFieldColors(),
@@ -789,9 +789,9 @@ private fun CloudModelSelector(
                 label = { Text(label) },
                 supportingText = {
                     if (selectedModel !in state.models) {
-                        Text("The saved model is not available at this endpoint. Select an available model.")
+                        Text("Сохранённой модели нет на этом сервере. Выберите доступную модель.")
                     } else {
-                        Text("${state.models.size} models available")
+                        Text("Доступно моделей: ${state.models.size}")
                     }
                 },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -824,9 +824,9 @@ private fun CloudModelSelector(
         supportingText = {
             Text(
                 when (state) {
-                    ModelDiscoveryUiState.Idle -> "Enable cloud and enter an API URL to load models."
-                    ModelDiscoveryUiState.Loading -> "Loading available models…"
-                    ModelDiscoveryUiState.Empty -> "This endpoint returned no models. Check the URL or provider."
+                    ModelDiscoveryUiState.Idle -> "Включите облако и введите URL API, чтобы загрузить модели."
+                    ModelDiscoveryUiState.Loading -> "Загрузка доступных моделей…"
+                    ModelDiscoveryUiState.Empty -> "Этот сервер не вернул ни одной модели. Проверьте URL или провайдера."
                     is ModelDiscoveryUiState.Error -> state.message
                     is ModelDiscoveryUiState.Ready -> ""
                 }
@@ -846,7 +846,7 @@ private fun CloudModelSelector(
             onClick = onRetry,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text("Retry loading models")
+            Text("Повторить загрузку моделей")
         }
     }
 }

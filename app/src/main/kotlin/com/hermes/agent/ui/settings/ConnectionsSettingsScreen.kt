@@ -68,10 +68,10 @@ fun ConnectionsSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Connections") },
+                title = { Text("Подключения") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Navigate back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 }
             )
@@ -85,7 +85,7 @@ fun ConnectionsSettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            SectionHeader(text = "Local API server")
+            SectionHeader(text = "Локальный API-сервер")
             ApiServerSection(
                 settings = settings,
                 onToggle = { enabled ->
@@ -101,7 +101,7 @@ fun ConnectionsSettingsScreen(
                 },
             )
 
-            SectionHeader(text = "Remote shell")
+            SectionHeader(text = "Удалённая оболочка")
             RemoteShellSection(
                 settings = settings,
                 onHost = viewModel::setSshHost,
@@ -121,10 +121,10 @@ fun ConnectionsSettingsScreen(
                 onTestConnection = viewModel::testHomeAssistantConnection,
             )
 
-            SectionHeader(text = "Tailnet (experimental)")
+            SectionHeader(text = "Tailnet (экспериментально)")
             TailnetSection(viewModel = viewModel)
 
-            SectionHeader(text = "Remote gateway")
+            SectionHeader(text = "Удалённый шлюз")
             RemoteGatewaySection(
                 settings = settings,
                 onToggle = viewModel::setRemoteGatewayEnabled,
@@ -133,7 +133,7 @@ fun ConnectionsSettingsScreen(
                 onTestConnection = viewModel::testRemoteGatewayConnection,
             )
 
-            SectionHeader(text = "MCP servers")
+            SectionHeader(text = "MCP-серверы")
             McpServersSection()
         }
     }
@@ -154,9 +154,9 @@ private fun ApiServerSection(
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             ToggleRow(
-                title = "Run local API server",
-                subtitle = "Expose an OpenAI-compatible endpoint so other apps (Open WebUI, " +
-                    "LobeChat, scripts) can use Hermes as a backend.",
+                title = "Запустить локальный API-сервер",
+                subtitle = "Открывает адрес, совместимый с OpenAI, чтобы другие приложения (Open WebUI, " +
+                    "LobeChat, скрипты) могли использовать Hermes как бэкенд.",
                 checked = settings.apiServerEnabled,
                 onCheckedChange = onToggle,
             )
@@ -166,11 +166,11 @@ private fun ApiServerSection(
 
                 val reachable = if (status.running) status.baseUrl
                 else "http://${if (settings.apiServerAllowLan) "0.0.0.0" else "127.0.0.1"}:${settings.apiServerPort}/v1"
-                InfoRow(title = "Status", value = if (status.running) "Running" else "Starting…")
-                InfoRow(title = "Endpoint", value = reachable)
+                InfoRow(title = "Состояние", value = if (status.running) "Работает" else "Запуск…")
+                InfoRow(title = "Адрес", value = reachable)
                 status.error?.let {
                     Text(
-                        "Error: $it",
+                        "Ошибка: $it",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
                     )
@@ -180,8 +180,8 @@ private fun ApiServerSection(
                     value = settings.apiServerKey,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Bearer token") },
-                    supportingText = { Text("Send as: Authorization: Bearer <token>") },
+                    label = { Text("Токен доступа") },
+                    supportingText = { Text("Передавать так: Authorization: Bearer <токен>") },
                     singleLine = true,
                     visualTransformation = if (tokenVisible) {
                         VisualTransformation.None
@@ -195,27 +195,27 @@ private fun ApiServerSection(
                 OutlinedButton(
                     onClick = {
                         clipboard?.setPrimaryClip(
-                            android.content.ClipData.newPlainText("Hermes API key", settings.apiServerKey),
+                            android.content.ClipData.newPlainText("API-ключ Hermes", settings.apiServerKey),
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Copy token") }
+                ) { Text("Копировать токен") }
                 OutlinedButton(
                     onClick = { confirmRegeneration = true },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Regenerate token") }
+                ) { Text("Создать новый токен") }
 
                 HorizontalDivider()
                 ToggleRow(
-                    title = "Allow LAN access",
-                    subtitle = "Off: reachable only from this device (127.0.0.1). " +
-                        "On: reachable from other devices on your Wi-Fi — keep the token secret.",
+                    title = "Разрешить доступ из локальной сети",
+                    subtitle = "Выкл.: доступен только с этого устройства (127.0.0.1). " +
+                        "Вкл.: доступен с других устройств в вашей сети Wi-Fi — держите токен в секрете.",
                     checked = settings.apiServerAllowLan,
                     onCheckedChange = onAllowLan,
                 )
                 InfoNote(
-                    "When changes apply",
-                    "Changing LAN or port takes effect the next time you toggle the server off and on.",
+                    "Когда применяются изменения",
+                    "Изменение доступа из сети или порта вступает в силу, когда вы в следующий раз выключите и включите сервер.",
                 )
             }
         }
@@ -223,9 +223,9 @@ private fun ApiServerSection(
 
     if (confirmRegeneration) {
         DestructiveActionDialog(
-            title = "Regenerate bearer token?",
-            message = "Apps using the current token will lose access until you update their connection settings.",
-            confirmLabel = "Regenerate token",
+            title = "Создать новый токен?",
+            message = "Приложения с текущим токеном потеряют доступ, пока вы не обновите в них настройки подключения.",
+            confirmLabel = "Создать новый токен",
             onConfirm = {
                 onRegenerateKey()
                 tokenVisible = false
@@ -248,10 +248,10 @@ private fun RemoteShellSection(
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             InfoNote(
-                "About the remote shell",
-                "Let the shell tool run commands on a remote host over SSH " +
-                    "(target='remote'). Through SSH you also reach Docker on that host " +
-                    "(docker exec …). Leave the host blank to keep the shell on-device only.",
+                "Об удалённой оболочке",
+                "Позволяет инструменту shell выполнять команды на удалённом компьютере по SSH " +
+                    "(target='remote'). Через SSH также доступен Docker на этом компьютере " +
+                    "(docker exec …). Оставьте адрес пустым, чтобы оболочка работала только на устройстве.",
             )
 
             val hostField = rememberSettingText(settings.sshHost)
@@ -259,8 +259,8 @@ private fun RemoteShellSection(
             OutlinedTextField(
                 value = host,
                 onValueChange = { host = it; onHost(it) },
-                label = { Text("Host") },
-                placeholder = { Text("192.168.1.10 or example.com") },
+                label = { Text("Адрес") },
+                placeholder = { Text("192.168.1.10 или example.com") },
                 singleLine = true,
                 colors = hermesFieldColors(),
                 modifier = Modifier.fillMaxWidth().settingFocus(hostField),
@@ -272,7 +272,7 @@ private fun RemoteShellSection(
                 OutlinedTextField(
                     value = user,
                     onValueChange = { user = it; onUser(it) },
-                    label = { Text("User") },
+                    label = { Text("Пользователь") },
                     singleLine = true,
                     colors = hermesFieldColors(),
                     modifier = Modifier.weight(1f).settingFocus(userField),
@@ -285,7 +285,7 @@ private fun RemoteShellSection(
                         portText = it.filter(Char::isDigit).take(5)
                         portText.toIntOrNull()?.let(onPort)
                     },
-                    label = { Text("Port") },
+                    label = { Text("Порт") },
                     singleLine = true,
                     colors = hermesFieldColors(),
                     modifier = Modifier.width(96.dp).settingFocus(portTextField),
@@ -297,8 +297,8 @@ private fun RemoteShellSection(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it; onPassword(it) },
-                label = { Text("Password") },
-                supportingText = { Text("Stored encrypted on-device. Authentication also requires the host fingerprint below.") },
+                label = { Text("Пароль") },
+                supportingText = { Text("Хранится зашифрованным на устройстве. Для входа также нужен отпечаток ключа компьютера ниже.") },
                 visualTransformation = PasswordVisualTransformation(),
                 singleLine = true,
                 colors = hermesFieldColors(),
@@ -310,9 +310,9 @@ private fun RemoteShellSection(
             OutlinedTextField(
                 value = hostFingerprint,
                 onValueChange = { hostFingerprint = it; onHostFingerprint(it) },
-                label = { Text("Host key fingerprint") },
-                placeholder = { Text("SHA256:… or aa:bb:…") },
-                supportingText = { Text("Verify this fingerprint out of band before saving it.") },
+                label = { Text("Отпечаток ключа компьютера") },
+                placeholder = { Text("SHA256:… или aa:bb:…") },
+                supportingText = { Text("Перед сохранением сверьте этот отпечаток по другому каналу.") },
                 singleLine = true,
                 colors = hermesFieldColors(),
                 modifier = Modifier.fillMaxWidth().settingFocus(hostFingerprintField),
@@ -337,8 +337,8 @@ private fun HomeAssistantSection(
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             InfoNote(
-                "About Home Assistant control",
-                "Control lights, switches, climates, and scenes via your local or remote Home Assistant instance.",
+                "Об управлении Home Assistant",
+                "Управляйте светом, розетками, климатом и сценами через ваш локальный или удалённый Home Assistant.",
             )
 
             val urlField = rememberSettingText(settings.homeAssistantUrl)
@@ -346,7 +346,7 @@ private fun HomeAssistantSection(
             OutlinedTextField(
                 value = url,
                 onValueChange = { url = it; onUrl(it) },
-                label = { Text("Base URL") },
+                label = { Text("Базовый URL") },
                 placeholder = { Text("http://homeassistant.local:8123") },
                 singleLine = true,
                 colors = hermesFieldColors(),
@@ -358,8 +358,8 @@ private fun HomeAssistantSection(
             OutlinedTextField(
                 value = token,
                 onValueChange = { token = it; onToken(it) },
-                label = { Text("Long-lived access token") },
-                supportingText = { Text("Create under Profile -> Security -> Long-Lived Access Tokens in Home Assistant.") },
+                label = { Text("Долгосрочный токен доступа") },
+                supportingText = { Text("Создаётся в Home Assistant: Профиль -> Безопасность -> Долгосрочные токены доступа.") },
                 visualTransformation = if (tokenVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = { RevealToggle(tokenVisible) { tokenVisible = !tokenVisible } },
                 singleLine = true,
@@ -379,7 +379,7 @@ private fun HomeAssistantSection(
                 enabled = !testing,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(if (testing) "Testing…" else "Test connection")
+                Text(if (testing) "Проверка…" else "Проверить подключение")
             }
 
             testResult?.let { (success, message) ->
@@ -396,16 +396,16 @@ private fun HomeAssistantSection(
             OutlinedTextField(
                 value = dashboard,
                 onValueChange = { dashboard = it; onDashboardPath(it) },
-                label = { Text("Dashboard path (optional)") },
+                label = { Text("Путь к панели (необязательно)") },
                 placeholder = { Text("lovelace/0") },
-                supportingText = { Text("Relative to the base URL. Leave blank for the default dashboard.") },
+                supportingText = { Text("Относительно базового URL. Оставьте пустым для панели по умолчанию.") },
                 singleLine = true,
                 colors = hermesFieldColors(),
                 modifier = Modifier.fillMaxWidth().settingFocus(dashboardField),
             )
             ToggleRow(
-                title = "Show on Home screen",
-                subtitle = "Add a Home Assistant tile to the Home dashboard that opens this dashboard in-app.",
+                title = "Показывать на главном экране",
+                subtitle = "Добавить на главный экран плитку Home Assistant, которая открывает эту панель в приложении.",
                 checked = settings.homeAssistantDashboardEnabled,
                 onCheckedChange = onDashboardEnabled,
             )
@@ -453,10 +453,10 @@ private fun TailnetSection(viewModel: SettingsViewModel) {
             val current = status
             Text(
                 text = buildString {
-                    append("State: ").append(current?.state ?: "…")
-                    current?.hostname?.let { append("\nNode: ").append(it) }
-                    current?.addresses?.takeIf { it.isNotEmpty() }?.let { append("\nAddress: ").append(it.joinToString(", ")) }
-                    current?.error?.let { append("\nError: ").append(it) }
+                    append("Состояние: ").append(current?.state ?: "…")
+                    current?.hostname?.let { append("\nУзел: ").append(it) }
+                    current?.addresses?.takeIf { it.isNotEmpty() }?.let { append("\nАдрес: ").append(it.joinToString(", ")) }
+                    current?.error?.let { append("\nОшибка: ").append(it) }
                 },
                 style = MaterialTheme.typography.bodySmall,
                 color = if (current?.error != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
@@ -478,14 +478,14 @@ private fun TailnetSection(viewModel: SettingsViewModel) {
                     modifier = Modifier.weight(1f),
                     contentPadding = SettingsButtonPadding,
                 ) {
-                    ButtonLabel(if (current?.running == true) "Stop node" else "Start node")
+                    ButtonLabel(if (current?.running == true) "Остановить узел" else "Запустить узел")
                 }
                 OutlinedButton(
                     onClick = { viewModel.tailnetLogs { logs = it.takeLast(2000) } },
                     modifier = Modifier.weight(1f),
                     contentPadding = SettingsButtonPadding,
                 ) {
-                    ButtonLabel("Show logs")
+                    ButtonLabel("Показать журналы")
                 }
             }
 
@@ -496,13 +496,13 @@ private fun TailnetSection(viewModel: SettingsViewModel) {
                 val url = current.authUrl
                 if (url == null) {
                     Text(
-                        "Getting your Tailscale sign-in link…",
+                        "Получаю ссылку для входа в Tailscale…",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
                 } else {
                     Text(
-                        "Sign in to finish connecting this device to your tailnet.",
+                        "Войдите, чтобы завершить подключение этого устройства к вашей сети tailnet.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -518,17 +518,17 @@ private fun TailnetSection(viewModel: SettingsViewModel) {
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text("Sign in to Tailscale")
+                        Text("Войти в Tailscale")
                     }
                     OutlinedButton(
                         onClick = {
                             context.getSystemService(android.content.ClipboardManager::class.java)
-                                ?.setPrimaryClip(android.content.ClipData.newPlainText("Tailscale sign-in link", url))
+                                ?.setPrimaryClip(android.content.ClipData.newPlainText("Ссылка для входа в Tailscale", url))
                         },
                         modifier = Modifier.fillMaxWidth(),
                         contentPadding = SettingsButtonPadding,
                     ) {
-                        ButtonLabel("Copy link")
+                        ButtonLabel("Копировать ссылку")
                     }
                 }
             }
@@ -538,10 +538,10 @@ private fun TailnetSection(viewModel: SettingsViewModel) {
             }
 
             InfoNote(
-                "About this node",
-                "Experimental. The node runs inside this app only — no VPN permission, and " +
-                    "nothing else on the phone is rerouted. It keeps its key in this app's storage, " +
-                    "so signing in is a one-time step.",
+                "Об этом узле",
+                "Экспериментально. Узел работает только внутри этого приложения — без разрешения VPN, и " +
+                    "остальной трафик телефона не перенаправляется. Ключ хранится в памяти этого приложения, " +
+                    "поэтому войти нужно всего один раз.",
             )
         }
     }
@@ -562,10 +562,10 @@ private fun RemoteGatewaySection(
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             ToggleRow(
-                title = "Use remote gateway",
-                subtitle = "Delegate all agent execution to a PC Hermes gateway. " +
-                    "The PC is the canonical conversation store; the phone is a chat + " +
-                    "approval surface. Requires app restart to take effect.",
+                title = "Использовать удалённый шлюз",
+                subtitle = "Передать всю работу агента шлюзу Hermes на ПК. " +
+                    "ПК — основное хранилище разговоров; телефон — чат и " +
+                    "место для одобрений. Вступает в силу после перезапуска приложения.",
                 checked = settings.remoteGatewayEnabled,
                 onCheckedChange = onToggle,
             )
@@ -574,14 +574,14 @@ private fun RemoteGatewaySection(
             HorizontalDivider()
 
             InfoNote(
-                "Which address to use",
-                "Point at your PC's Hermes gateway. The gateway runs " +
-                    "`hermes gateway` and exposes an API server (default port 8642). " +
-                    "Use a hostname the phone can resolve: an mDNS name " +
-                    "(http://hermes-pc.local:8642) on your LAN, or a Tailscale " +
-                    "MagicDNS name (http://mymachine.tailnet.ts.net:8642). " +
-                    "Cleartext HTTP is allowed for these hosts; for a raw IP " +
-                    "use HTTPS, Tailscale Serve, or a reverse proxy.",
+                "Какой адрес указывать",
+                "Укажите шлюз Hermes на вашем ПК. На шлюзе запущен " +
+                    "`hermes gateway`, он открывает API-сервер (порт по умолчанию 8642). " +
+                    "Используйте имя, которое телефон может распознать: имя mDNS " +
+                    "(http://hermes-pc.local:8642) в локальной сети или имя Tailscale " +
+                    "MagicDNS (http://mymachine.tailnet.ts.net:8642). " +
+                    "Для этих адресов разрешён обычный HTTP; для голого IP-адреса " +
+                    "используйте HTTPS, Tailscale Serve или обратный прокси.",
             )
 
             // Seeded once, not re-keyed on the stored value: persisting per keystroke and
@@ -597,7 +597,7 @@ private fun RemoteGatewaySection(
             OutlinedTextField(
                 value = url,
                 onValueChange = { url = it; urlEdited = true },
-                label = { Text("Gateway URL") },
+                label = { Text("URL шлюза") },
                 placeholder = { Text("http://hermes-pc.local:8642") },
                 singleLine = true,
                 colors = hermesFieldColors(),
@@ -612,8 +612,8 @@ private fun RemoteGatewaySection(
             OutlinedTextField(
                 value = key,
                 onValueChange = { key = it },
-                label = { Text("Gateway API key") },
-                supportingText = { Text("The PC's API_SERVER_KEY (set in ~/.hermes/.env).") },
+                label = { Text("API-ключ шлюза") },
+                supportingText = { Text("API_SERVER_KEY на ПК (задаётся в ~/.hermes/.env).") },
                 visualTransformation = if (keyVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = { RevealToggle(keyVisible) { keyVisible = !keyVisible } },
                 singleLine = true,
@@ -668,7 +668,7 @@ private fun RemoteGatewaySection(
                 enabled = !testing,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(if (testing) "Testing…" else "Test connection")
+                Text(if (testing) "Проверка…" else "Проверить подключение")
             }
 
             testResult?.let { (success, message) ->
@@ -681,24 +681,24 @@ private fun RemoteGatewaySection(
 
             HorizontalDivider()
             InfoNote(
-                "What the remote gateway does",
-                "When enabled, conversations on this phone map to PC gateway " +
-                    "sessions. A turn sent from the phone appears on the PC, and " +
-                    "vice versa. Tool approvals are forwarded to the phone's " +
-                    "existing approval dialog.",
+                "Что делает удалённый шлюз",
+                "Когда включено, разговоры на этом телефоне связываются с сессиями шлюза " +
+                    "на ПК. Сообщение, отправленное с телефона, появляется на ПК, и " +
+                    "наоборот. Запросы на одобрение инструментов приходят в обычное " +
+                    "окно одобрения на телефоне.",
             )
             HorizontalDivider()
             InfoNote(
-                "Security",
-                "The phone inherits the full authority of the PC " +
-                    "gateway — terminal, file operations, everything the agent " +
-                    "can do. The API key is stored in the Android Keystore and " +
-                    "never leaves the device, but anyone with the key can drive " +
-                    "the agent. For a scoped connection, configure a dedicated " +
-                    "gateway profile (e.g. /p/phone/) with a restricted toolset " +
-                    "and point this URL at that profile prefix. The gateway is " +
-                    "the enforcement point — the phone cannot self-limit tools " +
-                    "that the PC has already started.",
+                "Безопасность",
+                "Телефон получает все полномочия шлюза " +
+                    "на ПК — терминал, работу с файлами, всё, что умеет " +
+                    "агент. API-ключ хранится в Android Keystore и " +
+                    "не покидает устройство, но любой, у кого есть ключ, может управлять " +
+                    "агентом. Для ограниченного подключения настройте отдельный " +
+                    "профиль шлюза (например, /p/phone/) с урезанным набором инструментов " +
+                    "и укажите здесь URL с префиксом этого профиля. Ограничения " +
+                    "применяет шлюз — телефон не может сам ограничить инструменты, " +
+                    "которые ПК уже запустил.",
                 textColor = MaterialTheme.colorScheme.error,
             )
         }
@@ -729,15 +729,15 @@ private fun McpServersSection(
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             InfoNote(
-                "About MCP servers",
-                "Connect Model Context Protocol servers over HTTP or SSE. Their tools become " +
-                    "available to the agent, namespaced per server and confirmation-gated before " +
-                    "they run.",
+                "О MCP-серверах",
+                "Подключайте серверы Model Context Protocol по HTTP или SSE. Их инструменты " +
+                    "становятся доступны агенту, с отдельным пространством имён для каждого сервера и подтверждением перед " +
+                    "запуском.",
             )
 
             if (servers.isEmpty()) {
                 Text(
-                    "No servers configured. The agent has no MCP tools until you add one.",
+                    "Серверы не настроены. Пока вы их не добавите, у агента нет MCP-инструментов.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -759,13 +759,13 @@ private fun McpServersSection(
                         )
                         val count = toolCounts[server.id] ?: 0
                         Text(
-                            "${server.transport.name} - $count tool(s)",
+                            "${server.transport.name} - инструментов: $count",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         server.lastError?.let { err ->
                             Text(
-                                "Last error: $err",
+                                "Последняя ошибка: $err",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.error,
                             )
@@ -789,14 +789,14 @@ private fun McpServersSection(
                         modifier = Modifier.weight(1f),
                         contentPadding = SettingsButtonPadding,
                     ) {
-                        ButtonLabel(if (busyServerId == server.id) "Syncing..." else "Sync tools")
+                        ButtonLabel(if (busyServerId == server.id) "Синхронизация..." else "Синхронизировать инструменты")
                     }
                     OutlinedButton(
                         onClick = { pendingDelete = server },
                         modifier = Modifier.weight(1f),
                         contentPadding = SettingsButtonPadding,
                     ) {
-                        ButtonLabel("Remove")
+                        ButtonLabel("Удалить")
                     }
                 }
             }
@@ -814,7 +814,7 @@ private fun McpServersSection(
                 onClick = { banner = null; showAddDialog = true },
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text("Add MCP server")
+                Text("Добавить MCP-сервер")
             }
         }
     }
@@ -833,10 +833,10 @@ private fun McpServersSection(
 
     pendingDelete?.let { server ->
         DestructiveActionDialog(
-            title = "Remove ${server.name}?",
-            message = "Its tools are unregistered and its cached catalogue is deleted. The server " +
-                "itself is not affected.",
-            confirmLabel = "Remove",
+            title = "Удалить ${server.name}?",
+            message = "Его инструменты будут отключены, а сохранённый каталог удалён. Сам сервер " +
+                "не затрагивается.",
+            confirmLabel = "Удалить",
             onConfirm = {
                 viewModel.deleteServer(server.id)
                 pendingDelete = null
@@ -860,7 +860,7 @@ private fun AddMcpServerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add MCP server") },
+        title = { Text("Добавить MCP-сервер") },
         text = {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -869,7 +869,7 @@ private fun AddMcpServerDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text("Имя") },
                     placeholder = { Text("context7") },
                     singleLine = true,
                     colors = hermesFieldColors(),
@@ -885,10 +885,10 @@ private fun AddMcpServerDialog(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 InfoNote(
-                    "About the URL",
-                    "HTTP or SSE endpoint. Servers that run as a local process are not " +
-                        "supported in the app sandbox - run them under Termux and point here " +
-                        "at their localhost port.",
+                    "Об адресе",
+                    "Адрес HTTP или SSE. Серверы, которые работают как локальный процесс, " +
+                        "в песочнице приложения не поддерживаются — запустите их в Termux и укажите здесь " +
+                        "их порт на localhost.",
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     McpTransportType.entries.forEach { option ->
@@ -903,7 +903,7 @@ private fun AddMcpServerDialog(
                 OutlinedTextField(
                     value = headerName,
                     onValueChange = { headerName = it },
-                    label = { Text("Auth header name (optional)") },
+                    label = { Text("Имя заголовка авторизации (необязательно)") },
                     placeholder = { Text("Authorization") },
                     singleLine = true,
                     colors = hermesFieldColors(),
@@ -912,7 +912,7 @@ private fun AddMcpServerDialog(
                 OutlinedTextField(
                     value = headerValue,
                     onValueChange = { headerValue = it },
-                    label = { Text("Auth header value (optional)") },
+                    label = { Text("Значение заголовка авторизации (необязательно)") },
                     visualTransformation = if (headerVisible) {
                         VisualTransformation.None
                     } else {
@@ -923,17 +923,17 @@ private fun AddMcpServerDialog(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 TextButton(onClick = { headerVisible = !headerVisible }) {
-                    Text(if (headerVisible) "Hide value" else "Reveal value")
+                    Text(if (headerVisible) "Скрыть значение" else "Показать значение")
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = { onAdd(name, url, transport, headerName, headerValue) }) {
-                Text("Add")
+                Text("Добавить")
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text("Отмена") }
         },
     )
 }

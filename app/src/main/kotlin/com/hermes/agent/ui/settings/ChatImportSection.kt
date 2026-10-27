@@ -54,26 +54,26 @@ class ChatImportViewModel @Inject constructor(
             _message.value = try {
                 val bytes = withContext(Dispatchers.IO) {
                     context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
-                        ?: error("Could not open the file.")
+                        ?: error("Не удалось открыть файл.")
                 }
                 val parsed = withContext(Dispatchers.Default) { ChatExportImporter.parse(bytes) }
                 if (parsed.conversations.isEmpty()) {
-                    "No chats with messages were found in that file."
+                    "В этом файле не найдено чатов с сообщениями."
                 } else {
                     val report = backups.import(
                         JsonBackup(conversations = parsed.conversations),
                         ImportMode.SKIP_EXISTING,
                     )
                     buildString {
-                        append("Imported ${report.added} ${parsed.source.label} chat${if (report.added == 1) "" else "s"}")
-                        if (report.skipped > 0) append(", ${report.skipped} already here")
-                        append(". Only the text of your messages and the replies comes across, not images or files.")
+                        append("Импортировано чатов ${parsed.source.label}: ${report.added}${if (report.added == 1) "" else ""}")
+                        if (report.skipped > 0) append(", уже были здесь: ${report.skipped}")
+                        append(". Переносится только текст ваших сообщений и ответов, без изображений и файлов.")
                     }
                 }
             } catch (e: ChatExportImporter.ImportFailure) {
-                e.message ?: "That file could not be read."
+                e.message ?: "Этот файл не удалось прочитать."
             } catch (e: Exception) {
-                "The import failed: ${e.message ?: e.javaClass.simpleName}"
+                "Импорт не удался: ${e.message ?: e.javaClass.simpleName}"
             }
             _working.value = false
         }
@@ -90,10 +90,10 @@ fun ChatImportSection(viewModel: ChatImportViewModel = hiltViewModel()) {
     }
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("Import chats from ChatGPT or Claude", style = MaterialTheme.typography.titleMedium)
+            Text("Импорт чатов из ChatGPT или Claude", style = MaterialTheme.typography.titleMedium)
             Text(
-                "In ChatGPT or Claude, request \"Export data\" from settings, then pick the zip you receive (or its conversations.json). " +
-                    "Chats already imported are skipped, so it is safe to import the same file again.",
+                "В ChatGPT или Claude запросите в настройках «Экспорт данных», затем выберите полученный zip-архив (или его conversations.json). " +
+                    "Уже импортированные чаты пропускаются, так что один и тот же файл можно импортировать повторно.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -103,7 +103,7 @@ fun ChatImportSection(viewModel: ChatImportViewModel = hiltViewModel()) {
                 OutlinedButton(
                     onClick = { picker.launch(arrayOf("application/zip", "application/json", "application/octet-stream", "text/plain")) },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Choose export file") }
+                ) { Text("Выбрать файл экспорта") }
             }
             message?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
         }

@@ -18,14 +18,14 @@ import com.materialkolor.scheme.SchemeTonalSpot
  * scheme.
  */
 enum class SeedPreset(val storageKey: String, val label: String, val seed: Color) {
-    MIDNIGHT("midnight", "Midnight", Color(0xFF1A237E)),
-    NORDIC("nordic", "Nordic", Color(0xFF546E7A)),
-    FOREST("forest", "Forest", Color(0xFF2E7D32)),
-    SUNSET("sunset", "Sunset", Color(0xFFE65100)),
-    ROSE("rose", "Rose", Color(0xFFAD1457)),
-    LAVENDER("lavender", "Lavender", Color(0xFF7B1FA2)),
-    SLATE("slate", "Slate", Color(0xFF455A64)),
-    OCEAN("ocean", "Ocean", Color(0xFF0277BD)),
+    MIDNIGHT("midnight", "Полночь", Color(0xFF1A237E)),
+    NORDIC("nordic", "Север", Color(0xFF546E7A)),
+    FOREST("forest", "Лес", Color(0xFF2E7D32)),
+    SUNSET("sunset", "Закат", Color(0xFFE65100)),
+    ROSE("rose", "Роза", Color(0xFFAD1457)),
+    LAVENDER("lavender", "Лаванда", Color(0xFF7B1FA2)),
+    SLATE("slate", "Сланец", Color(0xFF455A64)),
+    OCEAN("ocean", "Океан", Color(0xFF0277BD)),
     ;
 
     companion object {

@@ -81,14 +81,14 @@ class ApiServerService : Service() {
         ServiceCompat.startForeground(
             this,
             NOTIFICATION_ID,
-            buildNotification("API server starting...", ""),
+            buildNotification("Запуск API-сервера...", ""),
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC else 0,
         )
 
         startJob = scope.launch(Dispatchers.IO) {
             val settings = settingsRepository.current()
             if (settings.apiServerKey.isBlank()) {
-                ApiServerController.setError("API server needs a bearer token before it can start.")
+                ApiServerController.setError("API-серверу нужен токен доступа, без него он не запустится.")
                 stopServer()
                 return@launch
             }
@@ -96,7 +96,7 @@ class ApiServerService : Service() {
             val port = settings.apiServerPort
             val displayHost = if (settings.apiServerAllowLan) (lanIpv4() ?: "0.0.0.0") else "127.0.0.1"
 
-            val notification = buildNotification("API server running", "http://$displayHost:$port/v1")
+            val notification = buildNotification("API-сервер работает", "http://$displayHost:$port/v1")
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as? android.app.NotificationManager
             notificationManager?.notify(NOTIFICATION_ID, notification)
 
@@ -124,7 +124,7 @@ class ApiServerService : Service() {
                 Timber.tag("ApiServer").i("started on %s:%d (lan=%b)", host, port, settings.apiServerAllowLan)
             } catch (t: Throwable) {
                 Timber.tag("ApiServer").e(t, "failed to start on port %d", port)
-                ApiServerController.setError(t.message ?: "failed to start (port $port in use?)")
+                ApiServerController.setError(t.message ?: "не удалось запустить (порт $port занят?)")
                 // Only forget our own instance; never one another start put there.
                 if (server === srv) server = null
                 runCatching { srv.stop() }
@@ -161,10 +161,10 @@ class ApiServerService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Hermes API Server",
+                "API-сервер Hermes",
                 NotificationManager.IMPORTANCE_LOW,
             ).apply {
-                description = "Local OpenAI-compatible API server status"
+                description = "Состояние локального API-сервера, совместимого с OpenAI"
                 enableVibration(false)
                 setShowBadge(false)
             }

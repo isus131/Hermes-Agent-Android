@@ -56,7 +56,7 @@ class SkillsViewModel @Inject constructor(
                     _state.value = _state.value.copy(skills = skills, isLoading = false, listError = null)
                 }
             } catch (e: Exception) {
-                _state.value = _state.value.copy(isLoading = false, listError = e.message ?: "Failed to load skills")
+                _state.value = _state.value.copy(isLoading = false, listError = e.message ?: "Не удалось загрузить навыки")
             }
         }
     }
@@ -80,8 +80,8 @@ class SkillsViewModel @Inject constructor(
         val name = s.addName.trim()
         val desc = s.addDescription.trim()
         val content = s.addContent.trim()
-        if (name.isBlank()) { _state.value = s.copy(error = "Name is required"); return }
-        if (content.isBlank()) { _state.value = s.copy(error = "Content is required"); return }
+        if (name.isBlank()) { _state.value = s.copy(error = "Нужно указать имя"); return }
+        if (content.isBlank()) { _state.value = s.copy(error = "Нужно заполнить содержимое"); return }
         viewModelScope.launch {
             runCatching {
                 skillRepository.upsert(

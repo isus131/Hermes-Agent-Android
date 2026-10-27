@@ -225,7 +225,7 @@ fun StarmapCanvas(
                 .padding(top = 16.dp),
         ) {
             Text(
-                text = "✨ ${memories.size} Knowledge Stars • Pinch to zoom • Tap node to inspect",
+                text = "✨ Звёзд знаний: ${memories.size} • Сведите пальцы для масштаба • Нажмите на узел, чтобы посмотреть",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color(0xFFE2E8F0),
                 modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
@@ -263,7 +263,7 @@ fun StarmapCanvas(
                                 )
                             }
                             Text(
-                                text = " Memory Node",
+                                text = " Узел памяти",
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -271,7 +271,7 @@ fun StarmapCanvas(
                         }
 
                         IconButton(onClick = { selectedNode = null }, modifier = Modifier.size(32.dp)) {
-                            Icon(Icons.Outlined.Close, contentDescription = "Close", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Icon(Icons.Outlined.Close, contentDescription = "Закрыть", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
 
@@ -294,7 +294,7 @@ fun StarmapCanvas(
                             },
                         ) {
                             Icon(Icons.Outlined.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error)
-                            Text(" Remove Fact", color = MaterialTheme.colorScheme.error)
+                            Text(" Удалить факт", color = MaterialTheme.colorScheme.error)
                         }
                     }
                 }

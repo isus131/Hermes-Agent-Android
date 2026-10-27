@@ -94,7 +94,7 @@ class AgentForegroundService : Service() {
         ServiceCompat.startForeground(
             this,
             NOTIFICATION_ID,
-            buildNotification("Hermes active", "Monitoring the board…"),
+            buildNotification("Hermes активен", "Слежу за доской…"),
             serviceType,
         )
         AgentServiceController.setRunning(true)
@@ -118,7 +118,7 @@ class AgentForegroundService : Service() {
                 }
                 // Going idle: suspend until poked (or the fallback fires).
                 AgentServiceController.setWorkingOn(null)
-                updateNotification("Hermes idle", "Waiting for new tickets…")
+                updateNotification("Hermes ожидает", "Жду новые задачи…")
                 withTimeoutOrNull(IDLE_FALLBACK_MS) { wake.receive() }
             }
         }
@@ -129,8 +129,8 @@ class AgentForegroundService : Service() {
         onStarted = { ticket ->
             AgentServiceController.setWorkingOn(ticket.title)
             updateNotification(
-                "Working: ${ticket.title.take(28)}",
-                "Ticket ${ticket.id} in progress",
+                "В работе: ${ticket.title.take(28)}",
+                "Задача ${ticket.id} выполняется",
             )
         },
         onCompleted = { ticket ->
@@ -153,10 +153,10 @@ class AgentForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Hermes Service",
+                "Служба Hermes",
                 NotificationManager.IMPORTANCE_LOW,
             ).apply {
-                description = "Background agent execution status"
+                description = "Состояние фоновой работы агента"
                 enableVibration(false)
                 setShowBadge(false)
             }

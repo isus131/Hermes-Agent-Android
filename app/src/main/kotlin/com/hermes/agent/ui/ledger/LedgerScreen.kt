@@ -48,10 +48,10 @@ fun LedgerScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("What Hermes did") },
+                title = { Text("Что сделал Hermes") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Назад")
                     }
                 },
             )
@@ -65,7 +65,7 @@ fun LedgerScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "No recorded activity yet. Tool runs and delegated tasks will appear here.",
+                    text = "Записанных действий пока нет. Здесь появятся запуски инструментов и поручённые задачи.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 32.dp),
@@ -98,8 +98,8 @@ private fun LedgerRow(entry: ActivityEntry) {
             Text(
                 text = when (entry.kind) {
                     ActivityKind.TOOL_CALL -> entry.title
-                    ActivityKind.DELEGATION -> "Delegated: ${entry.title}"
-                    ActivityKind.PROACTIVE -> "Ping: ${entry.title}"
+                    ActivityKind.DELEGATION -> "Поручено: ${entry.title}"
+                    ActivityKind.PROACTIVE -> "Напоминание: ${entry.title}"
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,

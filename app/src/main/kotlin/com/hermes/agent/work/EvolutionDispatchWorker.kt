@@ -71,13 +71,13 @@ class EvolutionDispatchWorker @AssistedInject constructor(
     private fun foregroundInfo(): ForegroundInfo {
         val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         nm.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, "Feature evolution builds", NotificationManager.IMPORTANCE_LOW),
+            NotificationChannel(CHANNEL_ID, "Сборки развития функций", NotificationManager.IMPORTANCE_LOW),
         )
         val launch = applicationContext.packageManager.getLaunchIntentForPackage(applicationContext.packageName)
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_menu_manage)
-            .setContentTitle("Your bots are building an improvement")
-            .setContentText("Builder and reviewer are working. Review it under Settings → Feature evolution.")
+            .setContentTitle("Ваши боты собирают улучшение")
+            .setContentText("Сборщик и проверяющий работают. Проверить: «Настройки → Развитие функций».")
             .setOngoing(true)
             .apply {
                 launch?.let {

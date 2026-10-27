@@ -65,10 +65,10 @@ fun EvolutionScreen(
     Scaffold(
         topBar = {
             SlimTopBar(
-                title = "Feature evolution",
+                title = "Развитие функций",
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Назад")
                     }
                 },
             )
@@ -83,10 +83,10 @@ fun EvolutionScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
-                "Hermes looks at how you use it, proposes improvements, and — once you approve — has one " +
-                    "desktop bot build each one and another review it. Fixes that fit a sandboxed module " +
-                    "install on the fly after you review them; bigger changes go to your self-repair repo " +
-                    "and arrive as a hot-fix patch or a test build.",
+                "Hermes смотрит, как вы им пользуетесь, предлагает улучшения и — после вашего одобрения — поручает одному " +
+                    "боту на ПК собрать каждое из них, а другому проверить. Исправления, которые помещаются в изолированный модуль, " +
+                    "устанавливаются на лету после вашей проверки; крупные изменения уходят в ваш репозиторий самовосстановления " +
+                    "и приходят как патч-исправление или тестовая сборка.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -121,12 +121,12 @@ fun EvolutionScreen(
             if (overrides.isNotEmpty()) {
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text("Live fixes", style = MaterialTheme.typography.titleMedium)
+                        Text("Живые исправления", style = MaterialTheme.typography.titleMedium)
                         overrides.forEach { (tool, module) ->
                             Text("$tool → $module", style = MaterialTheme.typography.bodySmall)
                         }
                         Text(
-                            "Each reverts to the built-in tool automatically after 3 failures in a row.",
+                            "Каждое автоматически откатывается к встроенному инструменту после 3 сбоев подряд.",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -136,7 +136,7 @@ fun EvolutionScreen(
 
             if (proposals.isEmpty()) {
                 Text(
-                    "No proposals yet. Tap \"Analyze now\" after using Hermes for a while.",
+                    "Предложений пока нет. Нажмите «Анализировать», когда немного поработаете с Hermes.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -179,7 +179,7 @@ private fun StatusBanner(ui: EvolutionViewModel.UiState, onDismiss: () -> Unit) 
                     color = if (ui.error != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                TextButton(onClick = onDismiss) { Text("Dismiss") }
+                TextButton(onClick = onDismiss) { Text("Скрыть") }
             }
         }
     }
@@ -203,10 +203,10 @@ private fun SettingsCard(
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("Weekly analysis", style = MaterialTheme.typography.titleMedium)
+                    Text("Еженедельный анализ", style = MaterialTheme.typography.titleMedium)
                     Text(
-                        "While charging and idle. Sends anonymised usage evidence to your cloud model; " +
-                            "proposes only — nothing changes without your approval.",
+                        "Во время зарядки и простоя. Отправляет обезличенные данные об использовании вашей облачной модели; " +
+                            "только предлагает — без вашего одобрения ничего не меняется.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -214,25 +214,25 @@ private fun SettingsCard(
                 Switch(checked = weekly, onCheckedChange = onWeekly)
             }
             lastAnalysis?.let {
-                Text("Last analysis: $it", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Последний анализ: $it", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Button(onClick = onAnalyze, enabled = !busy, modifier = Modifier.fillMaxWidth()) { Text("Analyze now") }
+            Button(onClick = onAnalyze, enabled = !busy, modifier = Modifier.fillMaxWidth()) { Text("Анализировать") }
 
             HorizontalDivider()
-            Text("Bots", style = MaterialTheme.typography.titleMedium)
+            Text("Боты", style = MaterialTheme.typography.titleMedium)
             Text(
                 if (gatewayConfigured) {
-                    "Profiles on your desktop Hermes gateway. One can run a local LLM, the other relay to Antigravity; " +
-                        "they may be the same PC. Add profiles on the Bots screen."
+                    "Профили на шлюзе Hermes на вашем ПК. Один может запускать локальную модель, другой — пересылать в Antigravity; " +
+                        "это может быть один и тот же ПК. Профили добавляются на экране «Боты»."
                 } else {
-                    "No desktop gateway is connected (Settings → Connections). Module proposals wait until it is; " +
-                        "app changes can still be filed to the self-repair repo."
+                    "Шлюз на ПК не подключён («Настройки → Подключения»). Предложения модулей подождут, пока он не появится; " +
+                        "изменения приложения всё равно можно отправить в репозиторий самовосстановления."
                 },
                 style = MaterialTheme.typography.bodySmall,
                 color = if (gatewayConfigured) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error,
             )
-            ProfilePicker("Builder", builder, profiles, onBuilder)
-            ProfilePicker("Reviewer", reviewer, profiles, onReviewer)
+            ProfilePicker("Сборщик", builder, profiles, onBuilder)
+            ProfilePicker("Проверяющий", reviewer, profiles, onReviewer)
         }
     }
 }
@@ -242,13 +242,13 @@ private fun ProfilePicker(label: String, selected: String, options: List<String>
     var open by remember { mutableStateOf(false) }
     Box {
         OutlinedButton(onClick = { open = true }, modifier = Modifier.fillMaxWidth()) {
-            Text("$label bot: ${selected.ifBlank { "not set" }}")
+            Text("$label: ${selected.ifBlank { "не выбран" }}")
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
             options.forEach { name ->
                 DropdownMenuItem(text = { Text(name) }, onClick = { onSelect(name); open = false })
             }
-            DropdownMenuItem(text = { Text("None") }, onClick = { onSelect(""); open = false })
+            DropdownMenuItem(text = { Text("Нет") }, onClick = { onSelect(""); open = false })
         }
     }
 }
@@ -283,20 +283,20 @@ private fun ProposalCard(
                 )
             }
             Text(p.problem, style = MaterialTheme.typography.bodyMedium)
-            p.targetTool?.let { Text("Fixes: $it", style = MaterialTheme.typography.labelMedium) }
+            p.targetTool?.let { Text("Исправляет: $it", style = MaterialTheme.typography.labelMedium) }
 
-            TextButton(onClick = { expanded = !expanded }) { Text(if (expanded) "Hide details" else "Details") }
+            TextButton(onClick = { expanded = !expanded }) { Text(if (expanded) "Скрыть подробности" else "Подробнее") }
             if (expanded) {
-                if (p.evidence.isNotBlank()) Detail("Evidence", p.evidence)
-                Detail("Acceptance criteria", p.acceptanceCriteria.joinToString("\n") { "• $it" })
+                if (p.evidence.isNotBlank()) Detail("Основания", p.evidence)
+                Detail("Критерии приёмки", p.acceptanceCriteria.joinToString("\n") { "• $it" })
                 if (p.reviewFindings.isNotEmpty()) {
-                    Detail("Latest findings (${p.reviewVerdict?.name ?: "phone"})", p.reviewFindings.joinToString("\n") { "• $it" })
+                    Detail("Последние замечания (${p.reviewVerdict?.name ?: "телефон"})", p.reviewFindings.joinToString("\n") { "• $it" })
                 }
-                if (p.testReport.isNotBlank()) Detail("On-device checks", p.testReport, mono = true)
-                if (p.kind == ProposalKind.APP_CHANGE) p.artifact?.let { Detail("Change spec", it, mono = true) }
-                p.issueUrl?.let { Detail("Issue", it) }
+                if (p.testReport.isNotBlank()) Detail("Проверки на устройстве", p.testReport, mono = true)
+                if (p.kind == ProposalKind.APP_CHANGE) p.artifact?.let { Detail("Описание изменения", it, mono = true) }
+                p.issueUrl?.let { Detail("Задача", it) }
                 Text(
-                    "Updated ${formatDate(p.updatedAt)} · rounds: ${p.rounds}",
+                    "Обновлено ${formatDate(p.updatedAt)} · раундов: ${p.rounds}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -304,10 +304,10 @@ private fun ProposalCard(
 
             if (p.kind == ProposalKind.APP_CHANGE && p.status == ProposalStatus.READY && p.issueUrl != null) {
                 Text(
-                    "Filed. Once the draft PR is reviewed and merged, the PC builds the fix as a hot-fix patch " +
-                        "for your installed release; it shows up under Settings → About → Updates as " +
-                        "\"Apply fix (restart required)\" — no reinstall. Changes a patch cannot carry come as " +
-                        "a full update instead. Tap Mark installed once it is applied.",
+                    "Отправлено. Когда черновой PR проверят и примут, ПК соберёт исправление как патч " +
+                        "для установленной у вас версии; оно появится в «Настройки → О приложении → Обновления» как " +
+                        "«Применить исправление (нужен перезапуск)» — без переустановки. Изменения, которые патч не может нести, придут " +
+                        "полным обновлением. Когда оно будет применено, нажмите «Отметить установленным».",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -321,37 +321,37 @@ private fun ProposalCard(
                     System.currentTimeMillis() - p.updatedAt > STALE_MILLIS
                 when (p.status) {
                     ProposalStatus.PROPOSED -> {
-                        Button(onClick = onApprove, enabled = !busy) { Text("Approve") }
-                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Reject") }
+                        Button(onClick = onApprove, enabled = !busy) { Text("Одобрить") }
+                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Отклонить") }
                     }
                     ProposalStatus.APPROVED -> {
-                        Button(onClick = onSend, enabled = !busy) { Text("Send to bots") }
+                        Button(onClick = onSend, enabled = !busy) { Text("Отправить ботам") }
                         if (p.kind == ProposalKind.APP_CHANGE && repairConfigured) {
-                            OutlinedButton(onClick = onFile, enabled = !busy) { Text("File without bots") }
+                            OutlinedButton(onClick = onFile, enabled = !busy) { Text("Отправить без ботов") }
                         }
-                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Reject") }
+                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Отклонить") }
                     }
                     ProposalStatus.BUILDING, ProposalStatus.IN_REVIEW -> {
-                        if (stale) Button(onClick = onSend, enabled = !busy) { Text("Restart") }
-                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Cancel") }
+                        if (stale) Button(onClick = onSend, enabled = !busy) { Text("Перезапустить") }
+                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Отмена") }
                     }
                     ProposalStatus.READY -> if (p.kind.hotLoadable) {
-                        Button(onClick = onReview, enabled = !busy) { Text("Review & install") }
-                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Reject") }
+                        Button(onClick = onReview, enabled = !busy) { Text("Проверить и установить") }
+                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Отклонить") }
                     } else if (p.issueUrl == null) {
                         Button(onClick = onFile, enabled = !busy && repairConfigured) {
-                            Text(if (repairConfigured) "File to repair repo" else "Set up self-repair first")
+                            Text(if (repairConfigured) "Отправить в репозиторий исправлений" else "Сначала настройте самовосстановление")
                         }
-                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Reject") }
+                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Отклонить") }
                     } else {
-                        Button(onClick = onMarkInstalled, enabled = !busy) { Text("Mark installed") }
+                        Button(onClick = onMarkInstalled, enabled = !busy) { Text("Отметить установленным") }
                     }
                     ProposalStatus.INSTALLED -> if (p.kind.hotLoadable) {
-                        OutlinedButton(onClick = onRollback, enabled = !busy) { Text("Roll back") }
+                        OutlinedButton(onClick = onRollback, enabled = !busy) { Text("Откатить") }
                     }
                     ProposalStatus.FAILED, ProposalStatus.ROLLED_BACK -> {
-                        Button(onClick = onApprove, enabled = !busy) { Text("Retry") }
-                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Reject") }
+                        Button(onClick = onApprove, enabled = !busy) { Text("Повторить") }
+                        OutlinedButton(onClick = onReject, enabled = !busy) { Text("Отклонить") }
                     }
                     ProposalStatus.REJECTED -> Unit
                 }
@@ -373,28 +373,28 @@ private fun ModuleReviewCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
     ) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("Review before installing", style = MaterialTheme.typography.titleMedium)
+            Text("Проверьте перед установкой", style = MaterialTheme.typography.titleMedium)
             Text(review.proposal.title, style = MaterialTheme.typography.bodyMedium)
             if (m != null) {
-                Detail("Module", "${m.name} (${m.id}) v${m.version}")
+                Detail("Модуль", "${m.name} (${m.id}) v${m.version}")
                 Detail(
-                    "Permissions",
-                    if (review.permissions.isEmpty()) "None — pure computation" else review.permissions.joinToString("\n") { "• ${it.second}" },
+                    "Разрешения",
+                    if (review.permissions.isEmpty()) "Нет — только вычисления" else review.permissions.joinToString("\n") { "• ${it.second}" },
                 )
                 if (m.overrides.isNotEmpty()) {
                     Detail(
-                        "Replaces built-in tools",
-                        m.overrides.joinToString() + "\nThe built-in stays underneath and comes back automatically if this fails 3 times in a row.",
+                        "Заменяет встроенные инструменты",
+                        m.overrides.joinToString() + "\nВстроенный инструмент остаётся в запасе и автоматически вернётся, если этот даст сбой 3 раза подряд.",
                     )
                 }
-                Detail("Tools", m.tools.joinToString("\n") { "• ${it.name}: ${it.description}" })
+                Detail("Инструменты", m.tools.joinToString("\n") { "• ${it.name}: ${it.description}" })
             }
-            Detail("SHA-256 (pinned at install)", review.sha256, mono = true)
+            Detail("SHA-256 (зафиксирован при установке)", review.sha256, mono = true)
             if (review.proposal.reviewFindings.isNotEmpty()) {
-                Detail("Reviewer notes", review.proposal.reviewFindings.joinToString("\n") { "• $it" })
+                Detail("Заметки проверяющего", review.proposal.reviewFindings.joinToString("\n") { "• $it" })
             }
-            Detail("On-device checks (just re-run)", (review.findings + review.testReport).joinToString("\n"), mono = true)
-            Text("Code", style = MaterialTheme.typography.labelLarge)
+            Detail("Проверки на устройстве (только что повторены)", (review.findings + review.testReport).joinToString("\n"), mono = true)
+            Text("Код", style = MaterialTheme.typography.labelLarge)
             Box(
                 Modifier
                     .fillMaxWidth()
@@ -409,9 +409,9 @@ private fun ModuleReviewCard(
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = onInstall, enabled = review.passed && !busy, modifier = Modifier.weight(1f)) {
-                    Text(if (review.passed) "Install" else "Checks failed")
+                    Text(if (review.passed) "Установить" else "Проверки не пройдены")
                 }
-                OutlinedButton(onClick = onCancel, modifier = Modifier.weight(1f)) { Text("Cancel") }
+                OutlinedButton(onClick = onCancel, modifier = Modifier.weight(1f)) { Text("Отмена") }
             }
         }
     }

@@ -46,7 +46,7 @@ class PluginsViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(plugins = plugins, isLoading = false, error = null)
                 }
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(isLoading = false, error = e.message ?: "Failed to load plugins")
+                _uiState.value = _uiState.value.copy(isLoading = false, error = e.message ?: "Не удалось загрузить плагины")
             }
         }
     }

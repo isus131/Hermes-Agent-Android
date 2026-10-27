@@ -98,12 +98,12 @@ fun PostOfficeScreen(
     Scaffold(
         topBar = {
             SlimTopBar(
-                title = "Post Office",
+                title = "Почта агентов",
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = "Назад",
                         )
                     }
                 },
@@ -126,7 +126,7 @@ fun PostOfficeScreen(
                 ) {
                     item {
                         Text(
-                            text = "Cross-agent threads with Claude, Codex, Antigravity, and other agents.",
+                            text = "Переписка с Claude, Codex, Antigravity и другими агентами.",
                             style = MaterialTheme.typography.bodySmall,
                             color = scheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 6.dp),
@@ -238,14 +238,14 @@ private fun EmptyPostOfficeState(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "No Post Office messages yet",
+            text = "Сообщений пока нет",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             color = scheme.onSurface,
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = "Cross-agent mail between Claude, Codex, Antigravity, and Hermes will appear here once received.",
+            text = "Здесь появится переписка между Claude, Codex, Antigravity и Hermes, когда она придёт.",
             style = MaterialTheme.typography.bodyMedium,
             color = scheme.onSurfaceVariant,
             textAlign = TextAlign.Center,

@@ -126,7 +126,7 @@ class ChatViewModel @Inject constructor(
             runCatching { branchStore.save(conversationId, switch.points) }
                 .onFailure { t ->
                     Timber.tag("Chat").w(t, "could not save branches")
-                    _ephemeral.value = _ephemeral.value.copy(errorMessage = "Could not switch to that branch.")
+                    _ephemeral.value = _ephemeral.value.copy(errorMessage = "Не удалось переключиться на эту ветку.")
                     return@launch
                 }
             runCatching {
@@ -141,7 +141,7 @@ class ChatViewModel @Inject constructor(
                     liveTail.forEach { conversationRepository.addMessage(conversationId, it) }
                     branchStore.save(conversationId, before)
                 }.onFailure { Timber.tag("Chat").w(it, "could not restore the live branch") }
-                _ephemeral.value = _ephemeral.value.copy(errorMessage = "Could not switch to that branch.")
+                _ephemeral.value = _ephemeral.value.copy(errorMessage = "Не удалось переключиться на эту ветку.")
             }
         }
     }
@@ -201,7 +201,7 @@ class ChatViewModel @Inject constructor(
                 isSending = ephemeral.isSending,
                 errorMessage = ephemeral.errorMessage,
                 notice = ephemeral.notice,
-                title = conversation?.title ?: "New conversation",
+                title = conversation?.title ?: "Новый разговор",
                 currentPlan = ephemeral.plan,
                 toolCalls = ephemeral.toolCalls,
                 inputPrefill = prefill,
@@ -277,12 +277,12 @@ class ChatViewModel @Inject constructor(
                     if (message.role == MessageRole.USER) _inputPrefill.value = message.content
                     _ephemeral.value = _ephemeral.value.copy(
                         errorMessage = null,
-                        notice = "Rewound $removed message${if (removed == 1) "" else "s"}",
+                        notice = "Откатано сообщений: $removed${if (removed == 1) "" else ""}",
                     )
                 }
                 .onFailure { t ->
                     Timber.tag("Chat").w(t, "rewind failed")
-                    _ephemeral.value = _ephemeral.value.copy(errorMessage = "Could not rewind this chat.")
+                    _ephemeral.value = _ephemeral.value.copy(errorMessage = "Не удалось откатить этот чат.")
                 }
         }
     }
@@ -294,12 +294,12 @@ class ChatViewModel @Inject constructor(
      */
     fun forkFrom(message: Message, onForked: (String) -> Unit) {
         viewModelScope.launch {
-            val title = message.content.take(40).ifBlank { "Forked chat" }
+            val title = message.content.take(40).ifBlank { "Ответвлённый чат" }
             runCatching { conversationRepository.forkFrom(conversationId, message, title) }
                 .onSuccess(onForked)
                 .onFailure { t ->
                     Timber.tag("Chat").w(t, "fork failed")
-                    _ephemeral.value = _ephemeral.value.copy(errorMessage = "Could not fork this chat.")
+                    _ephemeral.value = _ephemeral.value.copy(errorMessage = "Не удалось ответвить этот чат.")
                 }
         }
     }
@@ -346,7 +346,7 @@ class ChatViewModel @Inject constructor(
         // Name a fresh conversation after its opening message — the closest the
         // app gets to a title "from context" until proper summarisation lands.
         val isFirstTurn = uiState.value.messages.isEmpty()
-        val titleIsDefault = uiState.value.title.isBlank() || uiState.value.title == "New conversation"
+        val titleIsDefault = uiState.value.title.isBlank() || (uiState.value.title == "Новый разговор" || uiState.value.title == "New conversation")
 
         sendJob = viewModelScope.launch {
             try {
@@ -383,7 +383,7 @@ class ChatViewModel @Inject constructor(
                 Timber.tag("ChatVM").w(t, "sendMessageOrchestrated failed")
                 _ephemeral.value = _ephemeral.value.copy(
                     isSending = false,
-                    errorMessage = t.message ?: "Unknown error",
+                    errorMessage = t.message ?: "Неизвестная ошибка",
                 )
                 // Failed never arrives on this path, so voice chat would stay silent.
                 if (_voiceChatActive.value) listenForNextTurn()
@@ -557,7 +557,7 @@ class ChatViewModel @Inject constructor(
     private fun startVoiceChat() {
         if (!voiceInputManager.isAvailable()) {
             _ephemeral.value = _ephemeral.value.copy(
-                errorMessage = "Speech recognition not available on this device",
+                errorMessage = "Распознавание речи на этом устройстве недоступно",
             )
             return
         }
@@ -591,7 +591,7 @@ class ChatViewModel @Inject constructor(
         if (emptyVoiceTurns >= MAX_EMPTY_VOICE_TURNS) {
             stopVoiceChat()
             _ephemeral.value = _ephemeral.value.copy(
-                errorMessage = "Voice chat stopped — I couldn't hear anything.",
+                errorMessage = "Голосовой чат остановлен — я ничего не услышал.",
             )
             return
         }
@@ -631,7 +631,7 @@ class ChatViewModel @Inject constructor(
     private fun startVoiceInput() {
         if (!voiceInputManager.isAvailable()) {
             _ephemeral.value = _ephemeral.value.copy(
-                errorMessage = "Speech recognition not available on this device",
+                errorMessage = "Распознавание речи на этом устройстве недоступно",
             )
             return
         }

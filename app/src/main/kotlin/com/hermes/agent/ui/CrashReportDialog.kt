@@ -28,12 +28,12 @@ fun CrashReportDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Hermes crashed last time") },
+        title = { Text("В прошлый раз Hermes аварийно завершился") },
         text = {
             Column {
                 Text(
-                    "This report was saved on your phone. It holds the app version, your device model " +
-                        "and the error trace, and no chats, settings or keys. Nothing is sent unless you share it.",
+                    "Этот отчёт сохранён на вашем телефоне. В нём версия приложения, модель устройства " +
+                        "и трассировка ошибки, но нет чатов, настроек и ключей. Ничего не отправляется, пока вы сами им не поделитесь.",
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
@@ -48,10 +48,10 @@ fun CrashReportDialog(
         },
         confirmButton = {
             androidx.compose.foundation.layout.Row {
-                onSendForRepair?.let { TextButton(onClick = it) { Text("Send for repair") } }
-                TextButton(onClick = onShare) { Text("Share") }
+                onSendForRepair?.let { TextButton(onClick = it) { Text("Отправить на исправление") } }
+                TextButton(onClick = onShare) { Text("Поделиться") }
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Delete") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Удалить") } },
     )
 }

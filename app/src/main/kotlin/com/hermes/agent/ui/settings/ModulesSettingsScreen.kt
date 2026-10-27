@@ -48,10 +48,10 @@ fun ModulesSettingsScreen(
     Scaffold(
         topBar = {
             SlimTopBar(
-                title = "Modules",
+                title = "Модули",
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Outlined.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Outlined.ArrowBack, contentDescription = "Назад")
                     }
                 },
             )
@@ -66,16 +66,16 @@ fun ModulesSettingsScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             InfoNote(
-                "About modules",
-                "Modules add new tools to Hermes. They run in a sandbox and only get the " +
-                    "permissions you approve.",
+                "О модулях",
+                "Модули добавляют Hermes новые инструменты. Они работают в песочнице и получают только " +
+                    "те разрешения, которые вы одобрили.",
             )
 
             OutlinedTextField(
                 value = state.registryUrl,
                 onValueChange = viewModel::setRegistryUrl,
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Module repository") },
+                label = { Text("Репозиторий модулей") },
                 singleLine = true,
             )
             Button(
@@ -85,7 +85,7 @@ fun ModulesSettingsScreen(
                 if (state.loading) {
                     CircularProgressIndicator(Modifier.size(18.dp))
                 } else {
-                    Text("Refresh")
+                    Text("Обновить")
                 }
             }
 
@@ -93,7 +93,7 @@ fun ModulesSettingsScreen(
             state.message?.let { Text(it, color = MaterialTheme.colorScheme.primary) }
 
             if (state.installed.isNotEmpty()) {
-                Text("Installed", style = MaterialTheme.typography.titleMedium)
+                Text("Установлено", style = MaterialTheme.typography.titleMedium)
                 state.installed.forEach { module ->
                     Card(Modifier.fillMaxWidth()) {
                         Column(
@@ -121,13 +121,13 @@ fun ModulesSettingsScreen(
                             if (module.description.isNotBlank()) Text(module.description)
                             if (module.grantedPermissions.isNotBlank()) {
                                 Text(
-                                    "Permissions: ${module.grantedPermissions}",
+                                    "Разрешения: ${module.grantedPermissions}",
                                     style = MaterialTheme.typography.bodySmall,
                                 )
                             }
                             OutlinedButton(onClick = { viewModel.uninstall(module.id) }) {
                                 Icon(Icons.Outlined.Delete, contentDescription = null)
-                                Text("Remove")
+                                Text("Удалить")
                             }
                         }
                     }
@@ -135,14 +135,14 @@ fun ModulesSettingsScreen(
                 HorizontalDivider()
             }
 
-            Text("Available", style = MaterialTheme.typography.titleMedium)
+            Text("Доступно", style = MaterialTheme.typography.titleMedium)
             val notInstalled = state.available.filterNot { it.id in state.installedIds }
             if (notInstalled.isEmpty() && !state.loading) {
                 Text(
                     if (state.available.isEmpty()) {
-                        "This repository has no modules yet."
+                        "В этом репозитории пока нет модулей."
                     } else {
-                        "Everything in this repository is installed."
+                        "Всё из этого репозитория уже установлено."
                     },
                 )
             }
@@ -166,7 +166,7 @@ fun ModulesSettingsScreen(
                                 CircularProgressIndicator(Modifier.size(18.dp))
                             } else {
                                 Icon(Icons.Outlined.Download, contentDescription = null)
-                                Text("Install")
+                                Text("Установить")
                             }
                         }
                     }
@@ -180,20 +180,20 @@ fun ModulesSettingsScreen(
     state.pendingInstall?.let { pending ->
         AlertDialog(
             onDismissRequest = viewModel::cancelInstall,
-            title = { Text("Install ${pending.manifest.name}?") },
+            title = { Text("Установить ${pending.manifest.name}?") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("by ${pending.manifest.author.ifBlank { "unknown author" }} · v${pending.manifest.version}")
+                    Text("автор: ${pending.manifest.author.ifBlank { "неизвестен" }} · v${pending.manifest.version}")
                     if (pending.manifest.description.isNotBlank()) {
                         Text(pending.manifest.description)
                     }
-                    Text("Adds these tools:", fontWeight = FontWeight.SemiBold)
+                    Text("Добавляет инструменты:", fontWeight = FontWeight.SemiBold)
                     pending.manifest.tools.forEach { tool ->
                         Text("• ${tool.name} — ${tool.description}")
                     }
-                    Text("Permissions:", fontWeight = FontWeight.SemiBold)
+                    Text("Разрешения:", fontWeight = FontWeight.SemiBold)
                     if (pending.manifest.permissions.isEmpty()) {
-                        Text("• None. It can only compute and return text.")
+                        Text("• Нет. Может только вычислять и возвращать текст.")
                     } else {
                         pending.manifest.permissions.forEach { permission ->
                             Text("• ${ScriptPluginPermissions.describe(permission, pending.manifest.hosts)}")
@@ -202,10 +202,10 @@ fun ModulesSettingsScreen(
                 }
             },
             confirmButton = {
-                Button(onClick = viewModel::confirmInstall) { Text("Install") }
+                Button(onClick = viewModel::confirmInstall) { Text("Установить") }
             },
             dismissButton = {
-                TextButton(onClick = viewModel::cancelInstall) { Text("Cancel") }
+                TextButton(onClick = viewModel::cancelInstall) { Text("Отмена") }
             },
         )
     }

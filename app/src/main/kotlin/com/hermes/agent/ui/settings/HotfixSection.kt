@@ -50,24 +50,24 @@ internal fun HotfixStatusCard(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(20.dp),
                 )
-                Text("Hot-fixes", style = MaterialTheme.typography.bodyLarge)
+                Text("Патчи-исправления", style = MaterialTheme.typography.bodyLarge)
             }
             Text(
-                "Small fixes can arrive as a patch instead of a full update: no reinstall, but Hermes " +
-                    "has to restart to use it. A patch is only accepted if it is signed with the same key " +
-                    "as this app and was built for exactly this version.",
+                "Небольшие исправления могут приходить патчем вместо полного обновления: без переустановки, но Hermes " +
+                    "нужно перезапустить. Патч принимается, только если он подписан тем же ключом, " +
+                    "что и это приложение, и собран именно для этой версии.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-                "Build: ${status.baseTinkerId ?: "unknown"}",
+                "Сборка: ${status.baseTinkerId ?: "неизвестно"}",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             if (!status.available) {
                 Text(
-                    status.unavailableReason ?: "Hot-fixes are unavailable.",
+                    status.unavailableReason ?: "Патчи-исправления недоступны.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -76,7 +76,7 @@ internal fun HotfixStatusCard(
             val active = status.active
             if (active != null) {
                 Text(
-                    if (active.patchVersion > 0) "Fix #${active.patchVersion} is active." else "A fix is active.",
+                    if (active.patchVersion > 0) "Исправление №${active.patchVersion} активно." else "Исправление активно.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -84,17 +84,17 @@ internal fun HotfixStatusCard(
                     Text(active.notes, style = MaterialTheme.typography.bodySmall)
                 }
             } else if (status.available && status.staged == null) {
-                Text("No fix applied — Hermes is running the installed version.", style = MaterialTheme.typography.bodySmall)
+                Text("Исправлений нет — работает установленная версия Hermes.", style = MaterialTheme.typography.bodySmall)
             }
 
             val staged = status.staged
             if (status.busy) {
                 val p = status.progressPercent
-                Text("Downloading and checking the fix…", style = MaterialTheme.typography.bodySmall)
+                Text("Загрузка и проверка исправления…", style = MaterialTheme.typography.bodySmall)
                 if (p != null) LinearProgressIndicator(progress = { p / 100f }, modifier = Modifier.fillMaxWidth())
                 else LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             } else if (staged != null && !staged.installed) {
-                Text("Preparing fix #${staged.patchVersion}…", style = MaterialTheme.typography.bodySmall)
+                Text("Подготовка исправления №${staged.patchVersion}…", style = MaterialTheme.typography.bodySmall)
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
 
@@ -118,22 +118,22 @@ internal fun HotfixStatusCard(
                 // start, so the restart is offered quietly instead of asked for. Never automatic.
                 if (restartPromptWanted(status)) {
                     Text(
-                        "Restart Hermes to finish. Anything running (a reply, a download) is stopped.",
+                        "Перезапустите Hermes, чтобы завершить. Всё, что сейчас выполняется (ответ, загрузка), будет остановлено.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Button(onClick = { confirmRestart = true }, modifier = Modifier.fillMaxWidth()) { Text("Restart now") }
+                    Button(onClick = { confirmRestart = true }, modifier = Modifier.fillMaxWidth()) { Text("Перезапустить сейчас") }
                 } else {
                     Text(
-                        "The fix takes effect the next time Hermes starts.",
+                        "Исправление вступит в силу при следующем запуске Hermes.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    TextButton(onClick = { confirmRestart = true }, modifier = Modifier.fillMaxWidth()) { Text("Restart now") }
+                    TextButton(onClick = { confirmRestart = true }, modifier = Modifier.fillMaxWidth()) { Text("Перезапустить сейчас") }
                 }
             }
             if (status.available && (active != null || staged != null) && !status.busy) {
-                OutlinedButton(onClick = { confirmRemove = true }, modifier = Modifier.fillMaxWidth()) { Text("Remove patch") }
+                OutlinedButton(onClick = { confirmRemove = true }, modifier = Modifier.fillMaxWidth()) { Text("Удалить патч") }
             }
         }
     }
@@ -141,19 +141,19 @@ internal fun HotfixStatusCard(
     if (confirmRemove) {
         AlertDialog(
             onDismissRequest = { confirmRemove = false },
-            title = { Text("Remove the patch?") },
-            text = { Text("Hermes goes back to the installed version after its next restart. The same fix will not be offered again.") },
-            confirmButton = { TextButton(onClick = { confirmRemove = false; onRemove() }) { Text("Remove") } },
-            dismissButton = { TextButton(onClick = { confirmRemove = false }) { Text("Cancel") } },
+            title = { Text("Удалить патч?") },
+            text = { Text("После следующего перезапуска Hermes вернётся к установленной версии. Это же исправление больше не будет предложено.") },
+            confirmButton = { TextButton(onClick = { confirmRemove = false; onRemove() }) { Text("Удалить") } },
+            dismissButton = { TextButton(onClick = { confirmRemove = false }) { Text("Отмена") } },
         )
     }
     if (confirmRestart) {
         AlertDialog(
             onDismissRequest = { confirmRestart = false },
-            title = { Text("Restart Hermes now?") },
-            text = { Text("Hermes closes and opens again. Any reply in progress is stopped.") },
-            confirmButton = { TextButton(onClick = { confirmRestart = false; onRestart() }) { Text("Restart") } },
-            dismissButton = { TextButton(onClick = { confirmRestart = false }) { Text("Later") } },
+            title = { Text("Перезапустить Hermes сейчас?") },
+            text = { Text("Hermes закроется и откроется снова. Ответ, который сейчас пишется, будет остановлен.") },
+            confirmButton = { TextButton(onClick = { confirmRestart = false; onRestart() }) { Text("Перезапустить") } },
+            dismissButton = { TextButton(onClick = { confirmRestart = false }) { Text("Позже") } },
         )
     }
 }

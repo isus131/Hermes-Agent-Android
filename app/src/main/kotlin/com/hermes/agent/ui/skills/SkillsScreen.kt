@@ -76,12 +76,12 @@ fun SkillsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Skills & Tools") },
+                title = { Text("Навыки и инструменты") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back"
+                            contentDescription = "Назад"
                         )
                     }
                 },
@@ -89,7 +89,7 @@ fun SkillsScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = viewModel::showAddDialog) {
-                Icon(Icons.Outlined.Add, contentDescription = "Add skill")
+                Icon(Icons.Outlined.Add, contentDescription = "Добавить навык")
             }
         },
     ) { padding ->
@@ -106,10 +106,10 @@ fun SkillsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
-                Text(text = "Error: ${state.listError}", color = MaterialTheme.colorScheme.error)
+                Text(text = "Ошибка: ${state.listError}", color = MaterialTheme.colorScheme.error)
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = viewModel::loadSkills) {
-                    Text("Retry")
+                    Text("Повторить")
                 }
             }
         } else if (state.skills.isEmpty()) {
@@ -117,10 +117,10 @@ fun SkillsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .semantics { contentDescription = "No skills yet. Tap + to add one." },
+                    .semantics { contentDescription = "Навыков пока нет. Нажмите +, чтобы добавить." },
                 contentAlignment = Alignment.Center,
             ) {
-                Text("No skills yet. Tap + to add one.", style = MaterialTheme.typography.bodyMedium)
+                Text("Навыков пока нет. Нажмите +, чтобы добавить.", style = MaterialTheme.typography.bodyMedium)
             }
         } else {
             val grouped = state.skills.groupBy { it.category }.toSortedMap()
@@ -172,9 +172,9 @@ fun SkillsScreen(
 
     pendingDelete?.let { skill ->
         DestructiveActionDialog(
-            title = "Delete \"${skill.name}\"?",
-            message = "This permanently removes the skill and its instructions. This action cannot be undone.",
-            confirmLabel = "Delete skill",
+            title = "Удалить «${skill.name}»?",
+            message = "Навык и его инструкции будут удалены навсегда. Это действие нельзя отменить.",
+            confirmLabel = "Удалить навык",
             onConfirm = {
                 viewModel.deleteSkill(skill)
                 pendingDelete = null
@@ -249,7 +249,7 @@ private fun SkillCard(skill: Skill, onClick: () -> Unit, onDelete: () -> Unit) {
             }
             if (!skill.isBuiltIn) {
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Outlined.Delete, contentDescription = "Delete skill")
+                    Icon(Icons.Outlined.Delete, contentDescription = "Удалить навык")
                 }
             }
         }
@@ -273,7 +273,7 @@ private fun SkillViewDialog(skill: Skill, onDismiss: () -> Unit) {
                 )
             }
         },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } },
+        confirmButton = { TextButton(onClick = onDismiss) { Text("Закрыть") } },
     )
 }
 
@@ -291,7 +291,7 @@ private fun AddSkillDialog(
     AlertDialog(
         modifier = Modifier.imePadding(),
         onDismissRequest = onDismiss,
-        title = { Text("New Skill") },
+        title = { Text("Новый навык") },
         text = {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -300,35 +300,35 @@ private fun AddSkillDialog(
                 OutlinedTextField(
                     value = state.addName,
                     onValueChange = onName,
-                    label = { Text("Name (e.g. research)") },
+                    label = { Text("Имя (например, research)") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = state.addDescription,
                     onValueChange = onDescription,
-                    label = { Text("Description") },
+                    label = { Text("Описание") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = state.addCategory,
                     onValueChange = onCategory,
-                    label = { Text("Category") },
+                    label = { Text("Категория") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = state.addTags,
                     onValueChange = onTags,
-                    label = { Text("Tags (comma-separated)") },
+                    label = { Text("Теги (через запятую)") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = state.addContent,
                     onValueChange = onContent,
-                    label = { Text("Instructions (Markdown)") },
+                    label = { Text("Инструкции (Markdown)") },
                     minLines = 6,
                     maxLines = 12,
                     modifier = Modifier.fillMaxWidth(),
@@ -338,7 +338,7 @@ private fun AddSkillDialog(
                 }
             }
         },
-        confirmButton = { TextButton(onClick = onConfirm) { Text("Save") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = { TextButton(onClick = onConfirm) { Text("Сохранить") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Отмена") } },
     )
 }

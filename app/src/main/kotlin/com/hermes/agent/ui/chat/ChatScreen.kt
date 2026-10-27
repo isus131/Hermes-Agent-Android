@@ -216,7 +216,7 @@ fun ChatScreen(
                                         putExtra(android.content.Intent.EXTRA_TEXT, markdown)
                                         type = "text/plain"
                                     }
-                                    exportContext.startActivity(android.content.Intent.createChooser(send, "Export Chat Transcript"))
+                                    exportContext.startActivity(android.content.Intent.createChooser(send, "Экспорт переписки"))
                                 }
                             },
                         )
@@ -279,10 +279,10 @@ fun ChatScreen(
     pendingConfirmation?.let { pending ->
         androidx.compose.material3.AlertDialog(
             onDismissRequest = { viewModel.submitToolConfirmation(pending.id, false) },
-            title = { Text("Approve Action") },
+            title = { Text("Одобрить действие") },
             text = {
                 Column {
-                    Text("Hermes wants to run the following tool:")
+                    Text("Hermes хочет запустить такой инструмент:")
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = pending.call.name,
@@ -298,12 +298,12 @@ fun ChatScreen(
             },
             confirmButton = {
                 TextButton(onClick = { viewModel.submitToolConfirmation(pending.id, true) }) {
-                    Text("Allow")
+                    Text("Разрешить")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { viewModel.submitToolConfirmation(pending.id, false) }) {
-                    Text("Deny")
+                    Text("Запретить")
                 }
             }
         )
@@ -344,12 +344,12 @@ private fun ReferenceChatTopBar(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(onClick = onOpenChats, modifier = Modifier.size(40.dp)) {
-                    Icon(Icons.Outlined.Menu, contentDescription = "Chats")
+                    Icon(Icons.Outlined.Menu, contentDescription = "Чаты")
                 }
                 Spacer(Modifier.size(4.dp))
                 Column {
                     Text(
-                        text = title.ifBlank { "New conversation" },
+                        text = title.ifBlank { "Новый разговор" },
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
@@ -377,13 +377,13 @@ private fun ReferenceChatTopBar(
             ) {
                 TopBarActionIcon(
                     icon = Icons.Outlined.Terminal,
-                    description = "Terminal",
+                    description = "Терминал",
                     active = terminalActive,
                     onClick = onToggleTerminal,
                 )
                 TopBarActionIcon(
                     icon = Icons.Outlined.Add,
-                    description = "Start new chat",
+                    description = "Начать новый чат",
                     active = false,
                     onClick = onNewChat,
                 )
@@ -419,14 +419,14 @@ private fun PlanDrawer(
     ModalDrawerSheet {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Execution Plan",
+                text = "План выполнения",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(8.dp))
             if (plan == null) {
                 Text(
-                    text = "No active plan.",
+                    text = "Активного плана нет.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -477,7 +477,7 @@ private fun ClarificationCard(
     ) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Text(
-                text = "Hermes needs a quick answer",
+                text = "Hermes нужен быстрый ответ",
                 style = MaterialTheme.typography.labelSmall,
                 fontFamily = GeistMono,
                 color = scheme.onPrimaryContainer.copy(alpha = 0.7f),
@@ -506,7 +506,7 @@ private fun ClarificationCard(
                     onValueChange = { freeText = it },
                     modifier = Modifier.weight(1f),
                     placeholder = {
-                        Text(if (request.choices.isEmpty()) "Type your answer…" else "Or type another answer…")
+                        Text(if (request.choices.isEmpty()) "Введите ответ…" else "Или введите другой ответ…")
                     },
                     singleLine = true,
                     shape = MaterialTheme.shapes.medium,
@@ -521,7 +521,7 @@ private fun ClarificationCard(
                     },
                     enabled = freeText.isNotBlank(),
                     shape = MaterialTheme.shapes.medium,
-                ) { Text("Send") }
+                ) { Text("Отправить") }
             }
         }
     }
@@ -547,7 +547,7 @@ private fun TodoPanel(todos: List<TodoItem>) {
                 modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded },
             ) {
                 Text(
-                    "PLAN",
+                    "ПЛАН",
                     fontFamily = GeistMono,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
@@ -603,9 +603,9 @@ private fun EmptyChatState(
     modifier: Modifier = Modifier,
 ) {
     val prompts = listOf(
-        QuickPrompt(Icons.Outlined.Today, "Plan my day", "Help me plan my day"),
-        QuickPrompt(Icons.Outlined.Description, "Create a note", "Create a note for me"),
-        QuickPrompt(Icons.Outlined.Public, "Look something up", "Look something up for me"),
+        QuickPrompt(Icons.Outlined.Today, "Спланировать день", "Помоги мне спланировать день"),
+        QuickPrompt(Icons.Outlined.Description, "Создать заметку", "Создай для меня заметку"),
+        QuickPrompt(Icons.Outlined.Public, "Найти информацию", "Найди для меня информацию"),
     )
     Column(
         modifier = modifier.padding(horizontal = 28.dp, vertical = 20.dp),
@@ -723,7 +723,7 @@ private fun TerminalPanel() {
         pendingCommand = null
         when {
             cmd == null -> Unit
-            !granted -> toast("Termux permission denied. Grant \"Run commands in Termux\" to continue.")
+            !granted -> toast("Termux не дал разрешения. Выдайте разрешение «Run commands in Termux», чтобы продолжить.")
             cmd.isEmpty() -> scope.launch { probeHermes() }
             else -> doLaunch(cmd)
         }
@@ -731,7 +731,7 @@ private fun TerminalPanel() {
 
     fun checkInstallation() {
         if (!runner.isTermuxInstalled()) {
-            toast("Termux not found. Install Termux from F-Droid (not the Play Store build).")
+            toast("Termux не найден. Установите Termux из F-Droid (не версию из Play Маркета).")
             return
         }
         val granted = androidx.core.content.ContextCompat.checkSelfPermission(
@@ -747,7 +747,7 @@ private fun TerminalPanel() {
 
     fun launchInTermux(command: String) {
         if (!runner.isTermuxInstalled()) {
-            toast("Termux not found. Install Termux from F-Droid (not the Play Store build).")
+            toast("Termux не найден. Установите Termux из F-Droid (не версию из Play Маркета).")
             return
         }
         val granted = androidx.core.content.ContextCompat.checkSelfPermission(
@@ -769,7 +769,7 @@ private fun TerminalPanel() {
                         .bufferedReader().use { it.readText() }
                 }.getOrNull()
             }
-            if (script == null) toast("Couldn't read installer script.")
+            if (script == null) toast("Не удалось прочитать скрипт установки.")
             else launchInTermux(script)
         }
     }
@@ -784,7 +784,7 @@ private fun TerminalPanel() {
             PulsingDot(color = scheme.tertiary, size = 6.dp)
             Spacer(Modifier.size(8.dp))
             Text(
-                "Termux bridge",
+                "Мост Termux",
                 fontFamily = GeistMono,
                 fontSize = 12.sp,
                 color = scheme.onSurfaceVariant,
@@ -792,8 +792,8 @@ private fun TerminalPanel() {
         }
         Spacer(Modifier.height(12.dp))
         Text(
-            "Run the full Hermes Agent in a real Linux environment via the Termux app. " +
-                "Install once, then start it — each action opens a Termux session you can watch.",
+            "Запускайте полноценный Hermes Agent в настоящей среде Linux через приложение Termux. " +
+                "Установите один раз, затем запускайте — каждое действие открывает сессию Termux, за которой можно следить.",
             style = MaterialTheme.typography.bodyMedium,
             color = scheme.onSurfaceVariant,
         )
@@ -801,10 +801,10 @@ private fun TerminalPanel() {
         // Installation status: verified by probing Termux for the hermes CLI.
         Row(verticalAlignment = Alignment.CenterVertically) {
             val (statusText, statusColor) = when {
-                probing -> "Hermes CLI: checking…" to scheme.onSurfaceVariant
-                hermesInstalled == true -> "Hermes CLI: installed ✓" to scheme.tertiary
-                hermesInstalled == false -> "Hermes CLI: not installed" to scheme.onSurfaceVariant
-                else -> "Hermes CLI: unknown" to scheme.onSurfaceVariant
+                probing -> "Hermes CLI: проверка…" to scheme.onSurfaceVariant
+                hermesInstalled == true -> "Hermes CLI: установлен ✓" to scheme.tertiary
+                hermesInstalled == false -> "Hermes CLI: не установлен" to scheme.onSurfaceVariant
+                else -> "Hermes CLI: неизвестно" to scheme.onSurfaceVariant
             }
             Text(
                 statusText,
@@ -815,7 +815,7 @@ private fun TerminalPanel() {
             Spacer(Modifier.weight(1f))
             if (!probing) {
                 Text(
-                    "Check",
+                    "Проверить",
                     fontFamily = GeistMono,
                     fontSize = 12.sp,
                     color = scheme.primary,
@@ -833,24 +833,24 @@ private fun TerminalPanel() {
                 onClick = { installHermes() },
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
-            ) { Text("Install Hermes in Termux") }
+            ) { Text("Установить Hermes в Termux") }
             Spacer(Modifier.height(10.dp))
         }
         androidx.compose.material3.OutlinedButton(
             onClick = { launchInTermux("hermes; echo; read -p 'press enter to close…' _") },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
-        ) { Text("Run hermes") }
+        ) { Text("Запустить hermes") }
         Spacer(Modifier.height(10.dp))
         androidx.compose.material3.OutlinedButton(
             onClick = { launchInTermux("echo 'Termux ready.'; bash") },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
-        ) { Text("Open Termux shell") }
+        ) { Text("Открыть оболочку Termux") }
         Spacer(Modifier.weight(1f))
         if (hermesInstalled == true) {
             Text(
-                "Hermes CLI detected · Reinstall",
+                "Hermes CLI найден · Переустановить",
                 style = MaterialTheme.typography.labelSmall,
                 fontFamily = GeistMono,
                 color = scheme.onSurfaceVariant,
@@ -860,7 +860,7 @@ private fun TerminalPanel() {
             )
         }
         Text(
-            "Requires Termux (F-Droid) with allow-external-apps=true in ~/.termux/termux.properties.",
+            "Нужен Termux (F-Droid) с allow-external-apps=true в ~/.termux/termux.properties.",
             style = MaterialTheme.typography.labelSmall,
             fontFamily = GeistMono,
             color = scheme.outline,

@@ -148,7 +148,7 @@ class SettingsViewModel @Inject constructor(
                         event.session?.let { session ->
                             setProviderDiscovery(
                                 session.providerId,
-                                ModelDiscoveryUiState.Error("Sign in failed: ${event.error}"),
+                                ModelDiscoveryUiState.Error("Не удалось войти: ${event.error}"),
                             )
                         }
                     }
@@ -389,7 +389,7 @@ class SettingsViewModel @Inject constructor(
                 val text = jsonBackupManager.encode(backup, password)
                 appContext.contentResolver.openOutputStream(uri)?.use { out ->
                     out.write(text.toByteArray(Charsets.UTF_8))
-                } ?: error("Could not open the file for writing.")
+                } ?: error("Не удалось открыть файл для записи.")
                 Triple(
                     backup.totalItems + if (includeBots) 1 else 0,
                     backup.credentials != null,
@@ -399,13 +399,13 @@ class SettingsViewModel @Inject constructor(
                 onSuccess = { (items, keys, encrypted) ->
                     BackupUiState.Success(
                         buildString {
-                            append("Backed up $items item(s)")
-                            if (keys) append(", including cloud API keys")
-                            append(if (encrypted) ", encrypted." else ".")
+                            append("Сохранено элементов: $items")
+                            if (keys) append(", включая облачные API-ключи")
+                            append(if (encrypted) ", с шифрованием." else ".")
                         },
                     )
                 },
-                onFailure = { BackupUiState.Error(it.message ?: "Backup failed.") },
+                onFailure = { BackupUiState.Error(it.message ?: "Резервное копирование не удалось.") },
             )
         }
     }
@@ -417,7 +417,7 @@ class SettingsViewModel @Inject constructor(
             _jsonBackupState.value = runCatching {
                 val text = appContext.contentResolver.openInputStream(uri)?.use { input ->
                     input.readBytes().toString(Charsets.UTF_8)
-                } ?: error("Could not open the file for reading.")
+                } ?: error("Не удалось открыть файл для чтения.")
                 // Decoded before anything is written, so a wrong password or a
                 // corrupt file cannot leave the database half-updated.
                 val backup = jsonBackupManager.decode(text, password)
@@ -433,11 +433,11 @@ class SettingsViewModel @Inject constructor(
             }.fold(
                 onSuccess = { (r, keys) ->
                     BackupUiState.Success(
-                        "Added ${r.added}, replaced ${r.replaced}, skipped ${r.skipped}." +
-                            if (keys > 0) " Restored $keys credential(s)." else "",
+                        "Добавлено: ${r.added}, заменено: ${r.replaced}, пропущено: ${r.skipped}." +
+                            if (keys > 0) " Восстановлено учётных данных: $keys." else "",
                     )
                 },
-                onFailure = { BackupUiState.Error(it.message ?: "Restore failed.") },
+                onFailure = { BackupUiState.Error(it.message ?: "Восстановление не удалось.") },
             )
         }
     }
@@ -496,11 +496,11 @@ class SettingsViewModel @Inject constructor(
 
     private fun modelDiscoveryError(failure: Throwable): String = when (failure) {
         is HttpException -> when (failure.code()) {
-            401, 403 -> "The provider rejected model discovery. Check the API key and retry."
-            404 -> "This provider does not expose a /models endpoint at that URL. Check the API base URL."
-            else -> "The provider returned HTTP ${failure.code()} while loading models."
+            401, 403 -> "Провайдер отклонил запрос списка моделей. Проверьте API-ключ и повторите."
+            404 -> "У этого провайдера нет адреса /models по этому URL. Проверьте базовый URL API."
+            else -> "При загрузке моделей провайдер вернул HTTP ${failure.code()}."
         }
-        else -> failure.message ?: "Couldn't load models from this provider."
+        else -> failure.message ?: "Не удалось загрузить модели от этого провайдера."
     }
 
     private data class CloudEndpoint(val baseUrl: String, val apiKey: String)
@@ -557,7 +557,7 @@ class SettingsViewModel @Inject constructor(
         val current = settingsRepository.current().cloudProviderProfiles
         val profile = if (definitionId == "custom" || definitionId.startsWith("custom_")) {
             val id = if (definitionId == "custom") "custom_${System.currentTimeMillis()}" else definitionId
-            val name = customName?.takeIf { it.isNotBlank() } ?: "Custom Provider"
+            val name = customName?.takeIf { it.isNotBlank() } ?: "Свой провайдер"
             val baseUrl = customBaseUrl?.trim()?.ifBlank { "http://localhost:11434/v1" } ?: "http://localhost:11434/v1"
             com.hermes.agent.domain.settings.CloudProviderProfile(
                 id = id,
@@ -707,7 +707,7 @@ class SettingsViewModel @Inject constructor(
             ?: CloudProviderRegistry.definition(providerId)?.let(CloudProviderRegistry::profile)
             ?: com.hermes.agent.domain.settings.CloudProviderProfile(
                 id = providerId,
-                name = "Custom Provider",
+                name = "Свой провайдер",
                 baseUrl = "",
                 model = "",
                 apiKey = "",
@@ -740,7 +740,7 @@ class SettingsViewModel @Inject constructor(
                     context.startActivity(browserIntent)
                 }
             } catch (t: Throwable) {
-                setProviderDiscovery(providerId, ModelDiscoveryUiState.Error(t.message ?: "Failed to start sign in"))
+                setProviderDiscovery(providerId, ModelDiscoveryUiState.Error(t.message ?: "Не удалось начать вход"))
             }
         }
     }
@@ -753,7 +753,7 @@ class SettingsViewModel @Inject constructor(
             setProviderApiKey(exchange.providerId, exchange.apiKey).join()
             refreshProviderModels(exchange.providerId, debounceMillis = 0L)
         }.onFailure { t ->
-            setProviderDiscovery(session.providerId, ModelDiscoveryUiState.Error(t.message ?: "Key exchange failed"))
+            setProviderDiscovery(session.providerId, ModelDiscoveryUiState.Error(t.message ?: "Обмен ключами не удался"))
         }
     }
 
@@ -812,8 +812,8 @@ class SettingsViewModel @Inject constructor(
             return@launch
         }
         val authenticated = deviceAuthenticationService.authenticate(
-            title = "Enable trusted background actions",
-            reason = "Confirm with your fingerprint or phone passcode",
+            title = "Включить доверенные фоновые действия",
+            reason = "Подтвердите отпечатком пальца или кодом телефона",
         )
         if (authenticated) settingsRepository.setTrustedBackgroundPhoneActions(true)
     }
@@ -959,11 +959,11 @@ class SettingsViewModel @Inject constructor(
             val url = typedUrl.trim().ifBlank { current.remoteGatewayUrl }.trim().removeSuffix("/")
             val key = typedKey.trim().ifBlank { current.remoteGatewayApiKey }.trim()
             if (url.isBlank()) {
-                onResult(false, "Please specify the gateway URL.")
+                onResult(false, "Укажите URL шлюза.")
                 return@launch
             }
             if (key.isBlank()) {
-                onResult(false, "Please provide the gateway API key.")
+                onResult(false, "Укажите API-ключ шлюза.")
                 return@launch
             }
             try {
@@ -980,15 +980,15 @@ class SettingsViewModel @Inject constructor(
                     .build()
                 client.newCall(request).execute().use { response ->
                     if (response.isSuccessful) {
-                        onResult(true, "Connected: ${response.body?.string()?.take(60) ?: "OK"}")
+                        onResult(true, "Подключено: ${response.body?.string()?.take(60) ?: "ОК"}")
                     } else if (response.code == 401) {
-                        onResult(false, "Unauthorized (HTTP 401): Check your API key.")
+                        onResult(false, "Нет доступа (HTTP 401): проверьте API-ключ.")
                     } else {
                         onResult(false, "HTTP ${response.code}: ${response.message}")
                     }
                 }
             } catch (e: Exception) {
-                onResult(false, "Connection error: ${e.message ?: e.javaClass.simpleName}")
+                onResult(false, "Ошибка подключения: ${e.message ?: e.javaClass.simpleName}")
             }
         }
 
@@ -1034,14 +1034,14 @@ class SettingsViewModel @Inject constructor(
     fun addCurrentLocationAsPlace(label: String) = viewModelScope.launch {
         val fix = presenceManager.currentFix()
         if (fix == null) {
-            _placeFeedback.value = "No location available yet — check the location permission."
+            _placeFeedback.value = "Местоположение пока недоступно — проверьте разрешение на геолокацию."
             return@launch
         }
         val existing = presenceManager.places()
         presenceManager.savePlaces(
             existing + com.hermes.agent.domain.model.PresencePlace(label, fix.first, fix.second),
         )
-        _placeFeedback.value = "Saved \"$label\"."
+        _placeFeedback.value = "Сохранено: «$label»."
     }
 
     fun removePlace(label: String) = viewModelScope.launch {
@@ -1055,11 +1055,11 @@ class SettingsViewModel @Inject constructor(
         val url = current.homeAssistantUrl.trim().removeSuffix("/")
         val token = current.homeAssistantToken.trim()
         if (url.isBlank()) {
-            onResult(false, "Please specify the Home Assistant base URL.")
+            onResult(false, "Укажите базовый URL Home Assistant.")
             return@launch
         }
         if (token.isBlank()) {
-            onResult(false, "Please provide a Long-Lived Access Token.")
+            onResult(false, "Укажите долгосрочный токен доступа.")
             return@launch
         }
         try {
@@ -1075,15 +1075,15 @@ class SettingsViewModel @Inject constructor(
                 .build()
             client.newCall(request).execute().use { response ->
                 if (response.isSuccessful) {
-                    onResult(true, "Connected successfully: ${response.body?.string()?.take(60) ?: "API running."}")
+                    onResult(true, "Подключение успешно: ${response.body?.string()?.take(60) ?: "API работает."}")
                 } else if (response.code == 401) {
-                    onResult(false, "Unauthorized (HTTP 401): Check your Access Token.")
+                    onResult(false, "Нет доступа (HTTP 401): проверьте токен доступа.")
                 } else {
                     onResult(false, "HTTP ${response.code}: ${response.message}")
                 }
             }
         } catch (e: Exception) {
-            onResult(false, "Connection error: ${e.message ?: e.javaClass.simpleName}")
+            onResult(false, "Ошибка подключения: ${e.message ?: e.javaClass.simpleName}")
         }
     }
 
@@ -1125,7 +1125,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             val result = runCatching { otaUpdateChecker.checkOffer() }
             _updateState.value = result.fold(
-                onFailure = { UpdateUiState.Error(it.message ?: "Check failed") },
+                onFailure = { UpdateUiState.Error(it.message ?: "Проверка не удалась") },
                 onSuccess = { decision ->
                     when (decision) {
                         is com.hermes.agent.data.hotfix.OtaDecision.Patch ->
@@ -1183,12 +1183,12 @@ class SettingsViewModel @Inject constructor(
             _exportState.value = result.fold(
                 onSuccess = {
                     if (it.sessionCount == 0) {
-                        ExportUiState.Error("No conversations to export yet.")
+                        ExportUiState.Error("Пока нет разговоров для экспорта.")
                     } else {
                         ExportUiState.Ready(it.zipFile, it.sessionCount, it.messageCount)
                     }
                 },
-                onFailure = { ExportUiState.Error(it.message ?: "Export failed") },
+                onFailure = { ExportUiState.Error(it.message ?: "Экспорт не удался") },
             )
         }
     }

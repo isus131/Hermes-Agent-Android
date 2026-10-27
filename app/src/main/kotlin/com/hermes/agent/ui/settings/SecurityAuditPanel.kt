@@ -22,7 +22,7 @@ import com.hermes.agent.util.audit.SecurityControl
 
 /** Short "N/M enforced" summary for the security-audit header. */
 val securityAuditSummary: String
-    get() = "${SecurityAudit.enforcedCount}/${SecurityAudit.all.size} controls enforced"
+    get() = "Включено защит: ${SecurityAudit.enforcedCount}/${SecurityAudit.all.size}"
 
 /**
  * The security-audit checklist rows, with status icons so users (and reviewers)

@@ -62,7 +62,7 @@ import com.hermes.agent.core.theme.GeistMono
 data class CodeArtifact(
     val language: String,
     val code: String,
-    val title: String = "${language.uppercase()} Artifact",
+    val title: String = "Артефакт ${language.uppercase()}",
 )
 
 object ArtifactExtractor {
@@ -74,13 +74,13 @@ object ArtifactExtractor {
             val lang = match.groupValues[1].ifBlank { "text" }.lowercase()
             val snippet = match.groupValues[2].trimEnd()
             val title = when (lang) {
-                "html" -> "Web Page Preview"
-                "svg" -> "SVG Graphic"
-                "markdown", "md" -> "Markdown Document"
-                "json" -> "JSON Schema"
-                "kotlin", "kt" -> "Kotlin Source"
-                "python", "py" -> "Python Script"
-                else -> "${lang.uppercase()} Snippet"
+                "html" -> "Предпросмотр веб-страницы"
+                "svg" -> "SVG-графика"
+                "markdown", "md" -> "Документ Markdown"
+                "json" -> "Схема JSON"
+                "kotlin", "kt" -> "Исходный код Kotlin"
+                "python", "py" -> "Скрипт Python"
+                else -> "Фрагмент ${lang.uppercase()}"
             }
             CodeArtifact(language = lang, code = snippet, title = title)
         }.toList()
@@ -132,7 +132,7 @@ fun ArtifactPreviewBottomSheet(
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                     Text(
-                        text = "Language: ${artifact.language}",
+                        text = "Язык: ${artifact.language}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -143,19 +143,19 @@ fun ArtifactPreviewBottomSheet(
                         onClick = {
                             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                             clipboard.setPrimaryClip(ClipData.newPlainText(artifact.title, artifact.code))
-                            Toast.makeText(context, "Code copied to clipboard", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Код скопирован в буфер обмена", Toast.LENGTH_SHORT).show()
                         },
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.ContentCopy,
-                            contentDescription = "Copy code",
+                            contentDescription = "Копировать код",
                             tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Outlined.Close,
-                            contentDescription = "Close preview",
+                            contentDescription = "Закрыть предпросмотр",
                             tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
@@ -177,7 +177,7 @@ fun ArtifactPreviewBottomSheet(
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
                             Icon(Icons.Outlined.Visibility, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Text("Interactive Preview")
+                            Text("Интерактивный просмотр")
                         }
                     },
                 )
@@ -190,7 +190,7 @@ fun ArtifactPreviewBottomSheet(
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
                             Icon(Icons.Outlined.Code, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Text("Source Code")
+                            Text("Исходный код")
                         }
                     },
                 )

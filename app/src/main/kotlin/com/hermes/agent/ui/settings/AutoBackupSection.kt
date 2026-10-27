@@ -65,7 +65,7 @@ class AutoBackupViewModel @Inject constructor(
         everyHours = store.everyHours,
         hasPassword = store.hasPassword && store.password() != null,
         lastLine = if (store.lastAt == 0L) "" else {
-            "Last run ${DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(store.lastAt))}: ${store.lastResult}"
+            "Последний запуск ${DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(store.lastAt))}: ${store.lastResult}"
         },
     )
 
@@ -121,9 +121,9 @@ fun AutoBackupSection(viewModel: AutoBackupViewModel = hiltViewModel()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("Automatic backups", style = MaterialTheme.typography.titleMedium)
+                    Text("Автоматические резервные копии", style = MaterialTheme.typography.titleMedium)
                     Text(
-                        "Saves a full encrypted backup on a schedule and keeps the newest 5.",
+                        "Сохраняет полную зашифрованную копию по расписанию и хранит 5 последних.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -135,9 +135,9 @@ fun AutoBackupSection(viewModel: AutoBackupViewModel = hiltViewModel()) {
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { picker.launch(null) }) { Text(if (ui.folderName == null) "Choose folder" else "Change folder") }
+                OutlinedButton(onClick = { picker.launch(null) }) { Text(if (ui.folderName == null) "Выбрать папку" else "Сменить папку") }
                 Text(
-                    ui.folderName ?: "No folder chosen",
+                    ui.folderName ?: "Папка не выбрана",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -145,31 +145,31 @@ fun AutoBackupSection(viewModel: AutoBackupViewModel = hiltViewModel()) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text(if (ui.hasPassword) "Password (saved; type to replace)" else "Password for these backups") },
+                label = { Text(if (ui.hasPassword) "Пароль (сохранён; введите, чтобы заменить)" else "Пароль для этих копий") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = if (show) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = { TextButton(onClick = { show = !show }) { Text(if (show) "Hide" else "Show") } },
+                trailingIcon = { TextButton(onClick = { show = !show }) { Text(if (show) "Скрыть" else "Показать") } },
             )
             if (password.isNotEmpty()) {
                 OutlinedButton(
                     onClick = { viewModel.setPassword(password); password = "" },
                     enabled = password.length >= 8,
-                ) { Text(if (password.length >= 8) "Save password" else "At least 8 characters") }
+                ) { Text(if (password.length >= 8) "Сохранить пароль" else "Минимум 8 символов") }
             }
             Text(
-                "The password is kept on this phone, sealed with a key that cannot leave it, so backups can run unattended. " +
-                    "You still need it to restore, so remember it.",
+                "Пароль хранится на этом телефоне и защищён ключом, который не может его покинуть, поэтому копии делаются без вашего участия. " +
+                    "Для восстановления он всё равно понадобится, так что запомните его.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf(24 to "Daily", 168 to "Weekly").forEach { (hours, label) ->
+                listOf(24 to "Ежедневно", 168 to "Еженедельно").forEach { (hours, label) ->
                     FilterChip(selected = ui.everyHours == hours, onClick = { viewModel.setEveryHours(hours) }, label = { Text(label) })
                 }
             }
             if (ui.enabled) {
-                OutlinedButton(onClick = viewModel::runNow) { Text("Back up now") }
+                OutlinedButton(onClick = viewModel::runNow) { Text("Сделать копию сейчас") }
             }
             if (ui.lastLine.isNotEmpty()) {
                 Text(ui.lastLine, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

@@ -85,9 +85,9 @@ class ProactiveNotifier @Inject constructor(
             nm.createNotificationChannel(
                 NotificationChannel(
                     CHANNEL_ID,
-                    "Proactive updates",
+                    "Проактивные обновления",
                     NotificationManager.IMPORTANCE_DEFAULT,
-                ).apply { description = "Scheduled tasks, digests, and nudges from Hermes" },
+                ).apply { description = "Задачи по расписанию, сводки и напоминания от Hermes" },
             )
         }
 
@@ -109,7 +109,7 @@ class ProactiveNotifier @Inject constructor(
                 .setContentText(text)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(text))
                 .setAutoCancel(true)
-                .addAction(0, "Less of this", lessPending)
+                .addAction(0, "Поменьше такого", lessPending)
                 .build(),
         )
     }

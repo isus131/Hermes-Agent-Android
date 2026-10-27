@@ -21,19 +21,19 @@ enum class TopLevelDestination(
     val label: String,
     val icon: ImageVector,
 ) {
-    HOME(         route = "home",                 label = "Home",       icon = Icons.Outlined.Home),
-    CONVERSATIONS(route = "conversations",         label = "Chats",      icon = Icons.Outlined.Chat),
-    CHAT(         route = "chat/{conversationId}", label = "Chat",       icon = Icons.Outlined.Chat),
-    DOCUMENTS(    route = "documents",             label = "Artifacts",      icon = Icons.Outlined.Description),
-    SKILLS(       route = "skills",               label = "Skills & Tools", icon = Icons.Outlined.Stars),
-    CONNECT(      route = "connect",              label = "Messaging",      icon = Icons.Outlined.Link),
+    HOME(         route = "home",                 label = "Главная",       icon = Icons.Outlined.Home),
+    CONVERSATIONS(route = "conversations",         label = "Чаты",      icon = Icons.Outlined.Chat),
+    CHAT(         route = "chat/{conversationId}", label = "Чат",       icon = Icons.Outlined.Chat),
+    DOCUMENTS(    route = "documents",             label = "Артефакты",      icon = Icons.Outlined.Description),
+    SKILLS(       route = "skills",               label = "Навыки и инструменты", icon = Icons.Outlined.Stars),
+    CONNECT(      route = "connect",              label = "Мессенджеры",      icon = Icons.Outlined.Link),
     SCHEDULE(     route = "schedule",             label = "CRON",           icon = Icons.Outlined.Schedule),
-    DELEGATE(     route = "delegate",             label = "Delegate",   icon = Icons.AutoMirrored.Outlined.Send),
-    EXPERIMENT(   route = "experiment",           label = "Experiment", icon = Icons.Outlined.Science),
-    SETTINGS(     route = "settings",             label = "Settings",   icon = Icons.Outlined.Settings),
-    MEMORY(       route = "memory",               label = "Memory",     icon = Icons.Outlined.Psychology),
-    KANBAN(       route = "kanban",               label = "Board",      icon = Icons.Outlined.ViewColumn),
-    TICKET(       route = "ticket/{ticketId}",     label = "Ticket",     icon = Icons.Outlined.ViewColumn);
+    DELEGATE(     route = "delegate",             label = "Поручения",   icon = Icons.AutoMirrored.Outlined.Send),
+    EXPERIMENT(   route = "experiment",           label = "Эксперимент", icon = Icons.Outlined.Science),
+    SETTINGS(     route = "settings",             label = "Настройки",   icon = Icons.Outlined.Settings),
+    MEMORY(       route = "memory",               label = "Память",     icon = Icons.Outlined.Psychology),
+    KANBAN(       route = "kanban",               label = "Доска",      icon = Icons.Outlined.ViewColumn),
+    TICKET(       route = "ticket/{ticketId}",     label = "Задача",     icon = Icons.Outlined.ViewColumn);
 
     companion object {
         fun chatRoute(conversationId: String) = "chat/$conversationId"

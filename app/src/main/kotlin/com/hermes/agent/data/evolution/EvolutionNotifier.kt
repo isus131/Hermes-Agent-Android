@@ -31,9 +31,9 @@ class EvolutionNotifier @Inject constructor(
             nm.createNotificationChannel(
                 NotificationChannel(
                     CHANNEL_ID,
-                    "Skill Evolution",
+                    "Развитие навыков",
                     NotificationManager.IMPORTANCE_LOW, // informative, not urgent
-                ).apply { description = "Notifies when Hermes refines its skills or proposes improvements from your usage" },
+                ).apply { description = "Уведомляет, когда Hermes улучшает свои навыки или предлагает доработки на основе вашего использования" },
             )
         }
         return nm
@@ -68,30 +68,30 @@ class EvolutionNotifier @Inject constructor(
         if (count <= 0) return
         post(
             PROPOSALS_ID,
-            if (count == 1) "1 improvement proposed" else "$count improvements proposed",
-            "Found from how you use Hermes. Tap to review.",
-            "Hermes analysed your recent usage and proposed $count improvement(s). Nothing changes until you " +
-                "approve it under Settings → Feature evolution.",
+            if (count == 1) "Предложено 1 улучшение" else "Предложено улучшений: $count",
+            "Найдено по тому, как вы пользуетесь Hermes. Нажмите, чтобы посмотреть.",
+            "Hermes проанализировал ваше недавнее использование и предложил улучшений: $count. Ничего не изменится, пока вы " +
+                "не одобрите это в разделе «Настройки → Развитие функций».",
         )
     }
 
     override fun moduleReady(title: String) {
         post(
             READY_ID,
-            "Ready to review: $title",
-            "Built and reviewed by your bots. Tap to review and install.",
-            "Your builder and reviewer bots finished \"$title\". Review the code, permissions and test results under " +
-                "Settings → Feature evolution before installing.",
+            "Готово к проверке: $title",
+            "Создано и проверено вашими ботами. Нажмите, чтобы проверить и установить.",
+            "Боты-сборщик и проверяющий закончили «$title». Проверьте код, разрешения и результаты тестов в разделе " +
+                "«Настройки → Развитие функций» перед установкой.",
         )
     }
 
     override fun overrideReverted(toolName: String, moduleId: String, reason: String) {
         post(
             REVERTED_ID,
-            "Reverted a fix for $toolName",
-            "It kept failing, so Hermes went back to the built-in tool.",
-            "The evolution module $moduleId replaced $toolName but failed repeatedly ($reason). It was switched off " +
-                "and the built-in tool is back. See Settings → Feature evolution.",
+            "Исправление для $toolName отменено",
+            "Оно постоянно давало сбои, поэтому Hermes вернулся к встроенному инструменту.",
+            "Модуль развития $moduleId заменил $toolName, но постоянно давал сбои ($reason). Он отключён, " +
+                "и встроенный инструмент возвращён. См. «Настройки → Развитие функций».",
         )
     }
 
@@ -101,19 +101,19 @@ class EvolutionNotifier @Inject constructor(
         val contentIntent = contentIntent()
 
         val title = if (skillNames.size == 1) {
-            "Skill improved: ${skillNames.first()}"
+            "Навык улучшен: ${skillNames.first()}"
         } else {
-            "${skillNames.size} skills improved"
+            "Улучшено навыков: ${skillNames.size}"
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_menu_manage)
             .setContentTitle(title)
-            .setContentText("Refined from how you actually used them. Tap to review.")
+            .setContentText("Доработано по тому, как вы ими пользовались. Нажмите, чтобы посмотреть.")
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(
-                    "Hermes refined ${skillNames.joinToString(", ")} based on your recent " +
-                        "usage. Review under Settings → Skills & Tools.",
+                    "Hermes доработал ${skillNames.joinToString(", ")} на основе вашего недавнего " +
+                        "использования. Посмотреть: «Настройки → Навыки и инструменты».",
                 ),
             )
             .apply { contentIntent?.let { setContentIntent(it) } }

@@ -60,10 +60,10 @@ internal fun UpdateSection(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(20.dp),
                 )
-                Text("Over-the-air Updates", style = MaterialTheme.typography.bodyLarge)
+                Text("Обновления по воздуху", style = MaterialTheme.typography.bodyLarge)
             }
             Text(
-                "Current version: ${BuildConfig.VERSION_NAME}",
+                "Текущая версия: ${BuildConfig.VERSION_NAME}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -81,7 +81,7 @@ internal fun UpdateSection(
                         onClick = onCheck,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text("Check for updates")
+                        Text("Проверить обновления")
                     }
                 }
                 is UpdateUiState.Checking -> {
@@ -90,56 +90,56 @@ internal fun UpdateSection(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
-                        Text("Checking…", style = MaterialTheme.typography.bodySmall)
+                        Text("Проверка…", style = MaterialTheme.typography.bodySmall)
                     }
                 }
                 is UpdateUiState.UpToDate -> {
                     Text(
-                        "You're on the latest version.",
+                        "У вас последняя версия.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary,
                     )
                     OutlinedButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
-                        Text("Dismiss")
+                        Text("Скрыть")
                     }
                 }
                 is UpdateUiState.UpdateAvailable -> {
                     Text(
-                        "Hermes ${state.version} is available!",
+                        "Доступен Hermes ${state.version}!",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
                     if (state.apkUrl.isNotBlank()) {
                         if (!canInstall) {
                             Text(
-                                "Allow \"install unknown apps\" for Hermes so it can " +
-                                    "install the update directly.",
+                                "Разрешите Hermes «установку неизвестных приложений», чтобы он мог " +
+                                    "сам установить обновление.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             OutlinedButton(onClick = onManagePermission, modifier = Modifier.fillMaxWidth()) {
-                                Text("Allow installs")
+                                Text("Разрешить установку")
                             }
                         }
                         Button(
                             onClick = onDownload,
                             modifier = Modifier.fillMaxWidth(),
                         ) {
-                            Text("Download & install")
+                            Text("Скачать и установить")
                         }
                     } else {
                         Button(
                             onClick = { onOpenUrl(state.releaseUrl) },
                             modifier = Modifier.fillMaxWidth(),
                         ) {
-                            Text("View release")
+                            Text("Открыть релиз")
                         }
                     }
                 }
                 is UpdateUiState.FixAvailable -> {
                     val m = state.offer.manifest
                     Text(
-                        "A fix for this version is available (fix #${m.patchVersion}, ${formatSize(m.size)}).",
+                        "Для этой версии есть исправление (№${m.patchVersion}, ${formatSize(m.size)}).",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -147,27 +147,27 @@ internal fun UpdateSection(
                         Text(m.notes, style = MaterialTheme.typography.bodySmall)
                     }
                     Text(
-                        "No reinstall: Hermes downloads the fix, checks that it is signed with the same key as " +
-                            "this app and made for this exact build, then asks you to restart. It takes effect " +
-                            "the next time Hermes starts.",
+                        "Без переустановки: Hermes скачает исправление, проверит, что оно подписано тем же ключом, что и " +
+                            "это приложение, и собрано именно для этой сборки, а затем попросит перезапуск. Оно вступит в силу " +
+                            "при следующем запуске Hermes.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Button(onClick = { onApplyFix(state.offer) }, modifier = Modifier.fillMaxWidth()) {
-                        Text("Apply fix (restart required)")
+                        Text("Применить исправление (нужен перезапуск)")
                     }
                     state.fullUpdate?.let { full ->
                         OutlinedButton(onClick = onChooseFullUpdate, modifier = Modifier.fillMaxWidth()) {
-                            Text("Install full update ${full.version} instead")
+                            Text("Установить вместо этого полное обновление ${full.version}")
                         }
                     }
                     androidx.compose.material3.TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
-                        Text("Not now")
+                        Text("Не сейчас")
                     }
                 }
                 is UpdateUiState.Downloading -> {
                     Text(
-                        "Downloading Hermes ${state.version}… ${state.percent}%",
+                        "Загрузка Hermes ${state.version}… ${state.percent}%",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -176,7 +176,7 @@ internal fun UpdateSection(
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Text(
-                        "The screen will stay awake until the download finishes.",
+                        "Экран не будет гаснуть, пока загрузка не закончится.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -187,7 +187,7 @@ internal fun UpdateSection(
 }
 
 private fun formatSize(bytes: Long): String = when {
-    bytes >= 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
-    bytes >= 1024 -> "${bytes / 1024} KB"
+    bytes >= 1024 * 1024 -> "%.1f МБ".format(bytes / (1024.0 * 1024.0))
+    bytes >= 1024 -> "${bytes / 1024} КБ"
     else -> "$bytes B"
 }

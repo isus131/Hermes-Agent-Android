@@ -71,7 +71,7 @@ class EvolutionViewModel @Inject constructor(
         }
     }
 
-    fun analyzeNow() = work("Analysing your recent usage…") {
+    fun analyzeNow() = work("Анализирую ваше недавнее использование…") {
         val outcome = analyzer.analyze(notify = false)
         val summary = FeatureEvolutionWorker.describe(outcome)
         settings.recordAnalysis(System.currentTimeMillis(), summary)
@@ -80,27 +80,27 @@ class EvolutionViewModel @Inject constructor(
 
     /** Approve a proposal, or retry one that failed or was rolled back. */
     fun approve(id: String) = work(null) {
-        store.transition(id, ProposalStatus.APPROVED, "Approved. Send it to the bots to build it.")
-            ?: error("This proposal can no longer be approved")
-        "Approved"
+        store.transition(id, ProposalStatus.APPROVED, "Одобрено. Отправьте ботам, чтобы они это собрали.")
+            ?: error("Это предложение больше нельзя одобрить")
+        "Одобрено"
     }
 
     fun reject(id: String) = work(null) {
-        store.transition(id, ProposalStatus.REJECTED, "Rejected by you") ?: error("This proposal can no longer be rejected")
+        store.transition(id, ProposalStatus.REJECTED, "Отклонено вами") ?: error("Это предложение больше нельзя отклонить")
         // A build in progress is stopped, not just discarded when it finishes.
         scheduler.cancelDispatch(id)
-        "Rejected — it will not be proposed again for 90 days"
+        "Отклонено — его не предложат снова 90 дней"
     }
 
     fun sendToBots(id: String) = work(null) {
         val s = settings.current()
-        if (s.builderProfile.isBlank() || s.reviewerProfile.isBlank()) error("Pick a builder bot and a reviewer bot first")
-        if (!gateway.isConfigured()) error("Connect the desktop gateway first (Settings → Connections)")
+        if (s.builderProfile.isBlank() || s.reviewerProfile.isBlank()) error("Сначала выберите бота-сборщика и бота-проверяющего")
+        if (!gateway.isConfigured()) error("Сначала подключите шлюз на ПК («Настройки → Подключения»)")
         scheduler.dispatch(id)
-        "Sent to '${s.builderProfile}' (builder) and '${s.reviewerProfile}' (reviewer). This can take a while."
+        "Отправлено «${s.builderProfile}» (сборщик) и «${s.reviewerProfile}» (проверяющий). Это может занять время."
     }
 
-    fun openReview(id: String) = work("Re-checking the module on this phone…") {
+    fun openReview(id: String) = work("Перепроверяю модуль на этом телефоне…") {
         val review = installer.review(id).getOrThrow()
         _ui.update { it.copy(review = review) }
         null
@@ -108,15 +108,15 @@ class EvolutionViewModel @Inject constructor(
 
     fun closeReview() = _ui.update { it.copy(review = null) }
 
-    fun install(review: EvolutionModuleInstaller.ModuleReview) = work("Installing…") {
+    fun install(review: EvolutionModuleInstaller.ModuleReview) = work("Установка…") {
         val installed = installer.install(review.proposal.id, review.sha256).getOrThrow()
         _ui.update { it.copy(review = null) }
         installed.statusMessage
     }
 
-    fun rollback(id: String) = work("Rolling back…") { installer.rollback(id).getOrThrow().statusMessage }
+    fun rollback(id: String) = work("Откат…") { installer.rollback(id).getOrThrow().statusMessage }
 
-    fun fileAppChange(id: String) = work("Filing to the self-repair repo…") {
+    fun fileAppChange(id: String) = work("Отправка в репозиторий самовосстановления…") {
         installer.fileAppChange(id, filer).getOrThrow().statusMessage
     }
 
@@ -135,11 +135,11 @@ class EvolutionViewModel @Inject constructor(
     /** Runs [block] once at a time; its string result becomes the message, a failure the error. */
     private fun work(label: String?, block: suspend () -> String?) {
         if (_ui.value.busy != null) return
-        _ui.update { it.copy(busy = label ?: "Working…", message = null, error = null) }
+        _ui.update { it.copy(busy = label ?: "Работаю…", message = null, error = null) }
         viewModelScope.launch {
             runCatching { block() }
                 .onSuccess { msg -> _ui.update { it.copy(busy = null, message = msg) } }
-                .onFailure { e -> _ui.update { it.copy(busy = null, error = e.message ?: "Something went wrong") } }
+                .onFailure { e -> _ui.update { it.copy(busy = null, error = e.message ?: "Что-то пошло не так") } }
         }
     }
 }

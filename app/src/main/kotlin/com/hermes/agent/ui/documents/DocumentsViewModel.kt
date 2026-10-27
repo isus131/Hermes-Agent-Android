@@ -62,7 +62,7 @@ class DocumentsViewModel @Inject constructor(
      * Ingest a plain-text document.
      */
     fun ingestText(title: String, content: String) {
-        val safeTitle = title.trim().ifBlank { "Untitled" }
+        val safeTitle = title.trim().ifBlank { "Без названия" }
         val safeContent = content.trim()
         if (safeContent.isEmpty()) return
         viewModelScope.launch {
@@ -85,7 +85,7 @@ class DocumentsViewModel @Inject constructor(
     fun ingestFromUri(context: Context, uri: Uri) {
         viewModelScope.launch {
             try {
-                var fileName = "Imported Document"
+                var fileName = "Импортированный документ"
                 context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
                     if (cursor.moveToFirst()) {
                         val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)

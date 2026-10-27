@@ -87,8 +87,8 @@ class OtaDownloadService : Service() {
             .build()
 
         okHttpClient.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("Download failed (HTTP ${response.code}).")
-            val body = response.body ?: throw IOException("Empty download response.")
+            if (!response.isSuccessful) throw IOException("Загрузка не удалась (HTTP ${response.code}).")
+            val body = response.body ?: throw IOException("Пустой ответ при загрузке.")
             val total = body.contentLength()
 
             val dir = File(getExternalFilesDir(null), "updates").apply { mkdirs() }
@@ -130,8 +130,8 @@ class OtaDownloadService : Service() {
         
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Update Downloaded")
-            .setContentText("Tap to install")
+            .setContentTitle("Обновление загружено")
+            .setContentText("Нажмите, чтобы установить")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -145,7 +145,7 @@ class OtaDownloadService : Service() {
 
     private fun buildNotification(progress: Int): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Downloading Update")
+            .setContentTitle("Загрузка обновления")
             .setContentText("$progress%")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setProgress(100, progress, false)
@@ -160,8 +160,8 @@ class OtaDownloadService : Service() {
 
     private fun showErrorNotification() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Update Failed")
-            .setContentText("Failed to download the update.")
+            .setContentTitle("Ошибка обновления")
+            .setContentText("Не удалось загрузить обновление.")
             .setSmallIcon(R.mipmap.ic_launcher)
             .build()
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -172,7 +172,7 @@ class OtaDownloadService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Updates",
+                "Обновления",
                 NotificationManager.IMPORTANCE_LOW
             )
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

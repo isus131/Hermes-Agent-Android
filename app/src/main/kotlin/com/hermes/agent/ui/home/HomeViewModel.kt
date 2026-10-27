@@ -72,9 +72,9 @@ class HomeViewModel @Inject constructor(
                 val target = runCatching { llmRouter.activeTarget() }.getOrNull()
                 when {
                     target == null ->
-                        if (localLlmManager.isModelDownloaded()) localModelLabel(s) else "not configured"
+                        if (localLlmManager.isModelDownloaded()) localModelLabel(s) else "не настроена"
                     target.isOnDevice -> localModelLabel(s)
-                    else -> target.model.ifBlank { "not configured" }
+                    else -> target.model.ifBlank { "не настроена" }
                 }
             }
             // A cloud provider resolves its model id with a blocking settings

@@ -91,7 +91,7 @@ class HeartbeatWorker @AssistedInject constructor(
 
             for (order in dueOrders) {
                 try {
-                    val convTitle = "Heartbeat: ${order.title}"
+                    val convTitle = "Фоновая проверка: ${order.title}"
                     val convId = conversationRepository.createConversation(convTitle)
                     val prompt = buildString {
                         append("You are running a background heartbeat standing order.\n")
@@ -142,8 +142,8 @@ class HeartbeatWorker @AssistedInject constructor(
                         kindName = "HEARTBEAT",
                         origin = "BACKGROUND",
                         conversationId = null,
-                        title = "Heartbeat evaluation",
-                        detail = "Evaluated $executedCount standing orders with presence: ${presence.contextSummary}",
+                        title = "Фоновая проверка",
+                        detail = "Проверено постоянных поручений: $executedCount, присутствие: ${presence.contextSummary}",
                         success = true,
                     )
                 )

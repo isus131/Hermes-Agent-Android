@@ -39,12 +39,12 @@ fun ExperimentScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Model A/B Benchmark") },
+                title = { Text("Сравнение моделей A/B") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back",
+                            contentDescription = "Назад",
                         )
                     }
                 },
@@ -63,7 +63,7 @@ fun ExperimentScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Text(
-                "Benchmark and compare two models side-by-side with live latency (TTFT), speed (tok/s), and generation metrics.",
+                "Сравнивайте две модели бок о бок: задержка до первого токена (TTFT), скорость (ток/с) и другие метрики генерации.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -71,8 +71,8 @@ fun ExperimentScreen(
             OutlinedTextField(
                 value = state.prompt,
                 onValueChange = viewModel::setPrompt,
-                label = { Text("Benchmark Prompt") },
-                placeholder = { Text("Write a quick python script to calculate fibonacci numbers...") },
+                label = { Text("Тестовый запрос") },
+                placeholder = { Text("Напиши короткий скрипт на Python для вычисления чисел Фибоначчи...") },
                 modifier = Modifier.fillMaxWidth().heightIn(min = 90.dp),
                 maxLines = 6,
             )
@@ -81,7 +81,7 @@ fun ExperimentScreen(
                 OutlinedTextField(
                     value = state.modelA,
                     onValueChange = viewModel::setModelA,
-                    label = { Text("Model A") },
+                    label = { Text("Модель A") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -99,7 +99,7 @@ fun ExperimentScreen(
                 OutlinedTextField(
                     value = state.modelB,
                     onValueChange = viewModel::setModelB,
-                    label = { Text("Model B") },
+                    label = { Text("Модель B") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -120,7 +120,7 @@ fun ExperimentScreen(
             ) {
                 Icon(Icons.Outlined.PlayArrow, contentDescription = null)
                 Spacer(Modifier.width(6.dp))
-                Text("Run Benchmark")
+                Text("Запустить сравнение")
             }
 
             if (state.responseA.isNotBlank() || state.responseB.isNotBlank() ||
@@ -203,7 +203,7 @@ private fun BenchmarkResponsePanel(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Outlined.Bolt, contentDescription = null, modifier = Modifier.size(12.dp), tint = scheme.primary)
                             Spacer(Modifier.width(2.dp))
-                            Text("${metrics.ttftMs}ms TTFT", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = scheme.onSurface)
+                            Text("TTFT ${metrics.ttftMs} мс", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = scheme.onSurface)
                         }
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Outlined.Speed, contentDescription = null, modifier = Modifier.size(12.dp), tint = scheme.secondary)
@@ -218,7 +218,7 @@ private fun BenchmarkResponsePanel(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Outlined.Timer, contentDescription = null, modifier = Modifier.size(12.dp), tint = scheme.outline)
                             Spacer(Modifier.width(2.dp))
-                            Text("${"%.2f".format(metrics.totalTimeMs / 1000.0)}s total", fontSize = 11.sp, color = scheme.onSurfaceVariant)
+                            Text("всего ${"%.2f".format(metrics.totalTimeMs / 1000.0)} с", fontSize = 11.sp, color = scheme.onSurfaceVariant)
                         }
                         Text("${metrics.tokenCount} tokens", fontSize = 11.sp, color = scheme.onSurfaceVariant)
                     }
@@ -232,7 +232,7 @@ private fun BenchmarkResponsePanel(
                     color = MaterialTheme.colorScheme.error,
                 )
                 response.isBlank() && isRunning -> Text(
-                    text = "Streaming response…",
+                    text = "Получение ответа…",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

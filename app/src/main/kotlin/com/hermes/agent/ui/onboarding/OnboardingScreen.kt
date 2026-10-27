@@ -144,7 +144,7 @@ private fun WelcomeStep() {
         )
         Spacer(Modifier.height(24.dp))
         Text(
-            "Let's set up\nyour assistant",
+            "Давайте настроим\nвашего ассистента",
             fontFamily = Geist,
             fontWeight = FontWeight.Bold,
             fontSize = 32.sp,
@@ -154,8 +154,8 @@ private fun WelcomeStep() {
         )
         Spacer(Modifier.height(14.dp))
         Text(
-            "A few details, the permissions Hermes needs, and a quick look at your phone — " +
-                "all saved to memory so the agent knows you and your device.",
+            "Немного данных о вас, разрешения, которые нужны Hermes, и быстрый осмотр телефона — " +
+                "всё сохраняется в память, чтобы агент знал вас и ваше устройство.",
             style = MaterialTheme.typography.bodyLarge,
             color = scheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -192,7 +192,7 @@ private fun RestoreStep(viewModel: OnboardingViewModel) {
         )
         Spacer(Modifier.height(22.dp))
         Text(
-            "Restore Backup?",
+            "Восстановить резервную копию?",
             fontFamily = Geist,
             fontWeight = FontWeight.Bold,
             fontSize = 28.sp,
@@ -201,8 +201,8 @@ private fun RestoreStep(viewModel: OnboardingViewModel) {
         )
         Spacer(Modifier.height(14.dp))
         Text(
-            "If you have a backup file on this device, you can restore it now. "
-                + "This will skip the rest of the setup.",
+            "Если на этом устройстве есть файл резервной копии, его можно восстановить сейчас. "
+                + "Остальная настройка будет пропущена.",
             style = MaterialTheme.typography.bodyLarge,
             color = scheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -214,7 +214,7 @@ private fun RestoreStep(viewModel: OnboardingViewModel) {
         androidx.compose.material3.OutlinedTextField(
             value = restorePassword,
             onValueChange = { restorePassword = it },
-            label = { Text("Password (only if the backup has one)") },
+            label = { Text("Пароль (только если он есть у копии)") },
             singleLine = true,
             visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
             modifier = Modifier.widthIn(max = 320.dp),
@@ -224,7 +224,7 @@ private fun RestoreStep(viewModel: OnboardingViewModel) {
             onClick = { launcher.launch(arrayOf("application/json", "text/plain", "application/octet-stream")) },
             shape = MaterialTheme.shapes.medium,
         ) {
-            Text("Select Backup File")
+            Text("Выбрать файл копии")
         }
     }
 }
@@ -232,7 +232,7 @@ private fun RestoreStep(viewModel: OnboardingViewModel) {
 @Composable
 private fun ProfileStep(viewModel: OnboardingViewModel) {
     val profile by viewModel.profile.collectAsStateWithLifecycle()
-    StepHeader("About you", "Hermes commits these to memory so it can act on your behalf.")
+    StepHeader("О вас", "Hermes запоминает это, чтобы действовать от вашего имени.")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -240,19 +240,19 @@ private fun ProfileStep(viewModel: OnboardingViewModel) {
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Spacer(Modifier.height(76.dp)) // clear the header
-        Field("Name", profile.name) { v -> viewModel.update { it.copy(name = v) } }
-        Field("Home address", profile.address) { v -> viewModel.update { it.copy(address = v) } }
-        Field("Phone number", profile.phone, KeyboardType.Phone) { v -> viewModel.update { it.copy(phone = v) } }
-        Field("Email", profile.email, KeyboardType.Email) { v -> viewModel.update { it.copy(email = v) } }
+        Field("Имя", profile.name) { v -> viewModel.update { it.copy(name = v) } }
+        Field("Домашний адрес", profile.address) { v -> viewModel.update { it.copy(address = v) } }
+        Field("Номер телефона", profile.phone, KeyboardType.Phone) { v -> viewModel.update { it.copy(phone = v) } }
+        Field("Эл. почта", profile.email, KeyboardType.Email) { v -> viewModel.update { it.copy(email = v) } }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Box(Modifier.weight(1f)) {
-                Field("Wake time (e.g. 07:00)", profile.wakeTime) { v -> viewModel.update { it.copy(wakeTime = v) } }
+                Field("Время подъёма (например, 07:00)", profile.wakeTime) { v -> viewModel.update { it.copy(wakeTime = v) } }
             }
             Box(Modifier.weight(1f)) {
-                Field("Sleep time (e.g. 23:00)", profile.sleepTime) { v -> viewModel.update { it.copy(sleepTime = v) } }
+                Field("Время отхода ко сну (например, 23:00)", profile.sleepTime) { v -> viewModel.update { it.copy(sleepTime = v) } }
             }
         }
-        Field("Anything else Hermes should know", profile.notes, singleLine = false) { v ->
+        Field("Что ещё Hermes стоит знать", profile.notes, singleLine = false) { v ->
             viewModel.update { it.copy(notes = v) }
         }
         Spacer(Modifier.height(8.dp))
@@ -268,7 +268,7 @@ private fun DeviceStep(viewModel: OnboardingViewModel) {
     val scanning by viewModel.scanning.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
 
-    StepHeader("Your device", "Hermes checks your phone's capabilities so it can tailor its features to your device.")
+    StepHeader("Ваше устройство", "Hermes проверяет возможности телефона, чтобы подстроить функции под ваше устройство.")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -282,11 +282,11 @@ private fun DeviceStep(viewModel: OnboardingViewModel) {
             ) {
                 CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                 Spacer(Modifier.size(12.dp))
-                Text("Scanning hardware…", color = scheme.onSurfaceVariant)
+                Text("Сканирую оборудование…", color = scheme.onSurfaceVariant)
             }
             error != null && device == null -> Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Scan failed: $error",
+                    text = "Не удалось просканировать: $error",
                     color = scheme.error,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -294,13 +294,13 @@ private fun DeviceStep(viewModel: OnboardingViewModel) {
                 Button(
                     onClick = { viewModel.scanDevice() },
                     shape = MaterialTheme.shapes.medium
-                ) { Text("Retry scan") }
+                ) { Text("Повторить сканирование") }
             }
             device == null -> Button(
                 onClick = { viewModel.scanDevice() },
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
-            ) { Text("Scan this device") }
+            ) { Text("Просканировать устройство") }
             else -> DeviceCard(device!!)
         }
     }
@@ -318,19 +318,19 @@ private fun DeviceCard(d: DeviceProfile) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(7.dp),
     ) {
-        SpecRow("Device", "${d.manufacturer} ${d.model}")
+        SpecRow("Устройство", "${d.manufacturer} ${d.model}")
         SpecRow("Android", "${d.androidRelease} (API ${d.sdkInt})")
-        SpecRow("Chipset", d.soc)
-        SpecRow("CPU", "${d.cpuCores} cores · ${d.abi}")
-        SpecRow("RAM", "${oneDp(d.totalRamGb)} GB")
-        SpecRow("Storage", "${oneDp(d.freeStorageGb)} GB free / ${oneDp(d.totalStorageGb)} GB")
-        SpecRow("GPU", d.gpuRenderer.ifBlank { "unknown" })
-        SpecRow("Display", d.screen)
-        if (d.batteryPct in 0..100) SpecRow("Battery", "${d.batteryPct}%")
-        SpecRow("Sensors", "${d.sensors.size} detected")
+        SpecRow("Чипсет", d.soc)
+        SpecRow("Процессор", "ядер: ${d.cpuCores} · ${d.abi}")
+        SpecRow("ОЗУ", "${oneDp(d.totalRamGb)} ГБ")
+        SpecRow("Память", "свободно ${oneDp(d.freeStorageGb)} ГБ из ${oneDp(d.totalStorageGb)} ГБ")
+        SpecRow("Графика", d.gpuRenderer.ifBlank { "unknown" })
+        SpecRow("Экран", d.screen)
+        if (d.batteryPct in 0..100) SpecRow("Батарея", "${d.batteryPct}%")
+        SpecRow("Датчики", "${d.sensors.size} detected")
         Spacer(Modifier.height(2.dp))
         Text(
-            "Saved to memory — the agent will use this to decide what runs locally.",
+            "Сохранено в память — по этим данным агент решает, что запускать на устройстве.",
             style = MaterialTheme.typography.labelSmall,
             color = scheme.outline,
         )
@@ -385,10 +385,10 @@ private fun PermissionGroupRow(title: String, why: String, permissions: List<Str
                 Text(why, fontSize = 12.5.sp, color = scheme.onSurfaceVariant)
             }
             if (isGranted) {
-                Text("Granted", color = scheme.primary, fontWeight = FontWeight.Medium, fontSize = 13.sp)
+                Text("Разрешено", color = scheme.primary, fontWeight = FontWeight.Medium, fontSize = 13.sp)
             } else {
                 TextButton(onClick = { launcher.launch(permissions.toTypedArray()) }) {
-                    Text("Allow")
+                    Text("Разрешить")
                 }
             }
         }
@@ -399,7 +399,7 @@ private fun PermissionGroupRow(title: String, why: String, permissions: List<Str
 private fun PermissionsStep() {
     val scheme = MaterialTheme.colorScheme
 
-    StepHeader("Permissions", "Grant what Hermes needs to help — you can change these later in system settings.")
+    StepHeader("Разрешения", "Выдайте то, что нужно Hermes для помощи, — изменить это можно позже в настройках системы.")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -407,22 +407,22 @@ private fun PermissionsStep() {
         verticalArrangement = Arrangement.spacedBy(9.dp),
     ) {
         Spacer(Modifier.height(76.dp))
-        PermissionRow("Microphone", "Voice input and commands", Manifest.permission.RECORD_AUDIO)
+        PermissionRow("Микрофон", "Голосовой ввод и команды", Manifest.permission.RECORD_AUDIO)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            PermissionRow("Notifications", "Proactive reminders and task updates", Manifest.permission.POST_NOTIFICATIONS)
+            PermissionRow("Уведомления", "Напоминания и новости о задачах", Manifest.permission.POST_NOTIFICATIONS)
         }
-        PermissionRow("Location", "Location-aware answers and reminders", Manifest.permission.ACCESS_FINE_LOCATION)
-        PermissionRow("Contacts", "Look up and message people you name", Manifest.permission.READ_CONTACTS)
+        PermissionRow("Местоположение", "Ответы и напоминания с учётом местоположения", Manifest.permission.ACCESS_FINE_LOCATION)
+        PermissionRow("Контакты", "Поиск людей по имени и сообщения им", Manifest.permission.READ_CONTACTS)
         PermissionGroupRow(
-            "Calendar",
-            "Read and schedule events",
+            "Календарь",
+            "Чтение и создание событий",
             listOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR),
         )
-        PermissionRow("Camera", "Capture and analyze images on request", Manifest.permission.CAMERA)
-        PermissionRow("Termux Commands", "Let Hermes run the full agent in Termux", "com.termux.permission.RUN_COMMAND")
+        PermissionRow("Камера", "Съёмка и анализ изображений по запросу", Manifest.permission.CAMERA)
+        PermissionRow("Команды Termux", "Позволить Hermes запускать полного агента в Termux", "com.termux.permission.RUN_COMMAND")
         Spacer(Modifier.height(6.dp))
         Text(
-            "Each is requested separately — approve the ones you're comfortable with.",
+            "Каждое разрешение запрашивается отдельно — одобрите те, которые вас устраивают.",
             style = MaterialTheme.typography.labelSmall,
             color = scheme.outline,
         )
@@ -485,27 +485,27 @@ private fun NavBar(step: Int, viewModel: OnboardingViewModel) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (step > OnboardingViewModel.WELCOME) {
-                TextButton(onClick = { viewModel.back() }, enabled = !saving) { Text("Back") }
+                TextButton(onClick = { viewModel.back() }, enabled = !saving) { Text("Назад") }
             } else {
-                TextButton(onClick = { viewModel.skip() }, enabled = !saving) { Text("Skip setup") }
+                TextButton(onClick = { viewModel.skip() }, enabled = !saving) { Text("Пропустить настройку") }
             }
             Spacer(Modifier.weight(1f))
             if (step == OnboardingViewModel.RESTORE) {
                 Button(onClick = { viewModel.next() }, shape = MaterialTheme.shapes.medium, enabled = !saving) {
-                    Text("Skip Restore")
+                    Text("Пропустить восстановление")
                 }
             } else if (step < OnboardingViewModel.DEVICE) {
                 Button(onClick = { viewModel.next() }, shape = MaterialTheme.shapes.medium, enabled = !saving) {
-                    Text(if (step == OnboardingViewModel.WELCOME) "Get started" else "Continue")
+                    Text(if (step == OnboardingViewModel.WELCOME) "Начать" else "Далее")
                 }
             } else {
                 Button(onClick = { viewModel.finish() }, shape = MaterialTheme.shapes.medium, enabled = !saving) {
                     if (saving) {
                         CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
                         Spacer(Modifier.width(8.dp))
-                        Text("Saving...")
+                        Text("Сохранение...")
                     } else {
-                        Text(if (error != null) "Retry" else "Finish setup")
+                        Text(if (error != null) "Повторить" else "Завершить настройку")
                     }
                 }
             }

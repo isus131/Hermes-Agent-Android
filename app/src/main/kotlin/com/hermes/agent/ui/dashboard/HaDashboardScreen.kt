@@ -70,12 +70,12 @@ fun HaDashboardScreen(
                 title = { Text("Home Assistant") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
                 actions = {
                     IconButton(onClick = { webView?.reload() }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Reload")
+                        Icon(Icons.Default.Refresh, contentDescription = "Перезагрузить")
                     }
                 },
             )
@@ -84,7 +84,7 @@ fun HaDashboardScreen(
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             if (baseUrl.isBlank()) {
                 Text(
-                    "Set the Home Assistant URL in Settings → Connections first.",
+                    "Сначала укажите адрес Home Assistant в разделе «Настройки → Подключения».",
                     modifier = Modifier.align(Alignment.Center).padding(24.dp),
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -122,7 +122,7 @@ fun HaDashboardScreen(
                                 err: WebResourceError,
                             ) {
                                 if (request.isForMainFrame) {
-                                    error = "Couldn't reach $baseUrl — check the URL and that the phone is on the same network."
+                                    error = "Не удалось подключиться к $baseUrl — проверьте адрес и что телефон в той же сети."
                                     loading = false
                                 }
                             }

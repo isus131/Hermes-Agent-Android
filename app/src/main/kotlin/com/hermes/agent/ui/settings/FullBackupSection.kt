@@ -79,7 +79,7 @@ class FullBackupViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<FullBackupUiState>(
         if (manager.isRestorePending()) {
-            FullBackupUiState.RestoreStaged("A backup is verified and waiting. Close Hermes and open it again to finish the restore.")
+            FullBackupUiState.RestoreStaged("Резервная копия проверена и ждёт. Закройте Hermes и откройте снова, чтобы завершить восстановление.")
         } else {
             FullBackupUiState.Idle
         },
@@ -92,10 +92,10 @@ class FullBackupViewModel @Inject constructor(
 
     fun backup(uri: Uri, password: String) {
         if (_state.value is FullBackupUiState.Working) return
-        _state.value = FullBackupUiState.Working("Backing up everything…")
+        _state.value = FullBackupUiState.Working("Сохраняю всё…")
         viewModelScope.launch {
             _state.value = runCatching {
-                val out = context.contentResolver.openOutputStream(uri) ?: error("Could not open the file for writing.")
+                val out = context.contentResolver.openOutputStream(uri) ?: error("Не удалось открыть файл для записи.")
                 manager.backup(out, password)
             }.onFailure {
                 // The file picker has already created the file; a failed backup must not leave an
@@ -103,21 +103,21 @@ class FullBackupViewModel @Inject constructor(
                 runCatching { android.provider.DocumentsContract.deleteDocument(context.contentResolver, uri) }
             }.fold(
                 onSuccess = { FullBackupUiState.BackupDone(describe(it)) },
-                onFailure = { FullBackupUiState.Error(it.message ?: "The backup failed.") },
+                onFailure = { FullBackupUiState.Error(it.message ?: "Резервное копирование не удалось.") },
             )
         }
     }
 
     fun stageRestore(uri: Uri, password: String) {
         if (_state.value is FullBackupUiState.Working) return
-        _state.value = FullBackupUiState.Working("Checking the backup…")
+        _state.value = FullBackupUiState.Working("Проверяю копию…")
         viewModelScope.launch {
             _state.value = runCatching {
-                val input = context.contentResolver.openInputStream(uri) ?: error("Could not open the file for reading.")
+                val input = context.contentResolver.openInputStream(uri) ?: error("Не удалось открыть файл для чтения.")
                 input.use { manager.stageRestore(it, password) }
             }.fold(
                 onSuccess = { FullBackupUiState.RestoreStaged(describe(it)) },
-                onFailure = { FullBackupUiState.Error(it.message ?: "The backup could not be read.") },
+                onFailure = { FullBackupUiState.Error(it.message ?: "Не удалось прочитать резервную копию.") },
             )
         }
     }
@@ -145,16 +145,16 @@ class FullBackupViewModel @Inject constructor(
     }
 
     private fun describe(s: FullBackupSummary): String = buildString {
-        append("Backed up everything: the database (${megabytes(s.databaseBytes)}), ${s.settings} settings, ")
-        append("${s.prefsFiles} preference files and ${s.files} files, encrypted.")
-        if (s.skipped.isNotEmpty()) append(" Left out: ${s.skipped.joinToString("; ")}.")
+        append("Сохранено всё: база данных (${megabytes(s.databaseBytes)}), настроек: ${s.settings}, ")
+        append("файлов настроек: ${s.prefsFiles} и файлов: ${s.files}, с шифрованием.")
+        if (s.skipped.isNotEmpty()) append(" Пропущено: ${s.skipped.joinToString("; ")}.")
     }
 
     private fun describe(s: StagedRestore): String = buildString {
         val made = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(s.manifest.exportedAt))
-        append("Backup verified (made $made by Hermes ${s.manifest.appVersionName}). ")
-        append("Close Hermes and open it again to finish the restore.")
-        if (!s.sameDevice) append(" It came from another phone, so its Tailscale sign-in will not be applied.")
+        append("Копия проверена (создана $made в Hermes ${s.manifest.appVersionName}). ")
+        append("Закройте Hermes и откройте снова, чтобы завершить восстановление.")
+        if (!s.sameDevice) append(" Она с другого телефона, поэтому вход в Tailscale из неё не применится.")
     }
 
     private fun megabytes(bytes: Long) = String.format(Locale.US, "%.1f MB", bytes / 1_048_576.0)
@@ -215,18 +215,18 @@ fun BackupRestoreSection(
     pendingFullRestoreUri?.let { uri ->
         AlertDialog(
             onDismissRequest = { pendingFullRestoreUri = null },
-            title = { Text("Replace everything with this backup?") },
+            title = { Text("Заменить всё этой резервной копией?") },
             text = {
                 Text(
-                    "Chats, settings, API keys, cron jobs, MCP servers, connectors and files will be replaced " +
-                        "by what is in the backup. Your current database is kept as a safety copy. " +
-                        "Hermes has to be closed and reopened to finish.",
+                    "Чаты, настройки, API-ключи, задачи cron, MCP-серверы, подключения и файлы будут заменены " +
+                        "содержимым копии. Текущая база данных сохранится как страховочная копия. " +
+                        "Чтобы завершить, Hermes нужно закрыть и открыть снова.",
                 )
             },
             confirmButton = {
-                TextButton(onClick = { viewModel.stageRestore(uri, password); pendingFullRestoreUri = null }) { Text("Restore") }
+                TextButton(onClick = { viewModel.stageRestore(uri, password); pendingFullRestoreUri = null }) { Text("Восстановить") }
             },
-            dismissButton = { TextButton(onClick = { pendingFullRestoreUri = null }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { pendingFullRestoreUri = null }) { Text("Отмена") } },
         )
     }
 
@@ -234,24 +234,24 @@ fun BackupRestoreSection(
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Icon(Icons.Outlined.Backup, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
-                Text("Backup & Restore", style = MaterialTheme.typography.bodyLarge)
+                Text("Резервное копирование и восстановление", style = MaterialTheme.typography.bodyLarge)
             }
             InfoNote(
-                "What gets backed up",
-                "Everything is one encrypted file of all Hermes keeps on this phone: chats and memory, every " +
-                    "setting, API keys and tokens, providers, cron jobs, messaging, MCP servers, connectors, skills, " +
-                    "modules, bots, board, notes, documents and the agent's workspace files. Untick it to choose " +
-                    "parts instead; a file of chosen parts is merged into what is already here and needs no restart. " +
-                    "You need the password to restore, and it cannot be recovered. Not included: downloaded models " +
-                    "(download them again) and Android permissions (grant them again). The Tailscale sign-in is " +
-                    "restored only on the same phone, and only from a full backup.",
+                "Что сохраняется",
+                "«Всё» — это один зашифрованный файл со всем, что Hermes хранит на этом телефоне: чаты и память, все " +
+                    "настройки, API-ключи и токены, провайдеры, задачи cron, мессенджеры, MCP-серверы, подключения, навыки, " +
+                    "модули, боты, доска, заметки, документы и рабочие файлы агента. Снимите галочку, чтобы выбрать " +
+                    "отдельные части; файл с выбранными частями объединяется с тем, что уже есть, и перезапуск не нужен. " +
+                    "Для восстановления нужен пароль, и восстановить его нельзя. Не входят: скачанные модели " +
+                    "(скачайте их снова) и разрешения Android (выдайте их снова). Вход в Tailscale " +
+                    "восстанавливается только на том же телефоне и только из полной копии.",
             )
 
             CheckRow(
                 checked = everything,
                 onChange = { everything = it },
-                label = "Everything",
-                hint = " · full backup, recommended",
+                label = "Всё",
+                hint = " · полная копия, рекомендуется",
             )
             if (!everything) {
                 BackupSection.entries.forEach { section ->
@@ -259,15 +259,15 @@ fun BackupRestoreSection(
                         checked = section in selected,
                         onChange = { selected = if (it) selected + section else selected - section },
                         label = section.label,
-                        hint = if (section == BackupSection.CREDENTIALS) " · needs a password" else null,
+                        hint = if (section == BackupSection.CREDENTIALS) " · нужен пароль" else null,
                         indent = true,
                     )
                 }
                 CheckRow(
                     checked = includeBots,
                     onChange = { includeBots = it },
-                    label = "Bots setup",
-                    hint = " · phone bots, PC bots, Chief's name",
+                    label = "Настройки ботов",
+                    hint = " · боты на телефоне и ПК, имя главного бота",
                     indent = true,
                 )
             }
@@ -275,10 +275,10 @@ fun BackupRestoreSection(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text(if (passwordRequired) "Password (required)" else "Password (optional)") },
+                label = { Text(if (passwordRequired) "Пароль (обязательно)" else "Пароль (необязательно)") },
                 singleLine = true,
                 visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = { TextButton(onClick = { showPassword = !showPassword }) { Text(if (showPassword) "Hide" else "Show") } },
+                trailingIcon = { TextButton(onClick = { showPassword = !showPassword }) { Text(if (showPassword) "Скрыть" else "Показать") } },
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
             )
 
@@ -286,7 +286,7 @@ fun BackupRestoreSection(
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Switch(checked = overwrite, onCheckedChange = { overwrite = it })
                     Text(
-                        if (overwrite) "Restoring a parts file replaces items that already exist" else "Restoring a parts file keeps your existing items",
+                        if (overwrite) "Восстановление частей заменяет уже существующие элементы" else "Восстановление частей сохраняет существующие элементы",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -301,17 +301,17 @@ fun BackupRestoreSection(
                     enabled = canBackUp,
                     modifier = Modifier.weight(1f),
                     contentPadding = SettingsButtonPadding,
-                ) { ButtonLabel("Back up") }
+                ) { ButtonLabel("Создать копию") }
                 OutlinedButton(
                     onClick = { restoreLauncher.launch(arrayOf("*/*")) },
                     enabled = !busy && (password.isNotBlank() || !everything),
                     modifier = Modifier.weight(1f),
                     contentPadding = SettingsButtonPadding,
-                ) { ButtonLabel("Restore") }
+                ) { ButtonLabel("Восстановить") }
             }
             if (passwordRequired && password.isBlank()) {
                 Text(
-                    if (everything) "Enter a password first." else "Set a password to include cloud API keys.",
+                    if (everything) "Сначала введите пароль." else "Задайте пароль, чтобы включить облачные API-ключи.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -327,16 +327,16 @@ fun BackupRestoreSection(
                 }
                 is FullBackupUiState.BackupDone -> {
                     Text(s.message, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-                    OutlinedButton(onClick = viewModel::dismiss, modifier = Modifier.fillMaxWidth()) { Text("Dismiss") }
+                    OutlinedButton(onClick = viewModel::dismiss, modifier = Modifier.fillMaxWidth()) { Text("Скрыть") }
                 }
                 is FullBackupUiState.Error -> {
                     Text(s.message, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
-                    OutlinedButton(onClick = viewModel::dismiss, modifier = Modifier.fillMaxWidth()) { Text("Dismiss") }
+                    OutlinedButton(onClick = viewModel::dismiss, modifier = Modifier.fillMaxWidth()) { Text("Скрыть") }
                 }
                 is FullBackupUiState.RestoreStaged -> {
                     Text(s.message, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-                    Button(onClick = { closeHermes(context) }, modifier = Modifier.fillMaxWidth()) { Text("Close Hermes now") }
-                    OutlinedButton(onClick = viewModel::cancelStaged, modifier = Modifier.fillMaxWidth()) { Text("Cancel restore") }
+                    Button(onClick = { closeHermes(context) }, modifier = Modifier.fillMaxWidth()) { Text("Закрыть Hermes сейчас") }
+                    OutlinedButton(onClick = viewModel::cancelStaged, modifier = Modifier.fillMaxWidth()) { Text("Отменить восстановление") }
                 }
                 FullBackupUiState.Idle -> Unit
             }
@@ -347,15 +347,15 @@ fun BackupRestoreSection(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
-                    Text("Working…", style = MaterialTheme.typography.bodySmall)
+                    Text("Работаю…", style = MaterialTheme.typography.bodySmall)
                 }
                 is BackupUiState.Success -> {
                     Text(jsonState.message, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-                    OutlinedButton(onClick = onJsonDismiss, modifier = Modifier.fillMaxWidth()) { Text("Dismiss") }
+                    OutlinedButton(onClick = onJsonDismiss, modifier = Modifier.fillMaxWidth()) { Text("Скрыть") }
                 }
                 is BackupUiState.Error -> {
                     Text(jsonState.message, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
-                    OutlinedButton(onClick = onJsonDismiss, modifier = Modifier.fillMaxWidth()) { Text("Dismiss") }
+                    OutlinedButton(onClick = onJsonDismiss, modifier = Modifier.fillMaxWidth()) { Text("Скрыть") }
                 }
                 else -> Unit
             }
@@ -363,7 +363,7 @@ fun BackupRestoreSection(
             lastRestore?.let { r ->
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        (if (r.ok) "Last restore: " else "Last restore, with problems: ") +
+                        (if (r.ok) "Последнее восстановление: " else "Последнее восстановление, с проблемами: ") +
                             SimpleDateFormat("d MMM yyyy, HH:mm", Locale.getDefault()).format(Date(r.at)),
                         style = MaterialTheme.typography.bodySmall,
                     )
@@ -371,7 +371,7 @@ fun BackupRestoreSection(
                     r.problems.forEach {
                         Text("• $it", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
                     }
-                    OutlinedButton(onClick = viewModel::dismissLastRestore, modifier = Modifier.fillMaxWidth()) { Text("Dismiss") }
+                    OutlinedButton(onClick = viewModel::dismissLastRestore, modifier = Modifier.fillMaxWidth()) { Text("Скрыть") }
                 }
             }
         }

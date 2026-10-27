@@ -141,7 +141,7 @@ import java.util.Calendar
 private const val DESKTOP_BOT_CONVERSATION_PREFIX = "desktopbot_"
 
 /** What a new thread is called until its first message names it. */
-private const val NEW_THREAD_TITLE = "New chat"
+private const val NEW_THREAD_TITLE = "Новый чат"
 
 /**
  * Pairs a stored thread back into the turns this screen shows.
@@ -458,13 +458,13 @@ class BotsViewModel @Inject constructor(
             runCatching {
                 conversationRepository.deleteConversation(id)
                 fresh?.let { conversationRepository.ensureConversation(it, NEW_THREAD_TITLE) }
-            }.onFailure { e -> _state.update { it.copy(error = "Couldn't delete that chat: ${e.message}") } }
+            }.onFailure { e -> _state.update { it.copy(error = "Не удалось удалить этот чат: ${e.message}") } }
         }
     }
 
     fun addDesktopBot(name: String) {
         if (!profileStore.add(name)) {
-            _state.update { it.copy(error = "'$name' is not a usable bot name.") }
+            _state.update { it.copy(error = "«$name» не подходит как имя бота.") }
             return
         }
         // Land on the bot just added, as addLocalBot does, and load its jobs.
@@ -476,7 +476,7 @@ class BotsViewModel @Inject constructor(
     fun addLocalBot(name: String, systemPrompt: String, isChiefOfBots: Boolean = false) {
         val bot = localBotStore.add(name, systemPrompt, isChiefOfBots)
         if (bot == null) {
-            _state.update { it.copy(error = "'$name' is not a usable bot name.") }
+            _state.update { it.copy(error = "«$name» не подходит как имя бота.") }
             return
         }
         _state.update { it.copy(error = null, selected = bot.id, jobs = emptyList(), stored = emptyList(), pending = null) }
@@ -505,14 +505,14 @@ class BotsViewModel @Inject constructor(
         val profile = _state.value.selected
         runCatching { gateway.listJobs(profile.takeIf { it != BotProfileStore.DEFAULT }) }
             .onSuccess { jobs -> _state.update { it.copy(jobs = jobs, loading = false) } }
-            .onFailure { e -> _state.update { it.copy(loading = false, error = e.message ?: "Could not reach the PC gateway.") } }
+            .onFailure { e -> _state.update { it.copy(loading = false, error = e.message ?: "Не удалось связаться со шлюзом на ПК.") } }
     }
 
     fun refreshRedditDrafts() = viewModelScope.launch {
         if (!_state.value.configured) return@launch
         runCatching { gateway.listRedditDrafts() }
             .onSuccess { drafts -> _state.update { it.copy(redditDrafts = drafts) } }
-            .onFailure { e -> _state.update { it.copy(redditMessage = e.message ?: "Could not load Reddit drafts.") } }
+            .onFailure { e -> _state.update { it.copy(redditMessage = e.message ?: "Не удалось загрузить черновики Reddit.") } }
     }
 
     /** Post a draft (or its critic rewrite) in the PC's logged-in Chrome window. No LLM in between. */
@@ -526,7 +526,7 @@ class BotsViewModel @Inject constructor(
                 }
             }
             .onFailure { e ->
-                _state.update { it.copy(busyRedditCode = null, redditMessage = "Post failed: ${e.message}") }
+                _state.update { it.copy(busyRedditCode = null, redditMessage = "Не удалось опубликовать: ${e.message}") }
                 // A refused post leaves the draft pending, possibly with new text: show what is there now.
                 refreshRedditDrafts()
             }
@@ -540,7 +540,7 @@ class BotsViewModel @Inject constructor(
                     s.copy(busyRedditCode = null, redditMessage = result, redditDrafts = s.redditDrafts.filterNot { it.code == draft.code })
                 }
             }
-            .onFailure { e -> _state.update { it.copy(busyRedditCode = null, redditMessage = "Skip failed: ${e.message}") } }
+            .onFailure { e -> _state.update { it.copy(busyRedditCode = null, redditMessage = "Не удалось пропустить: ${e.message}") } }
     }
 
     /** Apply pause, resume or run to one bot's PC job, then show its new state. */
@@ -571,7 +571,7 @@ class BotsViewModel @Inject constructor(
         val selected = _state.value.selected
         val thread = conversationIdFor(selected)
         if (_state.value.stored.isEmpty() && BotThreads.isLater(thread)) {
-            val title = message.ifBlank { "Attachment" }.replace(Regex("\\s+"), " ").take(40)
+            val title = message.ifBlank { "Вложение" }.replace(Regex("\\s+"), " ").take(40)
             viewModelScope.launch { runCatching { conversationRepository.renameConversation(thread, title) } }
         }
         _state.update {
@@ -634,7 +634,7 @@ class BotsViewModel @Inject constructor(
     ): String? {
         val bot = localBotStore.bots.value.firstOrNull { it.id == botId }
         if (bot == null) {
-            _state.update { it.failPending("This local bot no longer exists.").copy(sending = false) }
+            _state.update { it.failPending("Этого локального бота больше нет.").copy(sending = false) }
             return null
         }
         return sendOnPhone(conversationIdFor(bot.id), bot.name, message, attachmentUri, attachmentMimeType)
@@ -678,7 +678,7 @@ class BotsViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         chiefPcOnline = false,
-                        error = "The PC could not be reached, so ${it.chiefName} answered on the phone.",
+                        error = "ПК недоступен, поэтому ${it.chiefName} ответил на телефоне.",
                     )
                 }
             }
@@ -698,7 +698,7 @@ class BotsViewModel @Inject constructor(
         val listed = try {
             gateway.listProfiles()
         } catch (e: Exception) {
-            return DesktopOffer(emptyList(), "I couldn't reach the PC to look: ${e.message ?: "no answer"}.", reachable = false)
+            return DesktopOffer(emptyList(), "Не удалось связаться с ПК, чтобы проверить: ${e.message ?: "нет ответа"}.", reachable = false)
         }
         val profiles = listed ?: COMMON_PROFILE_NAMES
             .filter { runCatching { gateway.profileExists(it) }.getOrDefault(false) }
@@ -709,8 +709,8 @@ class BotsViewModel @Inject constructor(
         if (fresh.isEmpty()) {
             return DesktopOffer(
                 emptyList(),
-                "I looked on the PC and every bot it has is already in your tabs." +
-                    if (listed == null) " (This gateway can't list its bots, so I only tried common names.)" else "",
+                "Я проверил ПК: все его боты уже есть в ваших вкладках." +
+                    if (listed == null) " (Этот шлюз не умеет выдавать список ботов, поэтому я попробовал только распространённые имена.)" else "",
             )
         }
         val one = fresh.size == 1
@@ -719,8 +719,8 @@ class BotsViewModel @Inject constructor(
         }
         return DesktopOffer(
             fresh.map { it.name },
-            "This PC has ${if (one) "a bot" else "${fresh.size} bots"} that ${if (one) "isn't" else "aren't"} in your tabs yet:\n$lines\n\n" +
-                "Want me to add ${if (one) "it" else "them"}? Say yes, no, or name the ones you want.",
+            "На этом ПК ${if (one) "есть бот" else "есть боты (${fresh.size})"}, ${if (one) "которого" else "которых"} ещё нет в ваших вкладках:\n$lines\n\n" +
+                "Добавить ${if (one) "его" else "их"}? Скажите «да», «нет» или назовите нужных.",
         )
     }
 
@@ -751,17 +751,17 @@ class BotsViewModel @Inject constructor(
         }
         val text = if (chosen.isEmpty()) {
             profileStore.openOffer = emptyList()
-            "Okay, I'll leave them out. Ask me to \"find the bots on my PC\" whenever you want them."
+            "Хорошо, не буду добавлять. Попросите меня «найти ботов на моём ПК», когда понадобятся."
         } else {
             val added = chosen.filter { profileStore.add(it) }
             val rest = if (reply is ChiefOfBots.OfferReply.Some) offered - chosen.toSet() else emptyList()
             profileStore.openOffer = rest
             buildString {
                 append(
-                    if (added.isEmpty()) "They were already added."
-                    else "Added ${added.joinToString(", ")}. ${if (added.size == 1) "It's" else "They're"} in your bot tabs.",
+                    if (added.isEmpty()) "Они уже добавлены."
+                    else "Добавлено: ${added.joinToString(", ")}. ${if (added.size == 1) "Он" else "Они"} в ваших вкладках ботов.",
                 )
-                if (rest.isNotEmpty()) append(" Still on offer: ${rest.joinToString(", ")}. Say yes to add ${if (rest.size == 1) "it" else "them"} too.")
+                if (rest.isNotEmpty()) append(" Ещё можно добавить: ${rest.joinToString(", ")}. Скажите «да», чтобы добавить ${if (rest.size == 1) "и его" else "и их"}.")
             }
         }
         return finishLocalTurn(message, text)
@@ -772,8 +772,8 @@ class BotsViewModel @Inject constructor(
         val s = _state.value
         val onPhone = s.bots.filter { it.isLocal }.map { it.label }
         val onPc = s.bots.filter { !it.isLocal }.map { if (it.isHybrid) "${it.label} (me)" else it.label }
-        val reply = "On this phone: ${onPhone.joinToString(", ").ifEmpty { "none yet" }}.\n" +
-            "On the PC (added here): ${onPc.joinToString(", ").ifEmpty { "none" }}."
+        val reply = "На этом телефоне: ${onPhone.joinToString(", ").ifEmpty { "пока нет" }}.\n" +
+            "На ПК (добавлены здесь): ${onPc.joinToString(", ").ifEmpty { "нет" }}."
         return finishLocalTurn(message, reply)
     }
 
@@ -799,7 +799,7 @@ class BotsViewModel @Inject constructor(
             ),
         )
         val reply = if (!toolConfirmationService.awaitConfirmation(call)) {
-            "Okay, I left it alone."
+            "Хорошо, оставил как есть."
         } else {
             when (command) {
                 is ChiefOfBots.BotCommand.Create -> {
@@ -808,18 +808,18 @@ class BotsViewModel @Inject constructor(
                         ?: "You are ${command.name}, a focused assistant."
                     val bot = localBotStore.add(command.name, persona)
                     if (bot == null) {
-                        "I couldn't create \u201c${command.name}\u201d: that name is already taken."
+                        "Не удалось создать “${command.name}”: это имя уже занято."
                     } else {
-                        "Created \u201c${bot.name}\u201d. It's in your bot tabs."
+                        "Бот “${bot.name}” создан. Он в ваших вкладках ботов."
                     }
                 }
                 is ChiefOfBots.BotCommand.Remove -> {
                     val bot = localBotStore.bots.value.firstOrNull { it.name.equals(command.name, ignoreCase = true) }
                     if (bot == null) {
-                        "There's no bot named \u201c${command.name}\u201d on this phone."
+                        "На этом телефоне нет бота с именем “${command.name}”."
                     } else {
                         localBotStore.remove(bot.id)
-                        "Removed \u201c${bot.name}\u201d."
+                        "Бот “${bot.name}” удалён."
                     }
                 }
             }
@@ -1016,7 +1016,7 @@ class BotsViewModel @Inject constructor(
 
     private fun startVoiceChat() {
         if (!voiceInputManager.isAvailable()) {
-            _state.update { it.copy(error = "Speech recognition not available on this device") }
+            _state.update { it.copy(error = "Распознавание речи на этом устройстве недоступно") }
             return
         }
         _state.update { it.copy(voiceChatActive = true) }
@@ -1045,7 +1045,7 @@ class BotsViewModel @Inject constructor(
         if (!_state.value.voiceChatActive) return
         if (emptyVoiceTurns >= MAX_EMPTY_VOICE_TURNS) {
             stopVoiceChat()
-            _state.update { it.copy(error = "Voice chat stopped — I couldn't hear anything.") }
+            _state.update { it.copy(error = "Голосовой чат остановлен — я ничего не услышал.") }
             return
         }
         startVoiceInput()
@@ -1074,7 +1074,7 @@ class BotsViewModel @Inject constructor(
 
     private fun startVoiceInput() {
         if (!voiceInputManager.isAvailable()) {
-            _state.update { it.copy(error = "Speech recognition not available on this device") }
+            _state.update { it.copy(error = "Распознавание речи на этом устройстве недоступно") }
             return
         }
         listenJob?.cancel()
@@ -1156,7 +1156,7 @@ class BotsViewModel @Inject constructor(
         // when that model is present.
         val modelReady = runCatching { localLlmManager.isModelDownloaded() }.getOrDefault(false)
         localBotStore.bots.value.forEach { bot ->
-            entries += DashboardEntry(label = bot.name, kind = BotKind.LOCAL, status = "On-device persona")
+            entries += DashboardEntry(label = bot.name, kind = BotKind.LOCAL, status = "Персона на устройстве")
             online[bot.id] = modelReady
         }
 
@@ -1171,7 +1171,7 @@ class BotsViewModel @Inject constructor(
                 entries += result.fold(
                     onSuccess = { jobs -> DashboardEntry(nameOf(profile), kindOfProfile(profile), statusFor(jobs), detailFor(jobs)) },
                     onFailure = { e ->
-                        val status = if (chief && modelReady) "PC unreachable — answering on the phone" else "Unreachable"
+                        val status = if (chief && modelReady) "ПК недоступен — отвечаю на телефоне" else "Недоступен"
                         DashboardEntry(nameOf(profile), kindOfProfile(profile), status, e.message)
                     },
                 )
@@ -1181,7 +1181,7 @@ class BotsViewModel @Inject constructor(
                 val chief = profile == ChiefOfBots.PROFILE
                 online[profile] = chief && modelReady
                 if (chief) chiefPcOnline = false
-                val status = if (chief && modelReady) "PC gateway not set up — answering on the phone" else "PC gateway not set up"
+                val status = if (chief && modelReady) "Шлюз на ПК не настроен — отвечаю на телефоне" else "Шлюз на ПК не настроен"
                 entries += DashboardEntry(nameOf(profile), kindOfProfile(profile), status)
             }
         }
@@ -1197,15 +1197,15 @@ class BotsViewModel @Inject constructor(
     }
 
     private fun statusFor(jobs: List<RemoteJob>): String {
-        if (jobs.isEmpty()) return "No scheduled bots"
+        if (jobs.isEmpty()) return "Нет ботов по расписанию"
         val active = jobs.count { it.enabled }
-        return "$active/${jobs.size} active"
+        return "Активно: $active из ${jobs.size}"
     }
 
     private fun detailFor(jobs: List<RemoteJob>): String? {
-        jobs.firstOrNull { !it.lastError.isNullOrBlank() }?.let { return "${it.name.ifBlank { it.id }} failed: ${it.lastError}" }
-        jobs.firstOrNull { it.nextRunAt != null }?.let { return "Next: ${it.nextRunAt}" }
-        jobs.firstOrNull { it.lastRunAt != null }?.let { return "Last: ${it.lastRunAt} ${it.lastStatus.orEmpty()}".trim() }
+        jobs.firstOrNull { !it.lastError.isNullOrBlank() }?.let { return "${it.name.ifBlank { it.id }}: ошибка: ${it.lastError}" }
+        jobs.firstOrNull { it.nextRunAt != null }?.let { return "Следующий запуск: ${it.nextRunAt}" }
+        jobs.firstOrNull { it.lastRunAt != null }?.let { return "Последний запуск: ${it.lastRunAt} ${it.lastStatus.orEmpty()}".trim() }
         return null
     }
 
@@ -1234,12 +1234,12 @@ class BotsViewModel @Inject constructor(
     }
 
     private fun BotsUiState.failPending(message: String?) =
-        copy(pending = pending?.copy(reply = message ?: "The run failed.", failed = true))
+        copy(pending = pending?.copy(reply = message ?: "Запуск не удался.", failed = true))
 
 }
 
 /** Inside one bot's own tab: a regular chat thread, its PC jobs, and PC-wide approvals. */
-private enum class BotDetailTab(val label: String) { CHAT("Chat"), JOBS("Scheduled Jobs"), APPROVALS("Approvals") }
+private enum class BotDetailTab(val label: String) { CHAT("Чат"), JOBS("Задачи по расписанию"), APPROVALS("Одобрения") }
 
 /**
  * Top-level layout: Dashboard first, then one tab per bot — mirroring the desktop app's
@@ -1263,10 +1263,10 @@ fun BotsScreen(
     pendingConfirmation?.let { pending ->
         AlertDialog(
             onDismissRequest = { viewModel.submitToolConfirmation(pending.id, false) },
-            title = { Text("Approve Action") },
+            title = { Text("Одобрить действие") },
             text = {
                 Column {
-                    Text("This bot wants to run: ${pending.call.name}", fontWeight = FontWeight.Bold)
+                    Text("Этот бот хочет запустить: ${pending.call.name}", fontWeight = FontWeight.Bold)
                     Text(
                         pending.call.arguments.entries.joinToString("\n") { "${it.key}: ${it.value}" },
                         style = MaterialTheme.typography.bodySmall,
@@ -1274,8 +1274,8 @@ fun BotsScreen(
                     )
                 }
             },
-            confirmButton = { TextButton(onClick = { viewModel.submitToolConfirmation(pending.id, true) }) { Text("Allow") } },
-            dismissButton = { TextButton(onClick = { viewModel.submitToolConfirmation(pending.id, false) }) { Text("Deny") } },
+            confirmButton = { TextButton(onClick = { viewModel.submitToolConfirmation(pending.id, true) }) { Text("Разрешить") } },
+            dismissButton = { TextButton(onClick = { viewModel.submitToolConfirmation(pending.id, false) }) { Text("Запретить") } },
         )
     }
 
@@ -1309,15 +1309,15 @@ fun BotsScreen(
     Scaffold(
         topBar = {
             SlimTopBar(
-                title = "Bots",
+                title = "Боты",
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
                 actions = {
                     IconButton(onClick = { showAddDialog = true }) {
-                        Icon(Icons.Filled.Add, contentDescription = "Add a bot")
+                        Icon(Icons.Filled.Add, contentDescription = "Добавить бота")
                     }
                     IconButton(
                         onClick = {
@@ -1325,7 +1325,7 @@ fun BotsScreen(
                             viewModel.refreshRedditDrafts()
                         },
                     ) {
-                        Icon(Icons.Filled.Refresh, contentDescription = "Refresh")
+                        Icon(Icons.Filled.Refresh, contentDescription = "Обновить")
                     }
                 },
             )
@@ -1344,19 +1344,19 @@ fun BotsScreen(
                             Modifier.padding(16.dp).padding(end = 28.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            Text("The PC gateway is not set up yet.", fontWeight = FontWeight.SemiBold)
+                            Text("Шлюз на ПК ещё не настроен.", fontWeight = FontWeight.SemiBold)
                             Text(
-                                "Add its URL and API key, then come back here. Local bots work without it.",
+                                "Добавьте его адрес и API-ключ, затем вернитесь сюда. Локальные боты работают и без него.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
-                            OutlinedButton(onClick = onOpenConnections) { Text("Open Connections") }
+                            OutlinedButton(onClick = onOpenConnections) { Text("Открыть подключения") }
                         }
                         IconButton(
                             onClick = { noticeDismissed = true },
                             modifier = Modifier.align(Alignment.TopEnd),
                         ) {
-                            Icon(Icons.Outlined.Cancel, contentDescription = "Dismiss", modifier = Modifier.size(20.dp))
+                            Icon(Icons.Outlined.Cancel, contentDescription = "Скрыть", modifier = Modifier.size(20.dp))
                         }
                     }
                 }
@@ -1377,7 +1377,7 @@ fun BotsScreen(
                 Tab(
                     selected = showDashboard,
                     onClick = { showDashboard = true; viewModel.refreshDashboard() },
-                    text = { Text("Dashboard") },
+                    text = { Text("Панель") },
                 )
                 state.bots.forEach { bot ->
                     BotTab(
@@ -1521,8 +1521,8 @@ private fun BotTab(
     }
     val kind = when (bot.kind) {
         BotKind.LOCAL -> "on-device"
-        BotKind.DESKTOP -> "PC"
-        BotKind.HYBRID -> "hybrid phone and PC"
+        BotKind.DESKTOP -> "ПК"
+        BotKind.HYBRID -> "гибрид телефона и ПК"
     }
     val availability = when (online) {
         true -> "online"
@@ -1546,7 +1546,7 @@ private fun BotTab(
                     onLongClick = { menuOpen = true },
                 )
                 // The name is not drawn, so the tab has to say who it is to a screen reader.
-                .semantics { contentDescription = "${bot.label}, $kind bot, $availability" },
+                .semantics { contentDescription = "${bot.label}, бот: $kind, $availability" },
             contentAlignment = Alignment.Center,
         ) {
             Box(
@@ -1567,13 +1567,13 @@ private fun BotTab(
             )
         }
         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-            DropdownMenuItem(text = { Text("Open ${bot.label} chat") }, onClick = { menuOpen = false; onOpenChat() })
+            DropdownMenuItem(text = { Text("Открыть чат ${bot.label}") }, onClick = { menuOpen = false; onOpenChat() })
             // Only the Chief has a name of its own to change; the others are called what they are.
             if (bot.isHybrid) {
-                DropdownMenuItem(text = { Text("Rename") }, onClick = { menuOpen = false; onRename() })
+                DropdownMenuItem(text = { Text("Переименовать") }, onClick = { menuOpen = false; onRename() })
             }
             if (bot.id != BotProfileStore.DEFAULT) {
-                DropdownMenuItem(text = { Text("Remove bot") }, onClick = { menuOpen = false; onRemove() })
+                DropdownMenuItem(text = { Text("Удалить бота") }, onClick = { menuOpen = false; onRemove() })
             }
         }
     }
@@ -1670,17 +1670,17 @@ private fun AddBotDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add a bot") },
+        title = { Text("Добавить бота") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    FilterChip(selected = isLocal, onClick = { isLocal = true }, label = { Text("Local") })
-                    FilterChip(selected = !isLocal, onClick = { isLocal = false }, label = { Text("Desktop (PC)") })
+                    FilterChip(selected = isLocal, onClick = { isLocal = true }, label = { Text("Локальный") })
+                    FilterChip(selected = !isLocal, onClick = { isLocal = false }, label = { Text("Компьютер (ПК)") })
                 }
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text("Имя") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -1688,7 +1688,7 @@ private fun AddBotDialog(
                     OutlinedTextField(
                         value = prompt,
                         onValueChange = { prompt = it },
-                        label = { Text("System prompt") },
+                        label = { Text("Системный промпт") },
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -1702,16 +1702,16 @@ private fun AddBotDialog(
                         )
                         // A bot of its own that manages the bots on this phone. The Chief of Bots
                         // does that too, as one of its two sides; this is for a dedicated one.
-                        Text("Bot manager — can create and remove bots on this phone", style = MaterialTheme.typography.bodyMedium)
+                        Text("Менеджер ботов — может создавать и удалять ботов на этом телефоне", style = MaterialTheme.typography.bodyMedium)
                     }
                     Text(
-                        "Runs on your phone's own model with this persona — no PC needed.",
+                        "Работает на собственной модели телефона с этой персоной — ПК не нужен.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 } else {
                     Text(
-                        "Must match a profile that already exists on the PC gateway.",
+                        "Должно совпадать с профилем, который уже есть на шлюзе ПК.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -1725,9 +1725,9 @@ private fun AddBotDialog(
                     onDismiss()
                 },
                 enabled = name.isNotBlank() && (!isLocal || prompt.isNotBlank()),
-            ) { Text("Add") }
+            ) { Text("Добавить") }
         },
-        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Cancel") } },
+        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Отмена") } },
     )
 }
 
@@ -1738,18 +1738,18 @@ private fun RenameChiefDialog(current: String, onDismiss: () -> Unit, onSave: (S
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Name your Chief of Bots") },
+        title = { Text("Назовите главного бота") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it.take(ChiefOfBots.MAX_NAME_LENGTH) },
-                    label = { Text("Name") },
+                    label = { Text("Имя") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Text(
-                    "It answers to this name, on the phone and on the PC. Leave it blank to go back to " +
+                    "Он откликается на это имя на телефоне и на ПК. Оставьте поле пустым, чтобы вернуться к " +
                         "\"${ChiefOfBots.DEFAULT_NAME}\".",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1757,9 +1757,9 @@ private fun RenameChiefDialog(current: String, onDismiss: () -> Unit, onSave: (S
             }
         },
         confirmButton = {
-            OutlinedButton(onClick = { onSave(name); onDismiss() }) { Text("Save") }
+            OutlinedButton(onClick = { onSave(name); onDismiss() }) { Text("Сохранить") }
         },
-        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Cancel") } },
+        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Отмена") } },
     )
 }
 
@@ -1804,10 +1804,10 @@ private fun ChatTab(
         // History and new chat, as the main chat has them.
         Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { showHistory = true }, enabled = !sending) {
-                Icon(Icons.Outlined.History, contentDescription = "Chat history")
+                Icon(Icons.Outlined.History, contentDescription = "История чатов")
             }
             Text(
-                threads.firstOrNull { it.current }?.let(::threadLabel) ?: "Chat",
+                threads.firstOrNull { it.current }?.let(::threadLabel) ?: "Чат",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
@@ -1815,7 +1815,7 @@ private fun ChatTab(
                 modifier = Modifier.weight(1f),
             )
             IconButton(onClick = onNewThread, enabled = !sending && turns.isNotEmpty()) {
-                Icon(Icons.Filled.Add, contentDescription = "New chat")
+                Icon(Icons.Filled.Add, contentDescription = "Новый чат")
             }
         }
         HorizontalDivider()
@@ -1857,13 +1857,13 @@ private fun ChatTab(
                 // Which brain answers by default: a local bot always answers from this phone's model,
                 // whatever the main chat is set to use, and the Chief answers on the PC while it can.
                 modelName = when {
-                    bot.isLocal -> "On-device"
-                    bot.isHybrid && !pcOnline -> "On-device"
-                    else -> "PC gateway"
+                    bot.isLocal -> "На устройстве"
+                    bot.isHybrid && !pcOnline -> "На устройстве"
+                    else -> "Шлюз ПК"
                 },
                 attachmentsEnabled = bot.hasPhone,
                 // Who you are talking to lives in the field; the tab shows only a Bloub.
-                placeholder = "Talk to ${bot.label}",
+                placeholder = "Напишите ${bot.label}",
             )
         }
     }
@@ -1871,7 +1871,7 @@ private fun ChatTab(
 
 /** What a thread is called in the list: what it began with, or a plain name for the bot's first. */
 private fun threadLabel(thread: BotThread): String = when {
-    !BotThreads.isLater(thread.id) -> "Original chat"
+    !BotThreads.isLater(thread.id) -> "Исходный чат"
     else -> thread.title.ifBlank { NEW_THREAD_TITLE }
 }
 
@@ -1887,18 +1887,18 @@ private fun ThreadHistoryDialog(
     confirming?.let { thread ->
         AlertDialog(
             onDismissRequest = { confirming = null },
-            title = { Text("Delete this chat?") },
-            text = { Text("“${threadLabel(thread)}” will be removed from this phone. This can't be undone.") },
-            confirmButton = { TextButton(onClick = { onDelete(thread.id); confirming = null }) { Text("Delete") } },
-            dismissButton = { TextButton(onClick = { confirming = null }) { Text("Cancel") } },
+            title = { Text("Удалить этот чат?") },
+            text = { Text("«${threadLabel(thread)}» будет удалён с этого телефона. Это нельзя отменить.") },
+            confirmButton = { TextButton(onClick = { onDelete(thread.id); confirming = null }) { Text("Удалить") } },
+            dismissButton = { TextButton(onClick = { confirming = null }) { Text("Отмена") } },
         )
     }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Chat history") },
+        title = { Text("История чатов") },
         text = {
             if (threads.isEmpty()) {
-                Text("No chats yet.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Чатов пока нет.", color = MaterialTheme.colorScheme.onSurfaceVariant)
             } else {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     items(threads, key = { it.id }) { thread ->
@@ -1916,20 +1916,20 @@ private fun ThreadHistoryDialog(
                                     overflow = TextOverflow.Ellipsis,
                                 )
                                 Text(
-                                    format.format(java.util.Date(thread.updatedAt)) + if (thread.current) " \u00b7 open now" else "",
+                                    format.format(java.util.Date(thread.updatedAt)) + if (thread.current) " · открыт сейчас" else "",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
                             IconButton(onClick = { confirming = thread }) {
-                                Icon(Icons.Outlined.Delete, contentDescription = "Delete ${threadLabel(thread)}")
+                                Icon(Icons.Outlined.Delete, contentDescription = "Удалить ${threadLabel(thread)}")
                             }
                         }
                     }
                 }
             }
         },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } },
+        confirmButton = { TextButton(onClick = onDismiss) { Text("Закрыть") } },
     )
 }
 
@@ -1943,7 +1943,7 @@ private fun JobsTab(jobs: List<RemoteJob>, loading: Boolean, isLocal: Boolean, c
         if (isLocal) {
             item {
                 Text(
-                    "Local bots don't have PC jobs. Schedule on-device runs from the global CRON screen.",
+                    "У локальных ботов нет задач на ПК. Запуски на устройстве настраиваются на общем экране CRON.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -1952,9 +1952,9 @@ private fun JobsTab(jobs: List<RemoteJob>, loading: Boolean, isLocal: Boolean, c
             item {
                 Text(
                     when {
-                        loading -> "Loading…"
-                        !configured -> "The PC gateway is not set up yet, so this bot's scheduled jobs can't be loaded."
-                        else -> "No scheduled bots on this profile."
+                        loading -> "Загрузка…"
+                        !configured -> "Шлюз на ПК ещё не настроен, поэтому задачи этого бота по расписанию загрузить нельзя."
+                        else -> "В этом профиле нет ботов по расписанию."
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1987,7 +1987,7 @@ private fun ApprovalsTab(
         if (isLocal) {
             item {
                 Text(
-                    "Nothing is waiting for approval. When this bot wants to run a tool that needs your OK, you'll be asked here.",
+                    "Ничего не ждёт одобрения. Когда этот бот захочет запустить инструмент, которому нужно ваше согласие, вас спросят здесь.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -1995,7 +1995,7 @@ private fun ApprovalsTab(
         } else if (drafts.isEmpty()) {
             item {
                 Text(
-                    "No Reddit drafts waiting for approval.",
+                    "Нет черновиков Reddit, ожидающих одобрения.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -2019,11 +2019,11 @@ private fun DashboardTab(entries: List<DashboardEntry>, loading: Boolean) {
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        item { SectionTitle("All bots", loading) }
+        item { SectionTitle("Все боты", loading) }
         if (entries.isEmpty() && !loading) {
             item {
                 Text(
-                    "No bots yet. Tap + to add one.",
+                    "Ботов пока нет. Нажмите +, чтобы добавить.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -2041,9 +2041,9 @@ private fun DashboardCard(entry: DashboardEntry) {
                 Text(entry.label, fontWeight = FontWeight.SemiBold)
                 Text(
                     when (entry.kind) {
-                        BotKind.LOCAL -> "Local"
-                        BotKind.DESKTOP -> "Desktop"
-                        BotKind.HYBRID -> "Hybrid"
+                        BotKind.LOCAL -> "Локальный"
+                        BotKind.DESKTOP -> "ПК"
+                        BotKind.HYBRID -> "Гибридный"
                     },
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -2073,16 +2073,16 @@ private fun RedditDraftCard(draft: RedditDraft, busy: Boolean, onApprove: (useRe
             Text("r/${draft.sub}: ${draft.title}", fontWeight = FontWeight.SemiBold)
             if (draft.score != null) {
                 Text(
-                    "${draft.critic} score ${draft.score}/10" + (draft.issues?.let { " — $it" } ?: ""),
+                    "${draft.critic}: оценка ${draft.score}/10" + (draft.issues?.let { " — $it" } ?: ""),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            Text("Draft (${draft.code}):", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Черновик (${draft.code}):", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(draft.text, style = MaterialTheme.typography.bodyMedium)
             draft.rewrite?.let { rewrite ->
                 Text(
-                    "Rewrite (${draft.code}-R):",
+                    "Переписанный (${draft.code}-R):",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -2093,11 +2093,11 @@ private fun RedditDraftCard(draft: RedditDraft, busy: Boolean, onApprove: (useRe
             // screen still cannot fit them, the row wraps rather than breaking a label.
             val tight = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                OutlinedButton(onClick = { onApprove(false) }, enabled = !busy, contentPadding = tight) { Text("Post", maxLines = 1, softWrap = false) }
+                OutlinedButton(onClick = { onApprove(false) }, enabled = !busy, contentPadding = tight) { Text("Опубликовать", maxLines = 1, softWrap = false) }
                 if (draft.rewrite != null) {
-                    OutlinedButton(onClick = { onApprove(true) }, enabled = !busy, contentPadding = tight) { Text("Post rewrite", maxLines = 1, softWrap = false) }
+                    OutlinedButton(onClick = { onApprove(true) }, enabled = !busy, contentPadding = tight) { Text("Опубликовать новый", maxLines = 1, softWrap = false) }
                 }
-                OutlinedButton(onClick = onSkip, enabled = !busy, contentPadding = tight) { Text("Skip", maxLines = 1, softWrap = false) }
+                OutlinedButton(onClick = onSkip, enabled = !busy, contentPadding = tight) { Text("Пропустить", maxLines = 1, softWrap = false) }
             }
         }
     }
@@ -2149,7 +2149,7 @@ private fun ChatBubble(text: String, fromUser: Boolean, failed: Boolean = false,
             Column {
                 if (attachment) {
                     Text(
-                        "Image attached",
+                        "Прикреплено изображение",
                         color = textColor.copy(alpha = 0.7f),
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.padding(bottom = if (text.isNotBlank()) 4.dp else 0.dp),

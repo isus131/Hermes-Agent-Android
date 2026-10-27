@@ -32,11 +32,11 @@ fun RemoteJobCard(job: RemoteJob, busy: Boolean, onAction: (String) -> Unit, mod
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             job.nextRunAt?.let {
-                Text("Next $it", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Следующий: $it", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             job.lastRunAt?.let {
                 Text(
-                    "Last $it ${job.lastStatus.orEmpty()}",
+                    "Последний: $it ${job.lastStatus.orEmpty()}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -47,9 +47,9 @@ fun RemoteJobCard(job: RemoteJob, busy: Boolean, onAction: (String) -> Unit, mod
             HorizontalDivider()
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(onClick = { onAction(if (job.enabled) "pause" else "resume") }, enabled = !busy) {
-                    Text(if (job.enabled) "Pause" else "Resume")
+                    Text(if (job.enabled) "Пауза" else "Продолжить")
                 }
-                OutlinedButton(onClick = { onAction("run") }, enabled = !busy) { Text("Run now") }
+                OutlinedButton(onClick = { onAction("run") }, enabled = !busy) { Text("Запустить сейчас") }
             }
         }
     }

@@ -24,10 +24,10 @@ import com.hermes.agent.ui.theme.PriorityMedium
 @Composable
 fun PriorityChip(priority: TicketPriority, modifier: Modifier = Modifier) {
     val (color, label) = when (priority) {
-        TicketPriority.CRITICAL -> PriorityCritical to "Critical"
-        TicketPriority.HIGH -> PriorityHigh to "High"
-        TicketPriority.MEDIUM -> PriorityMedium to "Medium"
-        TicketPriority.LOW -> PriorityLow to "Low"
+        TicketPriority.CRITICAL -> PriorityCritical to "Критический"
+        TicketPriority.HIGH -> PriorityHigh to "Высокий"
+        TicketPriority.MEDIUM -> PriorityMedium to "Средний"
+        TicketPriority.LOW -> PriorityLow to "Низкий"
     }
     Surface(
         shape = MaterialTheme.shapes.small,
@@ -46,12 +46,12 @@ fun PriorityChip(priority: TicketPriority, modifier: Modifier = Modifier) {
 @Composable
 fun StatusChip(status: KanbanStatus, modifier: Modifier = Modifier) {
     val (container, label) = when (status) {
-        KanbanStatus.TODO -> KanbanTodo to "Todo"
-        KanbanStatus.IN_PROGRESS -> KanbanInProgress to "In Progress"
-        KanbanStatus.REVIEW -> KanbanReview to "Review"
-        KanbanStatus.BLOCKED -> KanbanBlocked to "Blocked"
-        KanbanStatus.DONE -> KanbanDone to "Done"
-        KanbanStatus.CANCELLED -> KanbanCancelled to "Cancelled"
+        KanbanStatus.TODO -> KanbanTodo to "К выполнению"
+        KanbanStatus.IN_PROGRESS -> KanbanInProgress to "В работе"
+        KanbanStatus.REVIEW -> KanbanReview to "На проверке"
+        KanbanStatus.BLOCKED -> KanbanBlocked to "Заблокировано"
+        KanbanStatus.DONE -> KanbanDone to "Готово"
+        KanbanStatus.CANCELLED -> KanbanCancelled to "Отменено"
     }
     Surface(
         shape = MaterialTheme.shapes.small,

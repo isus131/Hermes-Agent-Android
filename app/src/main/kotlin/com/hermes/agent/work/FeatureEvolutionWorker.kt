@@ -46,10 +46,10 @@ class FeatureEvolutionWorker @AssistedInject constructor(
         private const val TAG = "FeatureEvolution"
 
         fun describe(outcome: FeatureEvolutionAnalyzer.Outcome): String = when (outcome) {
-            is FeatureEvolutionAnalyzer.Outcome.Created -> "${outcome.proposals.size} new proposal(s)"
-            FeatureEvolutionAnalyzer.Outcome.NoSignals -> "No usage signals yet"
+            is FeatureEvolutionAnalyzer.Outcome.Created -> "Новых предложений: ${outcome.proposals.size}"
+            FeatureEvolutionAnalyzer.Outcome.NoSignals -> "Пока нет данных об использовании"
             is FeatureEvolutionAnalyzer.Outcome.NothingNew -> outcome.reason
-            is FeatureEvolutionAnalyzer.Outcome.Failed -> "Failed: ${outcome.message}"
+            is FeatureEvolutionAnalyzer.Outcome.Failed -> "Ошибка: ${outcome.message}"
         }
     }
 }

@@ -27,10 +27,10 @@ internal fun SaveBar(dirty: Boolean, onSave: () -> Unit, modifier: Modifier = Mo
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            text = if (dirty) "Unsaved changes" else "Saved",
+            text = if (dirty) "Есть несохранённые изменения" else "Сохранено",
             style = MaterialTheme.typography.bodySmall,
             color = if (dirty) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Button(onClick = onSave, enabled = dirty) { Text("Save") }
+        Button(onClick = onSave, enabled = dirty) { Text("Сохранить") }
     }
 }

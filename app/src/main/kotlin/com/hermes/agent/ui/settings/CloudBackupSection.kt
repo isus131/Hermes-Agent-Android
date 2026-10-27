@@ -79,14 +79,14 @@ class CloudBackupViewModel @Inject constructor(
         hasToken = store.token() != null,
         hasPassword = store.password() != null,
         lastLine = if (store.lastAt == 0L) "" else {
-            "Last upload ${DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(store.lastAt))}: ${store.lastResult}"
+            "Последняя выгрузка ${DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(store.lastAt))}: ${store.lastResult}"
         },
     )
 
     /** Saves what was typed; blank token and password fields keep what is already saved. */
     fun save(repo: String, device: String, token: String, password: String) {
         if (!CloudBackupPolicy.isRepo(repo)) {
-            _ui.update { it.copy(message = "Enter the repo as owner/name, for example yourname/app-backups.", isError = true) }
+            _ui.update { it.copy(message = "Укажите репозиторий в виде владелец/имя, например yourname/app-backups.", isError = true) }
             return
         }
         store.repo = repo
@@ -94,7 +94,7 @@ class CloudBackupViewModel @Inject constructor(
         if (token.isNotBlank()) store.setToken(token)
         if (password.isNotEmpty()) store.setPassword(password)
         CloudBackupScheduler.apply(context, store, replace = true)
-        _ui.update { read().copy(message = "Saved.", isError = false, files = it.files) }
+        _ui.update { read().copy(message = "Сохранено.", isError = false, files = it.files) }
     }
 
     fun setAuto(on: Boolean) {
@@ -106,37 +106,37 @@ class CloudBackupViewModel @Inject constructor(
     fun upload(password: String) {
         val pw = password.ifEmpty { store.password() }
         if (pw.isNullOrEmpty()) {
-            _ui.update { it.copy(message = "Enter a backup password first.", isError = true) }
+            _ui.update { it.copy(message = "Сначала введите пароль для копий.", isError = true) }
             return
         }
-        launchWork("Backing up and uploading…") {
+        launchWork("Создание копии и выгрузка…") {
             service.upload(pw).fold(
                 onSuccess = { m -> _ui.update { read().copy(message = m, isError = false, files = it.files) } },
-                onFailure = { e -> _ui.update { read().copy(message = e.message ?: "The upload failed.", isError = true, files = it.files) } },
+                onFailure = { e -> _ui.update { read().copy(message = e.message ?: "Выгрузка не удалась.", isError = true, files = it.files) } },
             )
         }
     }
 
-    fun refresh() = launchWork("Reading the cloud backups…") {
+    fun refresh() = launchWork("Чтение облачных копий…") {
         service.list().fold(
-            onSuccess = { list -> _ui.update { it.copy(files = list, message = if (list.isEmpty()) "No backups in the repo yet." else "", isError = false, working = null) } },
-            onFailure = { e -> _ui.update { it.copy(message = e.message ?: "Could not read the repo.", isError = true, working = null) } },
+            onSuccess = { list -> _ui.update { it.copy(files = list, message = if (list.isEmpty()) "В репозитории пока нет копий." else "", isError = false, working = null) } },
+            onFailure = { e -> _ui.update { it.copy(message = e.message ?: "Не удалось прочитать репозиторий.", isError = true, working = null) } },
         )
     }
 
     fun restore(file: CloudFile, password: String) {
         val pw = password.ifEmpty { store.password() }
         if (pw.isNullOrEmpty()) {
-            _ui.update { it.copy(message = "Enter the backup password first.", isError = true) }
+            _ui.update { it.copy(message = "Сначала введите пароль для копий.", isError = true) }
             return
         }
-        launchWork("Downloading and checking…") {
+        launchWork("Загрузка и проверка…") {
             service.stage(file, pw).fold(
                 onSuccess = { s ->
-                    val note = if (!s.sameDevice) " It came from another device, so its Tailscale sign-in will not be applied." else ""
-                    _ui.update { it.copy(staged = true, message = "Backup verified. Close Hermes and open it again to finish the restore.$note", isError = false, working = null) }
+                    val note = if (!s.sameDevice) " Она с другого устройства, поэтому вход в Tailscale из неё не применится." else ""
+                    _ui.update { it.copy(staged = true, message = "Копия проверена. Закройте Hermes и откройте снова, чтобы завершить восстановление.$note", isError = false, working = null) }
                 },
-                onFailure = { e -> _ui.update { it.copy(message = e.message ?: "The backup could not be read.", isError = true, working = null) } },
+                onFailure = { e -> _ui.update { it.copy(message = e.message ?: "Не удалось прочитать резервную копию.", isError = true, working = null) } },
             )
         }
     }
@@ -167,15 +167,15 @@ fun CloudBackupSection(viewModel: CloudBackupViewModel = hiltViewModel()) {
     confirm?.let { file ->
         AlertDialog(
             onDismissRequest = { confirm = null },
-            title = { Text("Replace everything with this backup?") },
+            title = { Text("Заменить всё этой резервной копией?") },
             text = {
                 Text(
-                    "Chats, settings, API keys and files will be replaced by ${file.name} from ${file.device}. " +
-                        "Your current database is kept as a safety copy. Hermes has to be closed and reopened to finish.",
+                    "Чаты, настройки, API-ключи и файлы будут заменены копией ${file.name} с устройства ${file.device}. " +
+                        "Текущая база данных сохранится как страховочная копия. Чтобы завершить, Hermes нужно закрыть и открыть снова.",
                 )
             },
-            confirmButton = { TextButton(onClick = { viewModel.restore(file, password); confirm = null }) { Text("Restore") } },
-            dismissButton = { TextButton(onClick = { confirm = null }) { Text("Cancel") } },
+            confirmButton = { TextButton(onClick = { viewModel.restore(file, password); confirm = null }) { Text("Восстановить") } },
+            dismissButton = { TextButton(onClick = { confirm = null }) { Text("Отмена") } },
         )
     }
 
@@ -183,9 +183,9 @@ fun CloudBackupSection(viewModel: CloudBackupViewModel = hiltViewModel()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("Cloud backup (GitHub)", style = MaterialTheme.typography.titleMedium)
+                    Text("Облачные копии (GitHub)", style = MaterialTheme.typography.titleMedium)
                     Text(
-                        "Keeps encrypted full backups in a private repo, one folder per device, so a tablet and a phone can restore each other's.",
+                        "Хранит зашифрованные полные копии в приватном репозитории, по папке на устройство, чтобы планшет и телефон могли восстанавливаться из копий друг друга.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -194,27 +194,27 @@ fun CloudBackupSection(viewModel: CloudBackupViewModel = hiltViewModel()) {
             }
             OutlinedTextField(
                 value = repo, onValueChange = { repo = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                label = { Text("Private repo (owner/name)") },
+                label = { Text("Приватный репозиторий (владелец/имя)") },
             )
             OutlinedTextField(
                 value = device, onValueChange = { device = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                label = { Text("This device's name") },
+                label = { Text("Имя этого устройства") },
             )
             OutlinedTextField(
                 value = token, onValueChange = { token = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                label = { Text(if (ui.hasToken) "GitHub token (saved; type to replace)" else "GitHub token (Contents: read and write)") },
+                label = { Text(if (ui.hasToken) "Токен GitHub (сохранён; введите, чтобы заменить)" else "Токен GitHub (Contents: чтение и запись)") },
                 visualTransformation = hidden,
             )
             OutlinedTextField(
                 value = password, onValueChange = { password = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                label = { Text(if (ui.hasPassword) "Backup password (saved; type to replace)" else "Backup password") },
+                label = { Text(if (ui.hasPassword) "Пароль копий (сохранён; введите, чтобы заменить)" else "Пароль копий") },
                 visualTransformation = hidden,
-                trailingIcon = { TextButton(onClick = { show = !show }) { Text(if (show) "Hide" else "Show") } },
+                trailingIcon = { TextButton(onClick = { show = !show }) { Text(if (show) "Скрыть" else "Показать") } },
             )
             Text(
-                "The token and password are kept on this device, sealed with a key that cannot leave it. Use the same " +
-                    "password on every device that should read these backups; it cannot be recovered. Each backup is " +
-                    "encrypted before it leaves the device.",
+                "Токен и пароль хранятся на этом устройстве и защищены ключом, который не может его покинуть. Используйте один и тот же " +
+                    "пароль на всех устройствах, которые должны читать эти копии; восстановить его нельзя. Каждая копия " +
+                    "шифруется до того, как покинет устройство.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -223,23 +223,23 @@ fun CloudBackupSection(viewModel: CloudBackupViewModel = hiltViewModel()) {
                     onClick = { viewModel.save(repo, device, token, password); token = ""; if (password.length >= 8) password = "" },
                     enabled = repo.isNotBlank() && (password.isEmpty() || password.length >= 8),
                     modifier = Modifier.weight(1f),
-                ) { Text("Save") }
+                ) { Text("Сохранить") }
                 Button(
                     onClick = { viewModel.upload(password) },
                     enabled = ui.working == null && ui.hasToken && (ui.hasPassword || password.length >= 8),
                     modifier = Modifier.weight(1f),
-                ) { Text("Upload now") }
+                ) { Text("Выгрузить сейчас") }
             }
             OutlinedButton(
                 onClick = viewModel::refresh,
                 enabled = ui.working == null && ui.hasToken,
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text("Show cloud backups") }
+            ) { Text("Показать облачные копии") }
             // Upload and Show stay off until a token is saved; say so instead of leaving two dead buttons.
             val missing = when {
-                !CloudBackupPolicy.isRepo(ui.repo) -> "Enter the repo as owner/name and tap Save."
-                !ui.hasToken -> "Paste a GitHub token and tap Save to turn on Upload and Show cloud backups."
-                !ui.hasPassword -> "Enter the backup password and tap Save before uploading."
+                !CloudBackupPolicy.isRepo(ui.repo) -> "Укажите репозиторий в виде владелец/имя и нажмите «Сохранить»."
+                !ui.hasToken -> "Вставьте токен GitHub и нажмите «Сохранить», чтобы включить выгрузку и просмотр облачных копий."
+                !ui.hasPassword -> "Перед выгрузкой введите пароль копий и нажмите «Сохранить»."
                 else -> null
             }
             missing?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
@@ -258,19 +258,19 @@ fun CloudBackupSection(viewModel: CloudBackupViewModel = hiltViewModel()) {
                 )
             }
             if (ui.staged) {
-                Button(onClick = { closeHermes(context) }, modifier = Modifier.fillMaxWidth()) { Text("Close Hermes now") }
+                Button(onClick = { closeHermes(context) }, modifier = Modifier.fillMaxWidth()) { Text("Закрыть Hermes сейчас") }
             }
             ui.files?.forEach { file ->
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Column(Modifier.weight(1f)) {
                         Text(file.device, style = MaterialTheme.typography.bodyMedium)
                         Text(
-                            "${file.name.removePrefix("hermes-").removeSuffix(CloudBackupPolicy.SUFFIX)} · ${file.size / 1024} KB",
+                            "${file.name.removePrefix("hermes-").removeSuffix(CloudBackupPolicy.SUFFIX)} · ${file.size / 1024} КБ",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
-                    OutlinedButton(onClick = { confirm = file }, enabled = ui.working == null && (ui.hasPassword || password.isNotEmpty())) { Text("Restore") }
+                    OutlinedButton(onClick = { confirm = file }, enabled = ui.working == null && (ui.hasPassword || password.isNotEmpty())) { Text("Восстановить") }
                 }
             }
             if (ui.lastLine.isNotEmpty()) {

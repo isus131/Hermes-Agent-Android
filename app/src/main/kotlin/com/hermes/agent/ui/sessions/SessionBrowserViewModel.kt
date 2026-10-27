@@ -73,7 +73,7 @@ class SessionBrowserViewModel @Inject constructor(
             }
             _uiState.value = SessionBrowserUiState.Success(sessionsWithCounts)
         } catch (e: Exception) {
-            _uiState.value = SessionBrowserUiState.Error(userFacing(e, "Could not load your chats."))
+            _uiState.value = SessionBrowserUiState.Error(userFacing(e, "Не удалось загрузить ваши чаты."))
         }
     }
 
@@ -91,7 +91,7 @@ class SessionBrowserViewModel @Inject constructor(
             }
             _uiState.value = SessionBrowserUiState.Success(sessions)
         } catch (e: Exception) {
-            _uiState.value = SessionBrowserUiState.Error(userFacing(e, "Could not search your chats."))
+            _uiState.value = SessionBrowserUiState.Error(userFacing(e, "Не удалось выполнить поиск по чатам."))
         }
     }
 
@@ -105,7 +105,7 @@ class SessionBrowserViewModel @Inject constructor(
                 // Refresh the list
                 browseRecent()
             } catch (e: Exception) {
-                _uiState.value = SessionBrowserUiState.Error(userFacing(e, "Could not delete that chat."))
+                _uiState.value = SessionBrowserUiState.Error(userFacing(e, "Не удалось удалить этот чат."))
             }
         }
     }
@@ -119,7 +119,7 @@ class SessionBrowserViewModel @Inject constructor(
                 val markdown = sessionRepository.exportToMarkdown(sessionId)
                 onResult(markdown)
             } catch (e: Exception) {
-                _uiState.value = SessionBrowserUiState.Error(userFacing(e, "Could not export that chat."))
+                _uiState.value = SessionBrowserUiState.Error(userFacing(e, "Не удалось экспортировать этот чат."))
             }
         }
     }

@@ -66,56 +66,56 @@ fun SettingsScreen(
                 modifier = Modifier.statusBarsPadding().padding(start = 8.dp, top = 12.dp, bottom = 8.dp),
             )
             SettingsGroup(
-                "Assistant & appearance",
+                "Ассистент и оформление",
                 listOf(
-                    NavItem(Icons.Outlined.AccountCircle, "Assistant", "Providers, local model, voice, standing instructions", nav("settings_assistant")),
-                    NavItem(Icons.Outlined.ColorLens, "Appearance", "Theme, dark mode, and accent colour", nav("settings_appearance")),
+                    NavItem(Icons.Outlined.AccountCircle, "Ассистент", "Провайдеры, локальная модель, голос, постоянные инструкции", nav("settings_assistant")),
+                    NavItem(Icons.Outlined.ColorLens, "Оформление", "Тема, тёмный режим и акцентный цвет", nav("settings_appearance")),
                 ),
             )
 
             SettingsGroup(
-                "Connections & automation",
+                "Подключения и автоматизация",
                 listOf(
-                    NavItem(Icons.Outlined.SettingsEthernet, "Connections", "Home Assistant, remote shell, MCP servers, API server", nav("settings_connections")),
-                    NavItem(Icons.Outlined.Link, "Messaging", "Telegram, Discord, Signal, WhatsApp gateways", nav("connect")),
-                    NavItem(Icons.Outlined.Schedule, "CRON routines", "Recurring agent tasks on a schedule", nav("schedule")),
-                    NavItem(Icons.AutoMirrored.Outlined.Send, "Delegate", "Background agent tasks and their results", nav("delegate")),
-                    NavItem(Icons.Outlined.Notifications, "Proactive", "Digest, nudges, quiet hours, ping budget", nav("settings_proactive")),
-                    NavItem(Icons.Outlined.Extension, "Modules", "Download verified modules from the shared repository", nav("settings_modules")),
+                    NavItem(Icons.Outlined.SettingsEthernet, "Подключения", "Home Assistant, удалённая оболочка, MCP-серверы, API-сервер", nav("settings_connections")),
+                    NavItem(Icons.Outlined.Link, "Мессенджеры", "Шлюзы Telegram, Discord, Signal, WhatsApp", nav("connect")),
+                    NavItem(Icons.Outlined.Schedule, "CRON-задачи", "Повторяющиеся задачи агента по расписанию", nav("schedule")),
+                    NavItem(Icons.AutoMirrored.Outlined.Send, "Поручения", "Фоновые задачи агента и их результаты", nav("delegate")),
+                    NavItem(Icons.Outlined.Notifications, "Проактивность", "Дайджест, напоминания, тихие часы, лимит сообщений", nav("settings_proactive")),
+                    NavItem(Icons.Outlined.Extension, "Модули", "Скачать проверенные модули из общего репозитория", nav("settings_modules")),
                 ),
             )
 
             SettingsGroup(
-                "Knowledge & skills",
+                "Знания и навыки",
                 listOf(
-                    NavItem(Icons.Outlined.Psychology, "Memory", "View and manage agent memories", nav("memory")),
-                    NavItem(Icons.Outlined.AutoAwesome, "Learning", "Facts learned, your profile, auto-created skills", nav("learning")),
-                    NavItem(Icons.AutoMirrored.Outlined.LibraryBooks, "Knowledge base", "Documents and files indexed for retrieval", nav("documents")),
-                    NavItem(Icons.Outlined.Stars, "Skills & tools", "Browse and manage the agent's skills and tools", nav("skills")),
-                    NavItem(Icons.Outlined.Science, "Refine skills", "Improve a skill from how it was actually used", nav("refine_skills")),
-                    NavItem(Icons.Outlined.Description, "Agent operating notes", "Learned guidance layered on each agent's prompt", nav("refine_prompts")),
-                    NavItem(Icons.Outlined.AutoAwesome, "Feature evolution", "Improvements proposed from usage, built and reviewed by your bots", nav("evolution")),
+                    NavItem(Icons.Outlined.Psychology, "Память", "Просмотр воспоминаний агента и управление ими", nav("memory")),
+                    NavItem(Icons.Outlined.AutoAwesome, "Обучение", "Выученные факты, ваш профиль, автоматические навыки", nav("learning")),
+                    NavItem(Icons.AutoMirrored.Outlined.LibraryBooks, "База знаний", "Документы и файлы, проиндексированные для поиска", nav("documents")),
+                    NavItem(Icons.Outlined.Stars, "Навыки и инструменты", "Просмотр навыков и инструментов агента и управление ими", nav("skills")),
+                    NavItem(Icons.Outlined.Science, "Улучшение навыков", "Улучшить навык по тому, как он на самом деле использовался", nav("refine_skills")),
+                    NavItem(Icons.Outlined.Description, "Рабочие заметки агентов", "Выученные подсказки поверх промпта каждого агента", nav("refine_prompts")),
+                    NavItem(Icons.Outlined.AutoAwesome, "Развитие функций", "Улучшения по вашему использованию, собранные и проверенные вашими ботами", nav("evolution")),
                 ),
             )
 
             SettingsGroup(
-                "Activity & diagnostics",
+                "Активность и диагностика",
                 listOf(
-                    NavItem(Icons.Outlined.Insights, "Usage & cost", "Tokens, estimated spend, tool-call counts", nav("usage_insights")),
-                    NavItem(Icons.Outlined.History, "What Hermes did", "Activity ledger: tool runs and delegated tasks", nav("activity_ledger")),
-                    NavItem(Icons.Outlined.Science, "A/B experiment", "Compare two models on the same prompt", nav("experiment")),
-                    NavItem(Icons.Outlined.Article, "Logs", "View, copy, or share app logs for troubleshooting", nav("logs")),
+                    NavItem(Icons.Outlined.Insights, "Использование и расходы", "Токены, примерные траты, число вызовов инструментов", nav("usage_insights")),
+                    NavItem(Icons.Outlined.History, "Что сделал Hermes", "Журнал действий: запуски инструментов и поручённые задачи", nav("activity_ledger")),
+                    NavItem(Icons.Outlined.Science, "A/B-эксперимент", "Сравнить две модели на одном запросе", nav("experiment")),
+                    NavItem(Icons.Outlined.Article, "Журналы", "Просмотр, копирование и отправка журналов приложения для диагностики", nav("logs")),
                 ),
             )
 
             SettingsGroup(
-                "Device & security",
+                "Устройство и безопасность",
                 listOf(
-                    NavItem(Icons.Outlined.Accessibility, "App control", "Accessibility Service — lets the agent drive other apps") {
+                    NavItem(Icons.Outlined.Accessibility, "Управление приложениями", "Спец. возможности — позволяют агенту управлять другими приложениями") {
                         context.startActivity(android.content.Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS))
                     },
-                    NavItem(Icons.Outlined.Build, "Advanced", "Backup, updates, files access, self-evolution", nav("settings_advanced")),
-                    NavItem(Icons.Outlined.Info, "About, permissions & security", "Version, app permissions, companion apps, security audit", nav("settings_about")),
+                    NavItem(Icons.Outlined.Build, "Дополнительно", "Резервные копии, обновления, доступ к файлам, саморазвитие", nav("settings_advanced")),
+                    NavItem(Icons.Outlined.Info, "О приложении, разрешения и безопасность", "Версия, разрешения приложения, сопутствующие приложения, проверка безопасности", nav("settings_about")),
                 ),
             )
         }

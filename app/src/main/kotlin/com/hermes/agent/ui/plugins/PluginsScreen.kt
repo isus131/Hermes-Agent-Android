@@ -58,12 +58,12 @@ fun PluginsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Plugins") },
+                title = { Text("Плагины") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back"
+                            contentDescription = "Назад"
                         )
                     }
                 },
@@ -94,25 +94,25 @@ fun PluginsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    Text(text = "Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+                    Text(text = "Ошибка: ${uiState.error}", color = MaterialTheme.colorScheme.error)
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = viewModel::loadPlugins) {
-                        Text("Retry")
+                        Text("Повторить")
                     }
                 }
             } else if (plugins.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .semantics { contentDescription = "No plugins installed." },
+                        .semantics { contentDescription = "Плагины не установлены." },
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text("No plugins installed.", style = MaterialTheme.typography.bodyMedium)
+                    Text("Плагины не установлены.", style = MaterialTheme.typography.bodyMedium)
                 }
             } else {
                 Text(
-                    text = "${plugins.size} plugins · " +
-                        "${plugins.count { it.state == PluginState.ACTIVE }} active",
+                    text = "Плагинов: ${plugins.size} · " +
+                        "активно: ${plugins.count { it.state == PluginState.ACTIVE }}",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -138,9 +138,9 @@ fun PluginsScreen(
 
     pendingUninstall?.let { plugin ->
         DestructiveActionDialog(
-            title = "Uninstall \"${plugin.manifest.displayName}\"?",
-            message = "This removes the plugin and its local configuration. You will need to install it again to use it.",
-            confirmLabel = "Uninstall plugin",
+            title = "Удалить «${plugin.manifest.displayName}»?",
+            message = "Плагин и его локальные настройки будут удалены. Чтобы снова им пользоваться, его нужно будет установить заново.",
+            confirmLabel = "Удалить плагин",
             onConfirm = {
                 viewModel.uninstall(plugin.manifest.id)
                 pendingUninstall = null
@@ -188,14 +188,14 @@ private fun PluginRow(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Permissions: " + plugin.manifest.permissions.joinToString(", ") { it.type.name },
+                text = "Разрешения: " + plugin.manifest.permissions.joinToString(", ") { it.type.name },
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             plugin.lastError?.let { err ->
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Error: $err",
+                    text = "Ошибка: $err",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.error,
                 )
@@ -204,7 +204,7 @@ private fun PluginRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
-                TextButton(onClick = onUninstall) { Text("Uninstall") }
+                TextButton(onClick = onUninstall) { Text("Удалить") }
             }
         }
     }

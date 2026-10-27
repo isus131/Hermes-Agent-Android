@@ -54,10 +54,10 @@ fun LogScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Logs") },
+                title = { Text("Журналы") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Назад")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -79,10 +79,10 @@ fun LogScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Button(onClick = { copyToClipboard(context, logs) }) { Text("Copy") }
-                OutlinedButton(onClick = { shareLogs(context, logs) }) { Text("Share") }
-                OutlinedButton(onClick = viewModel::refresh) { Text("Refresh") }
-                OutlinedButton(onClick = viewModel::clear) { Text("Clear") }
+                Button(onClick = { copyToClipboard(context, logs) }) { Text("Копировать") }
+                OutlinedButton(onClick = { shareLogs(context, logs) }) { Text("Поделиться") }
+                OutlinedButton(onClick = viewModel::refresh) { Text("Обновить") }
+                OutlinedButton(onClick = viewModel::clear) { Text("Очистить") }
             }
             Text(
                 text = logs,
@@ -100,15 +100,15 @@ fun LogScreen(
 
 private fun copyToClipboard(context: Context, text: String) {
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    clipboard.setPrimaryClip(ClipData.newPlainText("Hermes logs", text))
-    Toast.makeText(context, "Logs copied to clipboard", Toast.LENGTH_SHORT).show()
+    clipboard.setPrimaryClip(ClipData.newPlainText("Журналы Hermes", text))
+    Toast.makeText(context, "Журналы скопированы в буфер обмена", Toast.LENGTH_SHORT).show()
 }
 
 private fun shareLogs(context: Context, text: String) {
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
-        putExtra(Intent.EXTRA_SUBJECT, "Hermes logs")
+        putExtra(Intent.EXTRA_SUBJECT, "Журналы Hermes")
         putExtra(Intent.EXTRA_TEXT, text)
     }
-    context.startActivity(Intent.createChooser(intent, "Share logs"))
+    context.startActivity(Intent.createChooser(intent, "Поделиться журналами"))
 }

@@ -156,10 +156,10 @@ class MainActivity : FragmentActivity() {
                                 Intent.createChooser(
                                     Intent(Intent.ACTION_SEND).apply {
                                         type = "text/plain"
-                                        putExtra(Intent.EXTRA_SUBJECT, "Hermes crash report")
+                                        putExtra(Intent.EXTRA_SUBJECT, "Отчёт о сбое Hermes")
                                         putExtra(Intent.EXTRA_TEXT, report)
                                     },
-                                    "Share crash report",
+                                    "Поделиться отчётом о сбое",
                                 ),
                             )
                             com.hermes.agent.data.diagnostics.CrashReporter.discard(this)
@@ -173,17 +173,17 @@ class MainActivity : FragmentActivity() {
                             {
                                 val redacted = com.hermes.agent.data.diagnostics.ReportRedactor.redact(report)
                                 val firstLine = redacted.lineSequence()
-                                    .firstOrNull { it.contains("Exception") || it.contains("Error") } ?: "Crash"
+                                    .firstOrNull { it.contains("Exception") || it.contains("Error") } ?: "Сбой"
                                 lifecycleScope.launch {
                                     val result = repairReporter.file(
-                                        title = "Crash: ${firstLine.trim().take(100)}",
+                                        title = "Сбой: ${firstLine.trim().take(100)}",
                                         body = com.hermes.agent.data.diagnostics.RepairReporter.body(
-                                            "Hermes", "Hermes crashed.", redacted, BuildConfig.VERSION_NAME,
+                                            "Hermes", "Hermes аварийно завершился.", redacted, BuildConfig.VERSION_NAME,
                                         ),
                                     )
                                     android.widget.Toast.makeText(
                                         this@MainActivity,
-                                        result.fold({ "Report sent for repair." }, { "Could not send: ${it.message}" }),
+                                        result.fold({ "Отчёт отправлен на исправление." }, { "Не удалось отправить: ${it.message}" }),
                                         android.widget.Toast.LENGTH_LONG,
                                     ).show()
                                     if (result.isSuccess) com.hermes.agent.data.diagnostics.CrashReporter.discard(this@MainActivity)

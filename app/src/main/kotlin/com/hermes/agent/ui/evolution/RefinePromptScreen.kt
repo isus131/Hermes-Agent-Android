@@ -51,10 +51,10 @@ fun RefinePromptScreen(
     Scaffold(
         topBar = {
             SlimTopBar(
-                title = "Agent operating notes",
+                title = "Рабочие заметки агентов",
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Назад")
                     }
                 },
             )
@@ -69,10 +69,10 @@ fun RefinePromptScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
-                "Each agent has a fixed built-in prompt that can't be changed, plus " +
-                    "learned notes that can. Hermes reflects on how an agent actually " +
-                    "performed and proposes updated notes — you approve them, and every " +
-                    "version is kept so you can roll back.",
+                "У каждого агента есть встроенный промпт, который нельзя изменить, и " +
+                    "выученные заметки, которые менять можно. Hermes анализирует, как агент на самом деле " +
+                    "справлялся, и предлагает обновлённые заметки — вы их одобряете, а каждая " +
+                    "версия сохраняется, чтобы можно было откатиться.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -90,22 +90,22 @@ fun RefinePromptScreen(
                     ) {
                         CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
                         Text(
-                            "Reflecting on ${s.role.displayName}…",
+                            "Анализирую: ${s.role.displayName}…",
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
                 is PromptUiState.Applied -> StatusCard {
-                    Text("✓ Notes updated.", color = MaterialTheme.colorScheme.primary)
-                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Done") }
+                    Text("✓ Заметки обновлены.", color = MaterialTheme.colorScheme.primary)
+                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Готово") }
                 }
                 is PromptUiState.Restored -> StatusCard {
-                    Text("✓ Restored v${s.version}.", color = MaterialTheme.colorScheme.primary)
-                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Done") }
+                    Text("✓ Восстановлена v${s.version}.", color = MaterialTheme.colorScheme.primary)
+                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Готово") }
                 }
                 is PromptUiState.NoChange -> StatusCard {
                     Text(s.message, style = MaterialTheme.typography.bodyMedium)
-                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("OK") }
+                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("ОК") }
                 }
                 is PromptUiState.Error -> StatusCard {
                     Text(
@@ -113,7 +113,7 @@ fun RefinePromptScreen(
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyMedium,
                     )
-                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Dismiss") }
+                    OutlinedButton(onClick = viewModel::reset, modifier = Modifier.fillMaxWidth()) { Text("Скрыть") }
                 }
                 is PromptUiState.Idle -> Unit
             }
@@ -142,13 +142,13 @@ fun RefinePromptScreen(
 
                             if (row.content.isBlank()) {
                                 Text(
-                                    "No learned notes yet — this agent runs on its built-in prompt alone.",
+                                    "Выученных заметок пока нет — этот агент работает только на встроенном промпте.",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             } else {
                                 Text(
-                                    "Current notes (v${row.version}):",
+                                    "Текущие заметки (v${row.version}):",
                                     style = MaterialTheme.typography.labelLarge,
                                 )
                                 Text(
@@ -164,13 +164,13 @@ fun RefinePromptScreen(
                                 Button(
                                     onClick = { viewModel.refine(row.role) },
                                     modifier = Modifier.weight(1f),
-                                ) { Text("Refine from usage") }
+                                ) { Text("Улучшить по использованию") }
                                 OutlinedButton(onClick = { viewModel.showHistory(row.role) }) {
-                                    Text("History")
+                                    Text("История")
                                 }
                             }
                             if (row.content.isNotBlank()) {
-                                TextButton(onClick = { viewModel.clear(row.role) }) { Text("Clear notes") }
+                                TextButton(onClick = { viewModel.clear(row.role) }) { Text("Очистить заметки") }
                             }
                         }
                     }
@@ -201,8 +201,8 @@ private fun ProposalCard(
             Text(proposal.role.displayName, style = MaterialTheme.typography.titleMedium)
             Text(proposal.rationale, style = MaterialTheme.typography.bodyMedium)
             Text(
-                "Based on ${proposal.traceCount} trace(s) · " +
-                    "${proposal.originalContent.length} → ${proposal.proposedContent.length} chars",
+                "На основе трасс: ${proposal.traceCount} · " +
+                    "${proposal.originalContent.length} → ${proposal.proposedContent.length} символов",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -223,7 +223,7 @@ private fun ProposalCard(
 
             if (proposal.originalContent.isNotBlank()) {
                 HorizontalDivider()
-                Text("Replacing:", style = MaterialTheme.typography.labelLarge)
+                Text("Заменяется:", style = MaterialTheme.typography.labelLarge)
                 Text(
                     proposal.originalContent,
                     style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
@@ -232,7 +232,7 @@ private fun ProposalCard(
             }
 
             HorizontalDivider()
-            Text("Proposed notes:", style = MaterialTheme.typography.labelLarge)
+            Text("Предлагаемые заметки:", style = MaterialTheme.typography.labelLarge)
             Text(
                 proposal.proposedContent,
                 style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
@@ -243,8 +243,8 @@ private fun ProposalCard(
                     onClick = onApply,
                     enabled = proposal.constraintsPass,
                     modifier = Modifier.weight(1f),
-                ) { Text(if (proposal.constraintsPass) "Apply" else "Failed gates") }
-                OutlinedButton(onClick = onDiscard, modifier = Modifier.weight(1f)) { Text("Discard") }
+                ) { Text(if (proposal.constraintsPass) "Применить" else "Проверки не пройдены") }
+                OutlinedButton(onClick = onDiscard, modifier = Modifier.weight(1f)) { Text("Отбросить") }
             }
         }
     }
@@ -264,7 +264,7 @@ private fun HistoryCard(
     ) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(
-                "${history.role.displayName} — notes history",
+                "${history.role.displayName} — история заметок",
                 style = MaterialTheme.typography.titleMedium,
             )
 
@@ -274,11 +274,11 @@ private fun HistoryCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
-                    Text("Loading…", style = MaterialTheme.typography.bodySmall)
+                    Text("Загрузка…", style = MaterialTheme.typography.bodySmall)
                 }
 
                 history.revisions.isEmpty() -> Text(
-                    "No earlier versions yet.",
+                    "Более ранних версий пока нет.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -302,12 +302,12 @@ private fun HistoryCard(
                             ),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        TextButton(onClick = { onRestore(rev) }) { Text("Restore this version") }
+                        TextButton(onClick = { onRestore(rev) }) { Text("Восстановить эту версию") }
                     }
                 }
             }
 
-            OutlinedButton(onClick = onClose, modifier = Modifier.fillMaxWidth()) { Text("Close") }
+            OutlinedButton(onClick = onClose, modifier = Modifier.fillMaxWidth()) { Text("Закрыть") }
         }
     }
 }

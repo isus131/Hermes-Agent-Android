@@ -69,10 +69,10 @@ fun AdvancedSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Advanced") },
+                title = { Text("Дополнительно") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Navigate back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 }
             )
@@ -86,7 +86,7 @@ fun AdvancedSettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            SectionHeader(text = "Privileged Shell (Shizuku)")
+            SectionHeader(text = "Привилегированная оболочка (Shizuku)")
             PrivilegedShellSection(
                 enabled = settings.privilegedShellEnabled,
                 status = privilegedStatus,
@@ -97,7 +97,7 @@ fun AdvancedSettingsScreen(
                 onResetGate = viewModel::resetPrivilegedGate,
             )
 
-            SectionHeader(text = "Backup & Restore")
+            SectionHeader(text = "Резервное копирование и восстановление")
             BackupRestoreSection(
                 jsonState = jsonBackupState,
                 onJsonBackup = { uri, sections, password, bots -> viewModel.exportJson(uri, sections, password, bots) },
@@ -107,16 +107,16 @@ fun AdvancedSettingsScreen(
             AutoBackupSection()
             CloudBackupSection()
 
-            SectionHeader(text = "Import chats")
+            SectionHeader(text = "Импорт чатов")
             ChatImportSection()
 
-            SectionHeader(text = "Files & Workspace Access")
+            SectionHeader(text = "Доступ к файлам и рабочей папке")
             FilesWorkspaceSection(
                 rootUri = settings.filesRootUri,
                 onUpdateRoot = viewModel::setFilesRootUri,
             )
 
-            SectionHeader(text = "Self-Evolution")
+            SectionHeader(text = "Саморазвитие")
             ExportSection(
                 state = exportState,
                 onExport = viewModel::exportSessions,
@@ -131,12 +131,12 @@ fun AdvancedSettingsScreen(
                         putExtra(Intent.EXTRA_STREAM, uri)
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     }
-                    context.startActivity(Intent.createChooser(share, "Share session export"))
+                    context.startActivity(Intent.createChooser(share, "Поделиться экспортом сессий"))
                 },
                 onDismiss = viewModel::dismissExportState,
             )
 
-            SectionHeader(text = "Self-repair")
+            SectionHeader(text = "Самовосстановление")
             SelfRepairSection()
 
         }
@@ -171,14 +171,14 @@ private fun FilesWorkspaceSection(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
-                text = "Workspace Root Directory",
+                text = "Корневая рабочая папка",
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
                 text = if (rootUri.isBlank()) {
-                    "Default: App Sandbox Internal Workspace"
+                    "По умолчанию: внутренняя рабочая папка приложения"
                 } else {
-                    "Granted Root: ${com.hermes.agent.data.tools.WorkspaceRoots.pathOf(rootUri) ?: rootUri}"
+                    "Выбранная папка: ${com.hermes.agent.data.tools.WorkspaceRoots.pathOf(rootUri) ?: rootUri}"
                 },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -192,14 +192,14 @@ private fun FilesWorkspaceSection(
                     modifier = Modifier.weight(1f),
                     contentPadding = SettingsButtonPadding,
                 ) {
-                    ButtonLabel(if (rootUri.isBlank()) "Grant Directory" else "Change Directory")
+                    ButtonLabel(if (rootUri.isBlank()) "Выбрать папку" else "Сменить папку")
                 }
                 if (rootUri.isNotBlank()) {
                     OutlinedButton(
                         onClick = { onUpdateRoot("") },
                         contentPadding = SettingsButtonPadding,
                     ) {
-                        ButtonLabel("Revoke / Reset")
+                        ButtonLabel("Отозвать / сбросить")
                     }
                 }
             }
@@ -229,8 +229,8 @@ private fun PrivilegedShellSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 DescribedTitle(
-                    title = "Enable Privileged Shell",
-                    description = "Allows the shell tool to run with ADB privileges (UID 2000) via Shizuku.",
+                    title = "Включить привилегированную оболочку",
+                    description = "Позволяет инструменту shell работать с правами ADB (UID 2000) через Shizuku.",
                     modifier = Modifier.weight(1f),
                 )
                 androidx.compose.material3.Switch(
@@ -247,25 +247,25 @@ private fun PrivilegedShellSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Shizuku Status",
+                    text = "Состояние Shizuku",
                     style = MaterialTheme.typography.titleSmall,
                 )
                 androidx.compose.material3.TextButton(onClick = onRefresh) {
-                    Text("Check Status")
+                    Text("Проверить")
                 }
             }
 
             when (status.status) {
                 com.hermes.agent.domain.device.PrivilegedShellBackend.Status.READY -> {
                     Text(
-                        text = "● Connected (UID ${status.uid} · Version ${status.version})",
+                        text = "● Подключено (UID ${status.uid} · версия ${status.version})",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
                 }
                 com.hermes.agent.domain.device.PrivilegedShellBackend.Status.PERMISSION_REQUIRED -> {
                     Text(
-                        text = "⚠️ Permission Required: Hermes needs Shizuku access.",
+                        text = "⚠️ Нужно разрешение: Hermes нужен доступ к Shizuku.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error,
                     )
@@ -273,34 +273,34 @@ private fun PrivilegedShellSection(
                         onClick = onRequestPermission,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text("Grant Shizuku Permission")
+                        Text("Выдать разрешение Shizuku")
                     }
                 }
                 com.hermes.agent.domain.device.PrivilegedShellBackend.Status.DEAD -> {
                     Text(
-                        text = "⚠️ Shizuku service is not running.",
+                        text = "⚠️ Служба Shizuku не запущена.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error,
                     )
                     Text(
-                        text = "Start it via ADB:\n${com.hermes.agent.data.device.PrivilegedShellGateway.ADB_START_COMMAND}",
+                        text = "Запустите её через ADB:\n${com.hermes.agent.data.device.PrivilegedShellGateway.ADB_START_COMMAND}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     OutlinedButton(
                         onClick = {
                             val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-                            val clip = android.content.ClipData.newPlainText("ADB Command", com.hermes.agent.data.device.PrivilegedShellGateway.ADB_START_COMMAND)
+                            val clip = android.content.ClipData.newPlainText("Команда ADB", com.hermes.agent.data.device.PrivilegedShellGateway.ADB_START_COMMAND)
                             clipboard.setPrimaryClip(clip)
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text("Copy ADB Command")
+                        Text("Копировать команду ADB")
                     }
                 }
                 com.hermes.agent.domain.device.PrivilegedShellBackend.Status.NOT_INSTALLED -> {
                     Text(
-                        text = "Shizuku app is not installed on this device.",
+                        text = "Приложение Shizuku не установлено на этом устройстве.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -310,7 +310,7 @@ private fun PrivilegedShellSection(
             if (gateStatus.state == com.hermes.agent.data.device.PrivilegedShellRetryGate.State.DIRTY_UNWIND) {
                 androidx.compose.material3.HorizontalDivider()
                 Text(
-                    text = "⚠️ Execution Gate Locked: ${gateStatus.reason}",
+                    text = "⚠️ Запуск заблокирован: ${gateStatus.reason}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error,
                 )
@@ -318,7 +318,7 @@ private fun PrivilegedShellSection(
                     onClick = onResetGate,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text("Reset Execution Gate")
+                    Text("Сбросить блокировку")
                 }
             }
         }
@@ -341,14 +341,14 @@ private fun ExportSection(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(20.dp),
                 )
-                Text("Export sessions for evolution", style = MaterialTheme.typography.bodyLarge)
+                Text("Экспорт сессий для саморазвития", style = MaterialTheme.typography.bodyLarge)
             }
             InfoNote(
-                "How the export is used",
-                "Exports your conversations as a JSON archive for the offline " +
-                    "hermes-agent-self-evolution tool. Unzip into ~/.hermes/sessions/ " +
-                    "on your computer, then run the evolver with --eval-source sessiondb. " +
-                    "The archive contains raw chat text — treat it as sensitive.",
+                "Как используется экспорт",
+                "Экспортирует ваши разговоры в JSON-архив для офлайн-инструмента " +
+                    "hermes-agent-self-evolution. Распакуйте в ~/.hermes/sessions/ " +
+                    "на компьютере, затем запустите его с --eval-source sessiondb. " +
+                    "Архив содержит текст чатов как есть — обращайтесь с ним как с конфиденциальными данными.",
             )
 
             when (state) {
@@ -358,21 +358,21 @@ private fun ExportSection(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
-                        Text("Exporting…", style = MaterialTheme.typography.bodySmall)
+                        Text("Экспорт…", style = MaterialTheme.typography.bodySmall)
                     }
                 }
                 is ExportUiState.Ready -> {
                     Text(
-                        "Exported ${state.sessionCount} sessions (${state.messageCount} messages).",
+                        "Экспортировано сессий: ${state.sessionCount} (сообщений: ${state.messageCount}).",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary,
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         Button(onClick = { onShare(state.zipFile) }, modifier = Modifier.weight(1f), contentPadding = SettingsButtonPadding) {
-                            ButtonLabel("Share archive")
+                            ButtonLabel("Поделиться архивом")
                         }
                         OutlinedButton(onClick = onDismiss, modifier = Modifier.weight(1f), contentPadding = SettingsButtonPadding) {
-                            ButtonLabel("Done")
+                            ButtonLabel("Готово")
                         }
                     }
                 }
@@ -383,12 +383,12 @@ private fun ExportSection(
                         color = MaterialTheme.colorScheme.error,
                     )
                     FilledTonalButton(onClick = onExport, modifier = Modifier.fillMaxWidth()) {
-                        Text("Retry export")
+                        Text("Повторить экспорт")
                     }
                 }
                 is ExportUiState.Idle -> {
                     FilledTonalButton(onClick = onExport, modifier = Modifier.fillMaxWidth()) {
-                        Text("Export sessions")
+                        Text("Экспортировать сессии")
                     }
                 }
             }

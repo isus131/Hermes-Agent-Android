@@ -28,7 +28,7 @@ fun BranchSwitcher(info: BranchInfo, onSwitch: (BranchInfo, Int) -> Unit, modifi
             enabled = info.position > 1,
             modifier = Modifier.size(32.dp),
         ) {
-            Icon(Icons.AutoMirrored.Outlined.KeyboardArrowLeft, contentDescription = "Previous version")
+            Icon(Icons.AutoMirrored.Outlined.KeyboardArrowLeft, contentDescription = "Предыдущая версия")
         }
         Text(
             "${info.position} / ${info.count}",
@@ -40,7 +40,7 @@ fun BranchSwitcher(info: BranchInfo, onSwitch: (BranchInfo, Int) -> Unit, modifi
             enabled = info.position < info.count,
             modifier = Modifier.size(32.dp),
         ) {
-            Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = "Next version")
+            Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = "Следующая версия")
         }
     }
 }

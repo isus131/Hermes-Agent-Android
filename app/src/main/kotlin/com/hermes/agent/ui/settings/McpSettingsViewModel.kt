@@ -77,11 +77,11 @@ class McpSettingsViewModel @Inject constructor(
         val trimmedName = name.trim()
         val trimmedUrl = url.trim()
         if (trimmedName.isEmpty()) {
-            onResult(false, "Give the server a name.")
+            onResult(false, "Дайте серверу имя.")
             return@launch
         }
         if (!trimmedUrl.startsWith("http://") && !trimmedUrl.startsWith("https://")) {
-            onResult(false, "The URL must start with http:// or https://.")
+            onResult(false, "URL должен начинаться с http:// или https://.")
             return@launch
         }
         val headers = if (headerName.isNotBlank()) {
@@ -105,14 +105,14 @@ class McpSettingsViewModel @Inject constructor(
             onSuccess = { sync ->
                 sync.fold(
                     onSuccess = { tools ->
-                        onResult(true, "Connected. ${tools.size} tool(s) discovered.")
+                        onResult(true, "Подключено. Найдено инструментов: ${tools.size}.")
                     },
                     onFailure = { e ->
-                        onResult(false, "Saved, but the server did not respond: ${e.message}")
+                        onResult(false, "Сохранено, но сервер не ответил: ${e.message}")
                     },
                 )
             },
-            onFailure = { e -> onResult(false, "Could not save the server: ${e.message}") },
+            onFailure = { e -> onResult(false, "Не удалось сохранить сервер: ${e.message}") },
         )
     }
 
@@ -132,11 +132,11 @@ class McpSettingsViewModel @Inject constructor(
         result.fold(
             onSuccess = { sync ->
                 sync.fold(
-                    onSuccess = { tools -> onResult(true, "${tools.size} tool(s) available.") },
-                    onFailure = { e -> onResult(false, e.message ?: "Sync failed.") },
+                    onSuccess = { tools -> onResult(true, "Доступно инструментов: ${tools.size}.") },
+                    onFailure = { e -> onResult(false, e.message ?: "Синхронизация не удалась.") },
                 )
             },
-            onFailure = { e -> onResult(false, e.message ?: "Sync failed.") },
+            onFailure = { e -> onResult(false, e.message ?: "Синхронизация не удалась.") },
         )
     }
 

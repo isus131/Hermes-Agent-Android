@@ -53,15 +53,15 @@ fun TicketDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Ticket") },
+                title = { Text("Задача") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
                 actions = {
                     IconButton(onClick = { showDeleteConfirm = true }) {
-                        Icon(Icons.Filled.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
+                        Icon(Icons.Filled.Delete, contentDescription = "Удалить", tint = MaterialTheme.colorScheme.error)
                     }
                 },
             )
@@ -70,7 +70,7 @@ fun TicketDetailScreen(
         val t = ticket
         if (t == null) {
             Column(Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
-                Text("Loading…", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Загрузка…", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             return@Scaffold
         }
@@ -85,7 +85,7 @@ fun TicketDetailScreen(
             }
             t.assignee?.let {
                 Spacer(Modifier.height(8.dp))
-                AssistChip(onClick = {}, label = { Text("Assignee: @$it") })
+                AssistChip(onClick = {}, label = { Text("Исполнитель: @$it") })
             }
             if (t.tags.isNotEmpty()) {
                 Spacer(Modifier.height(8.dp))
@@ -99,12 +99,12 @@ fun TicketDetailScreen(
             }
             t.result?.let {
                 Spacer(Modifier.height(16.dp))
-                Text("Result", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                Text("Результат", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                 Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
 
             Spacer(Modifier.height(24.dp))
-            Text("Move to", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Text("Переместить в", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -123,9 +123,9 @@ fun TicketDetailScreen(
 
     if (showDeleteConfirm) {
         DestructiveActionDialog(
-            title = "Delete Ticket",
-            message = "Are you sure you want to delete this ticket?",
-            confirmLabel = "Delete",
+            title = "Удалить задачу",
+            message = "Вы уверены, что хотите удалить эту задачу?",
+            confirmLabel = "Удалить",
             onConfirm = {
                 showDeleteConfirm = false
                 viewModel.delete(onDeleted = onNavigateBack)
@@ -136,10 +136,10 @@ fun TicketDetailScreen(
 }
 
 private fun KanbanStatus.label() = when (this) {
-    KanbanStatus.TODO -> "Todo"
-    KanbanStatus.IN_PROGRESS -> "In Progress"
-    KanbanStatus.REVIEW -> "Review"
-    KanbanStatus.BLOCKED -> "Blocked"
-    KanbanStatus.DONE -> "Done"
-    KanbanStatus.CANCELLED -> "Cancelled"
+    KanbanStatus.TODO -> "К выполнению"
+    KanbanStatus.IN_PROGRESS -> "В работе"
+    KanbanStatus.REVIEW -> "На проверке"
+    KanbanStatus.BLOCKED -> "Заблокировано"
+    KanbanStatus.DONE -> "Готово"
+    KanbanStatus.CANCELLED -> "Отменено"
 }

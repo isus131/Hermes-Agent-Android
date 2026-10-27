@@ -57,12 +57,12 @@ fun MemoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (isStarmapView) "Starmap Knowledge Graph" else "Long-term Memory") },
+                title = { Text(if (isStarmapView) "Звёздная карта знаний" else "Долговременная память") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back"
+                            contentDescription = "Назад"
                         )
                     }
                 },
@@ -70,7 +70,7 @@ fun MemoryScreen(
                     IconButton(onClick = { isStarmapView = !isStarmapView }) {
                         Icon(
                             imageVector = if (isStarmapView) Icons.Outlined.List else Icons.Outlined.AutoAwesome,
-                            contentDescription = if (isStarmapView) "List View" else "Starmap View",
+                            contentDescription = if (isStarmapView) "Списком" else "Звёздной картой",
                             tint = if (isStarmapView) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
@@ -93,7 +93,7 @@ fun MemoryScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                 ) {
-                    Icon(Icons.Outlined.Add, contentDescription = "Add memory")
+                    Icon(Icons.Outlined.Add, contentDescription = "Добавить воспоминание")
                 }
             }
         },
@@ -120,9 +120,9 @@ fun MemoryScreen(
             OutlinedTextField(
                 value = newMemory,
                 onValueChange = { newMemory = it },
-                label = { Text("Add a memory") },
+                label = { Text("Добавить воспоминание") },
                 supportingText = {
-                    Text("Anything Hermes should remember about you.")
+                    Text("Всё, что Hermes стоит запомнить о вас.")
                 },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 2,
@@ -151,9 +151,9 @@ fun MemoryScreen(
 
     if (deleteTarget != null) {
         DestructiveActionDialog(
-            title = "Delete Memory",
-            message = "Are you sure you want to delete this memory?",
-            confirmLabel = "Delete",
+            title = "Удалить воспоминание",
+            message = "Вы уверены, что хотите удалить это воспоминание?",
+            confirmLabel = "Удалить",
             onConfirm = {
                 deleteTarget?.let { viewModel.deleteMemory(it) }
                 deleteTarget = null
@@ -184,7 +184,7 @@ private fun MemoryRow(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "accessed ${memory.accessCount}× · score ${"%.2f".format(memory.relevanceScore)}",
+                    text = "обращений: ${memory.accessCount} · оценка ${"%.2f".format(memory.relevanceScore)}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -192,7 +192,7 @@ private fun MemoryRow(
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
-                    contentDescription = "Delete",
+                    contentDescription = "Удалить",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 )
             }

@@ -112,7 +112,7 @@ class TaskerPluginReceiver : BroadcastReceiver() {
         }
 
         if (outcome == null) {
-            finalResponse = "Execution timed out after ${config.timeoutSeconds}s"
+            finalResponse = "Время выполнения истекло через ${config.timeoutSeconds} с"
             exitCode = 2
         }
 

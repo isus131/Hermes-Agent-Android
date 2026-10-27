@@ -197,7 +197,7 @@ class FullBackupManager @Inject constructor(
                         fileCount += addTree(zip, entries, skipped, workspace, "${FullBackupFormat.EXTERNAL_DIR}workspace/") { false }
                     }
                     if (File(context.filesDir, "models").exists()) {
-                        skipped += "models/ (downloaded models: download them again)"
+                        skipped += "models/ (скачанные модели: скачайте их заново)"
                     }
 
                     val done = FullBackupSummary(
@@ -259,18 +259,18 @@ class FullBackupManager @Inject constructor(
                 }
             }
 
-            val m = manifest ?: throw BackupStreamCipher.CorruptBackupException("This backup has no manifest.")
-            val s = summary ?: throw BackupStreamCipher.CorruptBackupException("This backup is incomplete: it has no summary.")
+            val m = manifest ?: throw BackupStreamCipher.CorruptBackupException("В этой резервной копии нет манифеста.")
+            val s = summary ?: throw BackupStreamCipher.CorruptBackupException("Резервная копия неполная: в ней нет сводки.")
             if (m.format > FullBackupFormat.FORMAT) {
-                throw IOException("This backup was made by a newer version of Hermes (format ${m.format}). Update Hermes and try again.")
+                throw IOException("Эта резервная копия создана более новой версией Hermes (формат ${m.format}). Обновите Hermes и попробуйте снова.")
             }
             val current = currentDatabaseVersion()
             if (m.dbVersion > current) {
-                throw IOException("This backup's data is newer than this version of Hermes understands. Update Hermes and try again.")
+                throw IOException("Данные в этой резервной копии новее, чем понимает эта версия Hermes. Обновите Hermes и попробуйте снова.")
             }
             val missing = s.entries.filterNot { File(staging, it).isFile }
             if (missing.isNotEmpty()) {
-                throw BackupStreamCipher.CorruptBackupException("This backup is incomplete: ${missing.first()} is missing.")
+                throw BackupStreamCipher.CorruptBackupException("Резервная копия неполная: отсутствует ${missing.first()}.")
             }
             DatabaseFiles.requireIntact(File(staging, FullBackupFormat.DATABASE), current)
             // Decoded now so a bad file is reported here, not discovered halfway through applying it.
@@ -316,7 +316,7 @@ class FullBackupManager @Inject constructor(
             source.copyTo(target, overwrite = true)
             if (DatabaseFiles.isIntact(target)) return
         }
-        throw IOException("Could not take a consistent copy of the database. Try again.")
+        throw IOException("Не удалось сделать целостную копию базы данных. Попробуйте снова.")
     }
 
     private fun prefsNames(): List<String> {
@@ -348,7 +348,7 @@ class FullBackupManager @Inject constructor(
                 val stream = try {
                     file.inputStream()
                 } catch (e: IOException) {
-                    skipped += "$name (unreadable: ${e.message})"
+                    skipped += "$name (не читается: ${e.message})"
                     return@forEach
                 }
                 stream.use {
@@ -367,7 +367,7 @@ class FullBackupManager @Inject constructor(
         val base = root.canonicalFile
         // A crafted entry name must not be able to write outside the staging directory.
         if (target != base && !target.path.startsWith(base.path + File.separator)) {
-            throw BackupStreamCipher.CorruptBackupException("This backup contains an unsafe path.")
+            throw BackupStreamCipher.CorruptBackupException("Резервная копия содержит небезопасный путь.")
         }
         return target
     }
@@ -452,7 +452,7 @@ internal object DatabaseFiles {
         val ok = runCatching {
             withStandaloneCopy(file) { db ->
                 if (db.version > maxVersion) {
-                    throw IOException("This backup's database is newer than this version of Hermes understands.")
+                    throw IOException("База данных в этой резервной копии новее, чем понимает эта версия Hermes.")
                 }
                 db.rawQuery("PRAGMA integrity_check", null).use { it.moveToFirst() && it.getString(0) == "ok" }
             }
@@ -460,7 +460,7 @@ internal object DatabaseFiles {
         val failure = ok.exceptionOrNull()
         if (failure is IOException) throw failure
         if (ok.getOrDefault(false).not()) {
-            throw BackupStreamCipher.CorruptBackupException("The database inside this backup is damaged.")
+            throw BackupStreamCipher.CorruptBackupException("База данных внутри этой резервной копии повреждена.")
         }
     }
 }
@@ -501,7 +501,7 @@ object PendingRestore {
             apply(context, dir)
         } catch (t: Throwable) {
             Log.e(TAG, "restore failed; the app keeps its current data", t)
-            RestoreResult(false, System.currentTimeMillis(), "The restore could not be applied, so nothing was changed: ${t.message}")
+            RestoreResult(false, System.currentTimeMillis(), "Восстановление не удалось применить, поэтому ничего не изменено: ${t.message}")
         }
         dir.deleteRecursively()
         context.getSharedPreferences(STATE_PREFS, Context.MODE_PRIVATE).edit()
@@ -528,12 +528,12 @@ object PendingRestore {
         runCatching {
             val entries = json.decodeFromString(rawMap, File(dir, FullBackupFormat.SETTINGS).readText())
             val skipped = runBlocking { SettingsRepositoryImpl(context).importRawPreferences(entries) }
-            if (skipped.isNotEmpty()) problems += "Settings this version does not know were left out: ${skipped.joinToString()}"
-        }.onFailure { problems += "Settings: ${it.message}" }
+            if (skipped.isNotEmpty()) problems += "Настройки, которые эта версия не знает, пропущены: ${skipped.joinToString()}"
+        }.onFailure { problems += "Настройки: ${it.message}" }
         runCatching {
             val entries = json.decodeFromString(rawMap, File(dir, FullBackupFormat.LEARNING).readText())
             runBlocking { LearningState(context).importRaw(entries) }
-        }.onFailure { problems += "Learning state: ${it.message}" }
+        }.onFailure { problems += "Состояние обучения: ${it.message}" }
 
         // 3. Preference files.
         var prefs = 0
@@ -560,19 +560,19 @@ object PendingRestore {
             if (external != null) {
                 files += copyTree(externalRoot, external, problems) { true }
             } else {
-                problems += "The workspace folder could not be restored: shared storage is not available."
+                problems += "Рабочую папку не удалось восстановить: общее хранилище недоступно."
             }
         }
         if (!sameDevice && boundSkipped > 0) {
-            problems += "Tailscale sign-in belongs to another device, so it was not restored. Tap Start node to sign in again."
+            problems += "Вход в Tailscale принадлежит другому устройству, поэтому он не восстановлен. Нажмите «Запустить узел», чтобы войти снова."
         }
 
-        val message = "Restored the database, ${prefsCountText(prefs)} and $files file(s). " +
-            "The previous database was kept as ${HermesDatabase.DATABASE_NAME}${FullBackupFormat.KEPT_DATABASE_SUFFIX}."
+        val message = "Восстановлены база данных, ${prefsCountText(prefs)} и файлов: $files. " +
+            "Прежняя база данных сохранена как ${HermesDatabase.DATABASE_NAME}${FullBackupFormat.KEPT_DATABASE_SUFFIX}."
         return RestoreResult(problems.isEmpty(), System.currentTimeMillis(), message, problems)
     }
 
-    private fun prefsCountText(n: Int) = "$n preference file(s)"
+    private fun prefsCountText(n: Int) = "файлов настроек: $n"
 
     private fun swapDatabase(context: Context, staged: File) {
         val target = context.getDatabasePath(HermesDatabase.DATABASE_NAME)
@@ -581,7 +581,7 @@ object PendingRestore {
         staged.copyTo(incoming, overwrite = true)
         if (!DatabaseFiles.isIntact(incoming)) {
             incoming.delete()
-            throw IOException("the database in the backup did not pass its integrity check")
+            throw IOException("база данных в резервной копии не прошла проверку целостности")
         }
         val kept = File(target.parentFile, target.name + FullBackupFormat.KEPT_DATABASE_SUFFIX)
         if (target.exists()) {

@@ -78,7 +78,7 @@ class RefineSkillViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching { refiner.apply(proposal) }
                 .onSuccess { _state.value = RefineUiState.Applied }
-                .onFailure { _state.value = RefineUiState.Error(it.message ?: "Failed to apply") }
+                .onFailure { _state.value = RefineUiState.Error(it.message ?: "Не удалось применить") }
         }
     }
 
@@ -113,7 +113,7 @@ class RefineSkillViewModel @Inject constructor(
             runCatching { skillRepository.restore(revision.id) }
                 .onSuccess { restored ->
                     if (restored == null) {
-                        _state.value = RefineUiState.Error("That revision is no longer available.")
+                        _state.value = RefineUiState.Error("Эта версия больше недоступна.")
                         _history.value = null
                     } else {
                         _state.value = RefineUiState.Restored(revision.version)
@@ -122,7 +122,7 @@ class RefineSkillViewModel @Inject constructor(
                         showHistory(open.skillName)
                     }
                 }
-                .onFailure { _state.value = RefineUiState.Error(it.message ?: "Restore failed") }
+                .onFailure { _state.value = RefineUiState.Error(it.message ?: "Не удалось восстановить") }
         }
     }
 

@@ -76,7 +76,7 @@ internal fun shortModelName(raw: String): String {
     }
     return tokens
         .joinToString(" ") { if (it.length <= 3) it.uppercase() else it.replaceFirstChar(Char::uppercase) }
-        .ifBlank { "Auto" }
+        .ifBlank { "Авто" }
 }
 
 /**
@@ -172,7 +172,7 @@ fun ChatInputBar(
                 )
                 Spacer(Modifier.size(6.dp))
                 Text(
-                    text = "Image attached",
+                    text = "Прикреплено изображение",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -240,7 +240,7 @@ fun ChatInputBar(
                             onClick = { quickActionsOpen = true },
                             modifier = Modifier.size(40.dp),
                         ) {
-                            Icon(Icons.Outlined.Add, contentDescription = "Attachments and actions")
+                            Icon(Icons.Outlined.Add, contentDescription = "Вложения и действия")
                         }
                         DropdownMenu(
                             expanded = quickActionsOpen,
@@ -248,14 +248,14 @@ fun ChatInputBar(
                         ) {
                             if (attachmentsEnabled) {
                                 DropdownMenuItem(
-                                    text = { Text("Attach image") },
+                                    text = { Text("Прикрепить изображение") },
                                     onClick = {
                                         quickActionsOpen = false
                                         imagePickerLauncher.launch("image/*")
                                     },
                                 )
                                 DropdownMenuItem(
-                                    text = { Text("Attach document") },
+                                    text = { Text("Прикрепить документ") },
                                     onClick = {
                                         quickActionsOpen = false
                                         imagePickerLauncher.launch("*/*")
@@ -263,9 +263,9 @@ fun ChatInputBar(
                                 )
                             }
                             listOf(
-                                "Plan my day" to "Help me plan my day",
-                                "Create a note" to "Create a note for me",
-                                "Look something up" to "Look something up for me",
+                                "Спланировать день" to "Помоги мне спланировать день",
+                                "Создать заметку" to "Создай для меня заметку",
+                                "Найти информацию" to "Найди для меня информацию",
                             ).forEach { (label, prompt) ->
                                 DropdownMenuItem(
                                     text = { Text(label) },
@@ -363,7 +363,7 @@ fun ChatInputBar(
                                 Column(modifier = Modifier.width(248.dp).padding(horizontal = 16.dp, vertical = 8.dp)) {
                                     // Doubles as the label; updates live while dragging.
                                     Text(
-                                        text = "Reasoning effort: ${EFFORT_LEVELS[current].replaceFirstChar { it.uppercase() }}",
+                                        text = "Глубина рассуждений: ${EFFORT_LEVELS[current].replaceFirstChar { it.uppercase() }}",
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.SemiBold,
                                     )
@@ -380,13 +380,13 @@ fun ChatInputBar(
                                     )
                                     Row(modifier = Modifier.fillMaxWidth()) {
                                         Text(
-                                            text = "Minimal",
+                                            text = "Минимум",
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )
                                         Spacer(Modifier.weight(1f))
                                         Text(
-                                            text = "High",
+                                            text = "Максимум",
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )

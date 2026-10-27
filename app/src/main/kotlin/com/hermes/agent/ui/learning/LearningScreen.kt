@@ -64,10 +64,10 @@ fun LearningScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Learning") },
+                title = { Text("Обучение") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Назад")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -85,13 +85,13 @@ fun LearningScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            SectionCard(title = "Loop progress") {
-                StatusLine(done = true, text = "${s.conversationCount} conversations recorded")
+            SectionCard(title = "Ход обучения") {
+                StatusLine(done = true, text = "Записано разговоров: ${s.conversationCount}")
                 Spacer(Modifier.height(8.dp))
                 val toGo = s.conversationsUntilRebuild
                 Text(
-                    if (toGo == 0) "User-model rebuild is due on the next conversation."
-                    else "$toGo more conversation${if (toGo == 1) "" else "s"} until the next user-model rebuild.",
+                    if (toGo == 0) "Модель пользователя будет перестроена после следующего разговора."
+                    else "До следующего перестроения модели пользователя осталось разговоров: $toGo${if (toGo == 1) "" else ""}.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -100,10 +100,10 @@ fun LearningScreen(
                 LinearProgressIndicator(progress = { progress }, modifier = Modifier.fillMaxWidth())
             }
 
-            SectionCard(title = "User model") {
+            SectionCard(title = "Модель пользователя") {
                 StatusLine(
                     done = s.userModel != null,
-                    text = if (s.userModel != null) "Profile built" else "Not built yet",
+                    text = if (s.userModel != null) "Профиль построен" else "Ещё не построен",
                 )
                 if (s.userModel != null) {
                     Spacer(Modifier.height(8.dp))
@@ -115,7 +115,7 @@ fun LearningScreen(
                 } else {
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Builds automatically once you've shared a few facts and had ${s.rebuildEvery} conversations.",
+                        "Строится автоматически, когда вы расскажете о себе несколько фактов и проведёте разговоров: ${s.rebuildEvery}.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -129,31 +129,31 @@ fun LearningScreen(
                     if (rebuilding) {
                         CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
                         Spacer(Modifier.size(8.dp))
-                        Text("Rebuilding…")
+                        Text("Перестраиваю…")
                     } else {
-                        Text(if (s.userModel != null) "Rebuild now" else "Build now")
+                        Text(if (s.userModel != null) "Перестроить сейчас" else "Построить сейчас")
                     }
                 }
                 if (s.factCount < 3) {
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Needs at least 3 learned facts to build.",
+                        "Для построения нужно не меньше 3 выученных фактов.",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
 
-            SectionCard(title = "Facts learned (${s.factCount})") {
+            SectionCard(title = "Выученные факты (${s.factCount})") {
                 if (s.recentFacts.isEmpty()) {
                     Text(
-                        "No facts learned yet. Tell Hermes about yourself in a chat.",
+                        "Пока нет выученных фактов. Расскажите Hermes о себе в чате.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 } else {
                     Text(
-                        "Tap a fact to edit it, or use the trash icon to remove a wrong one.",
+                        "Нажмите на факт, чтобы изменить его, или на значок корзины, чтобы удалить неверный.",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -168,10 +168,10 @@ fun LearningScreen(
                 }
             }
 
-            SectionCard(title = "Skills created by Hermes (${s.autoSkills.size})") {
+            SectionCard(title = "Навыки, созданные Hermes (${s.autoSkills.size})") {
                 if (s.autoSkills.isEmpty()) {
                     Text(
-                        "None yet. Complete a task that uses two or more tools and Hermes will write a reusable skill.",
+                        "Пока нет. Выполните задачу, в которой участвуют два инструмента или больше, и Hermes напишет навык для повторного использования.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -214,7 +214,7 @@ private fun FactRow(fact: FactItem, onEdit: () -> Unit, onDelete: () -> Unit) {
         IconButton(onClick = onDelete) {
             Icon(
                 Icons.Outlined.Delete,
-                contentDescription = "Delete fact",
+                contentDescription = "Удалить факт",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(18.dp),
             )
@@ -232,7 +232,7 @@ private fun EditFactDialog(
     var text by remember { mutableStateOf(initial) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit fact") },
+        title = { Text("Изменить факт") },
         text = {
             OutlinedTextField(
                 value = text,
@@ -241,13 +241,13 @@ private fun EditFactDialog(
                 colors = hermesFieldColors(),
             )
         },
-        confirmButton = { TextButton(onClick = { onSave(text) }) { Text("Save") } },
+        confirmButton = { TextButton(onClick = { onSave(text) }) { Text("Сохранить") } },
         dismissButton = {
             Row {
                 TextButton(onClick = onDelete) {
-                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                    Text("Удалить", color = MaterialTheme.colorScheme.error)
                 }
-                TextButton(onClick = onDismiss) { Text("Cancel") }
+                TextButton(onClick = onDismiss) { Text("Отмена") }
             }
         },
     )

@@ -40,6 +40,6 @@ object ContextMeter {
         if (estimatedTokens <= 0) return ""
         val used = "~" + format(estimatedTokens)
         val window = windowFor(model) ?: return "$used tokens"
-        return "$used / ${format(window)} tokens"
+        return "$used / ${format(window)} токенов"
     }
 }

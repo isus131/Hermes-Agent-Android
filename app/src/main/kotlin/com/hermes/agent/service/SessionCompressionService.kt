@@ -97,12 +97,12 @@ class SessionCompressionService @Inject constructor(
             conversationId = messages.firstOrNull()?.conversationId ?: "",
             role = "system",
             content = buildString {
-                appendLine("📝 **CONVERSATION SUMMARY** (compressed from ${messages.size} messages)")
+                appendLine("📝 **КРАТКОЕ СОДЕРЖАНИЕ РАЗГОВОРА** (сжато из сообщений: ${messages.size})")
                 appendLine()
                 appendLine(summary.trim())
                 appendLine()
                 appendLine("---")
-                appendLine("*Original messages archived. Expand to view full history.*")
+                appendLine("*Исходные сообщения в архиве. Разверните, чтобы увидеть всю историю.*")
             },
             timestamp = System.currentTimeMillis(),
             agentRole = "system",

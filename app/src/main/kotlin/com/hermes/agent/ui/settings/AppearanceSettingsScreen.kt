@@ -97,7 +97,7 @@ fun AppearanceSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Appearance") },
+                title = { Text("Оформление") },
                 navigationIcon = {
                     Surface(
                         onClick = onBack,
@@ -108,7 +108,7 @@ fun AppearanceSettingsScreen(
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Navigate back",
+                                contentDescription = "Назад",
                             )
                         }
                     }
@@ -125,9 +125,9 @@ fun AppearanceSettingsScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             AppearanceCard {
-                Text("Colour preset", style = MaterialTheme.typography.titleMedium)
+                Text("Цветовая схема", style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "Tints every surface from one colour. Overrides the theme below while on.",
+                    "Окрашивает все поверхности в оттенки одного цвета. Пока включено, заменяет тему ниже.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -137,7 +137,7 @@ fun AppearanceSettingsScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     val none = colorPreset.isEmpty() || SeedPreset.fromStorageKey(colorPreset) == null
-                    PresetChip("None", null, none) { viewModel.setColorPreset("") }
+                    PresetChip("Нет", null, none) { viewModel.setColorPreset("") }
                     for (preset in SeedPreset.entries) {
                         PresetChip(preset.label, preset.seed, preset.storageKey == colorPreset) {
                             viewModel.setColorPreset(preset.storageKey)
@@ -147,9 +147,9 @@ fun AppearanceSettingsScreen(
             }
 
             AppearanceCard {
-                Text("Theme", style = MaterialTheme.typography.titleMedium)
+                Text("Тема", style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "Choose a colour style for Hermes",
+                    "Выберите цветовой стиль Hermes",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -157,21 +157,21 @@ fun AppearanceSettingsScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     listOf(
                         ThemeStyleOption(
-                            HermesSettings.THEME_STYLE_CLASSIC, "Classic",
-                            "Monochrome, with outlined squircle cards",
+                            HermesSettings.THEME_STYLE_CLASSIC, "Классическая",
+                            "Монохромная, с контурными карточками-сквиркалами",
                             null,
                         ),
                         ThemeStyleOption(
                             HermesSettings.THEME_STYLE_CORTEX, "Cortex",
-                            "Ember and teal, with rounded squircle cards",
+                            "Янтарь и бирюза, со скруглёнными карточками",
                             listOf(Color(0xFFC1440E), Color(0xFF0D6E7C)),
                         ),
                         ThemeStyleOption(
                             HermesSettings.THEME_STYLE_MATERIAL_YOU, "Material You",
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                                "One colour drawn from your wallpaper"
+                                "Один цвет из ваших обоев"
                             } else {
-                                "Requires Android 12 or newer"
+                                "Нужен Android 12 или новее"
                             },
                             null,
                             enabled = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S,
@@ -197,12 +197,12 @@ fun AppearanceSettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(Modifier.weight(1f)) {
-                            Text("Custom colour", style = MaterialTheme.typography.bodyLarge)
+                            Text("Свой цвет", style = MaterialTheme.typography.bodyLarge)
                             Text(
                                 if (themeStyle == HermesSettings.THEME_STYLE_MATERIAL_YOU) {
-                                    "Use this colour instead of your wallpaper's"
+                                    "Использовать этот цвет вместо цвета обоев"
                                 } else {
-                                    "Override Cortex's ember/teal with one colour"
+                                    "Заменить янтарь и бирюзу Cortex одним цветом"
                                 },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -237,7 +237,7 @@ fun AppearanceSettingsScreen(
                                     contentAlignment = Alignment.Center,
                                 ) {
                                     if (chosen) {
-                                        Icon(Icons.Filled.Check, contentDescription = "Selected", tint = Color.White)
+                                        Icon(Icons.Filled.Check, contentDescription = "Выбрано", tint = Color.White)
                                     }
                                 }
                             }
@@ -252,9 +252,9 @@ fun AppearanceSettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Dark Mode", style = MaterialTheme.typography.titleMedium)
+                        Text("Тёмная тема", style = MaterialTheme.typography.titleMedium)
                         Text(
-                            "Use true-black OLED surfaces",
+                            "Настоящий чёрный для OLED-экранов",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -271,9 +271,9 @@ fun AppearanceSettingsScreen(
             }
 
             AppearanceCard {
-                Text("Font", style = MaterialTheme.typography.titleMedium)
+                Text("Шрифт", style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "Choose the typeface used across Hermes",
+                    "Выберите шрифт для всего Hermes",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -284,9 +284,9 @@ fun AppearanceSettingsScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     listOf(
                         FontOption(HermesSettings.FONT_GEIST, "Geist", null),
-                        FontOption(HermesSettings.FONT_SYSTEM, "Sans Serif", FontFamily.SansSerif),
-                        FontOption(HermesSettings.FONT_SERIF, "Serif", FontFamily.Serif),
-                        FontOption(HermesSettings.FONT_MONO, "Monospace", FontFamily.Monospace),
+                        FontOption(HermesSettings.FONT_SYSTEM, "Без засечек", FontFamily.SansSerif),
+                        FontOption(HermesSettings.FONT_SERIF, "С засечками", FontFamily.Serif),
+                        FontOption(HermesSettings.FONT_MONO, "Моноширинный", FontFamily.Monospace),
                         FontOption(HermesSettings.FONT_RUBIK, "Rubik", Rubik),
                         FontOption(HermesSettings.FONT_IBM_PLEX, "IBM Plex Sans", IbmPlexSans),
                         FontOption(HermesSettings.FONT_OUTFIT, "Outfit", Outfit),
@@ -309,9 +309,9 @@ fun AppearanceSettingsScreen(
                 var pending by remember(fontScalePercent) {
                     mutableFloatStateOf(fontScalePercent.toFloat())
                 }
-                Text("Font size", style = MaterialTheme.typography.titleMedium)
+                Text("Размер шрифта", style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "${pending.roundToInt()}% · applies throughout the app",
+                    "${pending.roundToInt()}% · применяется во всём приложении",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -338,7 +338,7 @@ fun AppearanceSettingsScreen(
                     Text("A", style = MaterialTheme.typography.titleLarge)
                 }
                 Text(
-                    "The quick brown fox",
+                    "Съешь же ещё этих",
                     // Previews the value under the finger rather than the saved
                     // one, so the sample resizes while dragging.
                     style = MaterialTheme.typography.bodyLarge.copy(
@@ -407,7 +407,7 @@ private fun FontListRow(
                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
                 )
                 Text(
-                    "The quick brown fox jumps over the lazy dog",
+                    "Съешь же ещё этих мягких французских булок, да выпей чаю",
                     style = MaterialTheme.typography.bodySmall,
                     fontFamily = fontFamily,
                     maxLines = 1,
@@ -422,7 +422,7 @@ private fun FontListRow(
             if (selected) {
                 Icon(
                     Icons.Default.Check,
-                    contentDescription = "Selected",
+                    contentDescription = "Выбрано",
                     modifier = Modifier.size(20.dp),
                 )
             }
@@ -504,7 +504,7 @@ private fun ThemeStyleRow(
                 )
             }
             if (selected) {
-                Icon(Icons.Default.Check, contentDescription = "Selected", modifier = Modifier.size(20.dp))
+                Icon(Icons.Default.Check, contentDescription = "Выбрано", modifier = Modifier.size(20.dp))
             }
         }
     }
@@ -530,7 +530,7 @@ private fun PresetChip(label: String, seed: Color?, selected: Boolean, onClick: 
                 ),
             contentAlignment = Alignment.Center,
         ) {
-            if (selected) Icon(Icons.Filled.Check, contentDescription = "Selected", tint = if (seed == null) MaterialTheme.colorScheme.onSurface else Color.White)
+            if (selected) Icon(Icons.Filled.Check, contentDescription = "Выбрано", tint = if (seed == null) MaterialTheme.colorScheme.onSurface else Color.White)
         }
         Text(label, style = MaterialTheme.typography.labelMedium)
     }

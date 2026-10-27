@@ -134,21 +134,21 @@ fun MessageBubble(
         // first. Fork is the non-destructive alternative, named in the copy.
         AlertDialog(
             onDismissRequest = { confirmRewind = false },
-            title = { Text("Rewind to here?") },
+            title = { Text("Откатить до этого места?") },
             text = {
                 Text(
-                    "This deletes this message and everything after it. " +
-                        "To keep the original, use \"Fork from here\" instead.",
+                    "Это сообщение и всё, что после него, будет удалено. " +
+                        "Чтобы сохранить оригинал, лучше используйте «Ответвить отсюда».",
                 )
             },
             confirmButton = {
                 TextButton(onClick = {
                     confirmRewind = false
                     onRewindTo?.invoke(message)
-                }) { Text("Rewind") }
+                }) { Text("Откатить") }
             },
             dismissButton = {
-                TextButton(onClick = { confirmRewind = false }) { Text("Cancel") }
+                TextButton(onClick = { confirmRewind = false }) { Text("Отмена") }
             },
         )
     }
@@ -226,13 +226,13 @@ fun MessageBubble(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Visibility,
-                            contentDescription = "Image attached",
+                            contentDescription = "Прикреплено изображение",
                             tint = textColor,
                             modifier = Modifier.size(14.dp),
                         )
                         Spacer(Modifier.size(6.dp))
                         Text(
-                            text = "Image attached",
+                            text = "Прикреплено изображение",
                             style = MaterialTheme.typography.labelSmall,
                             color = textColor,
                         )
@@ -279,28 +279,28 @@ fun MessageBubble(
                     // Confirming the copy on the icon itself avoids a snackbar
                     // for something this small.
                     icon = if (copied) Icons.Outlined.Check else Icons.Outlined.ContentCopy,
-                    label = if (copied) "Copied" else "Copy text",
+                    label = if (copied) "Скопировано" else "Копировать текст",
                 ) {
                     clipboard.setText(AnnotatedString(message.content))
                     copied = true
                 }
-                MessageAction(Icons.Outlined.CallSplit, "Fork a new chat from here") {
+                MessageAction(Icons.Outlined.CallSplit, "Ответвить новый чат отсюда") {
                     actionsVisible = false
                     onForkFrom?.invoke(message)
                 }
-                MessageAction(Icons.Outlined.History, "Rewind to here") {
+                MessageAction(Icons.Outlined.History, "Откатить до этого места") {
                     confirmRewind = true
                 }
                 if (isUser) {
-                    MessageAction(Icons.Outlined.Edit, "Edit and retry") {
+                    MessageAction(Icons.Outlined.Edit, "Изменить и повторить") {
                         actionsVisible = false
                         onEditMessage?.invoke(message)
                     }
-                    MessageAction(Icons.Outlined.Psychology, "Retry with Ultrabrain") {
+                    MessageAction(Icons.Outlined.Psychology, "Повторить с Ultrabrain") {
                         actionsVisible = false
                         onRetryWithAlias?.invoke(message, "ultrabrain")
                     }
-                    MessageAction(Icons.Outlined.Bolt, "Retry with Quick/Local") {
+                    MessageAction(Icons.Outlined.Bolt, "Повторить быстро/локально") {
                         actionsVisible = false
                         onRetryWithAlias?.invoke(message, "quick")
                     }
@@ -355,7 +355,7 @@ fun StreamingBubble(
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 4.dp)
             .semantics(mergeDescendants = true) {
-                contentDescription = if (item.text.isBlank()) "Assistant is typing" else "Assistant is responding: ${item.text}"
+                contentDescription = if (item.text.isBlank()) "Ассистент печатает" else "Ассистент отвечает: ${item.text}"
             },
         horizontalAlignment = Alignment.Start,
     ) {

@@ -31,8 +31,8 @@ class DailyDigestWorker @AssistedInject constructor(
         val body = buildString {
             append(todoSection())
             append(notificationSection())
-        }.trim().ifBlank { "Nothing on the radar today." }.take(1_500)
-        proactiveNotifier.post(ProactiveSource.DIGEST, "Your daily digest", body)
+        }.trim().ifBlank { "Сегодня ничего не намечено." }.take(1_500)
+        proactiveNotifier.post(ProactiveSource.DIGEST, "Ваша сводка на день", body)
         Result.success()
     } catch (e: Exception) {
         Timber.tag("DailyDigest").w(e, "digest composition failed")
@@ -45,7 +45,7 @@ class DailyDigestWorker @AssistedInject constructor(
         if (open.isEmpty()) return ""
         val lines = open.take(MAX_DIGEST_TODOS).joinToString("\n") { "- ${it.content}" }
         val more = (open.size - MAX_DIGEST_TODOS).coerceAtLeast(0)
-        return "Open todos:\n$lines" + if (more > 0) "\n- and $more more" else ""
+        return "Открытые дела:\n$lines" + if (more > 0) "\n- и ещё $more" else ""
     }
 
     /**
@@ -63,8 +63,8 @@ class DailyDigestWorker @AssistedInject constructor(
                 if (n.text.isNotBlank()) ": ${n.text}" else ""
         }
         val more = (entries.size - MAX_DIGEST_NOTIFICATIONS).coerceAtLeast(0)
-        return "\n\nNotifications (last 24h):\n$lines" +
-            if (more > 0) "\n- and $more more" else ""
+        return "\n\nУведомления (за последние 24 ч):\n$lines" +
+            if (more > 0) "\n- и ещё $more" else ""
     }
 
     companion object {

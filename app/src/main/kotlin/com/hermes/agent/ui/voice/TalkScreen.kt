@@ -109,17 +109,17 @@ fun TalkScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Talk Mode") },
+                title = { Text("Режим разговора") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Exit Talk Mode")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Выйти из режима разговора")
                     }
                 },
                 actions = {
                     if (isBt) {
                         Icon(
                             imageVector = Icons.Default.Bluetooth,
-                            contentDescription = "Bluetooth Headset Connected",
+                            contentDescription = "Подключена Bluetooth-гарнитура",
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(end = 16.dp),
                         )
@@ -142,10 +142,10 @@ fun TalkScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 val stateText = when (state) {
-                    TalkState.IDLE -> "Standing by"
-                    TalkState.LISTENING -> "Listening to you..."
-                    TalkState.THINKING -> "Thinking..."
-                    TalkState.SPEAKING -> "Hermes is speaking (Barge-in active)"
+                    TalkState.IDLE -> "Ожидание"
+                    TalkState.LISTENING -> "Слушаю вас..."
+                    TalkState.THINKING -> "Думаю..."
+                    TalkState.SPEAKING -> "Hermes говорит (можно перебить)"
                 }
                 val stateColor = when (state) {
                     TalkState.IDLE -> MaterialTheme.colorScheme.outline
@@ -163,7 +163,7 @@ fun TalkScreen(
 
                 if (isBt) {
                     Text(
-                        text = "Routing audio through Bluetooth headset",
+                        text = "Звук идёт через Bluetooth-гарнитуру",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.outline,
                     )
@@ -221,7 +221,7 @@ fun TalkScreen(
                         )
                     ) {
                         Text(
-                            text = "You: $transcript",
+                            text = "Вы: $transcript",
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(12.dp),
                         )
@@ -256,7 +256,7 @@ fun TalkScreen(
                     ) {
                         Icon(Icons.Default.Stop, contentDescription = null)
                         Spacer(modifier = Modifier.size(8.dp))
-                        Text("Interrupt")
+                        Text("Перебить")
                     }
                 }
 
@@ -270,7 +270,7 @@ fun TalkScreen(
                 ) {
                     Icon(Icons.Default.CallEnd, contentDescription = null)
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text("End Session")
+                    Text("Завершить сеанс")
                 }
             }
         }

@@ -69,10 +69,10 @@ fun ProvidersSettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Providers") },
+                title = { Text("Провайдеры") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Navigate back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
                 // No add action here. "Add Provider" sits beside the
@@ -93,8 +93,8 @@ fun ProvidersSettingsScreen(
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     ToggleRow(
-                        title = "Cloud routing",
-                        subtitle = "Hermes chooses the best configured cloud model, then uses local AI only if every cloud provider fails.",
+                        title = "Маршрутизация в облако",
+                        subtitle = "Hermes выбирает лучшую настроенную облачную модель, а локальный ИИ использует, только если откажут все облачные провайдеры.",
                         checked = settings.cloudEnabled,
                         onCheckedChange = viewModel::setCloudEnabled,
                     )
@@ -107,13 +107,13 @@ fun ProvidersSettingsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "Configured Providers (${settings.cloudProviderProfiles.size})",
+                    text = "Настроенные провайдеры (${settings.cloudProviderProfiles.size})",
                     style = MaterialTheme.typography.titleMedium,
                 )
                 TextButton(onClick = { showAddDialog = true }) {
                     Icon(Icons.Default.Add, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Add Provider")
+                    Text("Добавить провайдера")
                 }
             }
 
@@ -125,11 +125,11 @@ fun ProvidersSettingsScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
-                            text = "No cloud providers configured yet.",
+                            text = "Облачные провайдеры пока не настроены.",
                             style = MaterialTheme.typography.titleSmall,
                         )
                         Text(
-                            text = "Add a provider (such as OpenAI, OpenRouter, Nous, Gemini, Groq, DeepSeek) or a custom local/remote OpenAI-compatible endpoint.",
+                            text = "Добавьте провайдера (например, OpenAI, OpenRouter, Nous, Gemini, Groq, DeepSeek) или свой локальный/удалённый сервер, совместимый с OpenAI.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -158,7 +158,7 @@ fun ProvidersSettingsScreen(
                 }
             }
 
-            InfoNote("About key storage", "Provider keys are stored with Android Keystore encryption.")
+            InfoNote("О хранении ключей", "Ключи провайдеров хранятся зашифрованными через Android Keystore.")
         }
     }
 
@@ -200,7 +200,7 @@ private fun AddProviderDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Cloud Provider") },
+        title = { Text("Добавить облачного провайдера") },
         text = {
             Column(
                 modifier = Modifier
@@ -214,10 +214,10 @@ private fun AddProviderDialog(
                     onExpandedChange = { expanded = it },
                 ) {
                     OutlinedTextField(
-                        value = if (isCustom) "Custom (OpenAI Compatible)" else (selectedDefinition?.name ?: selectedPresetId),
+                        value = if (isCustom) "Свой (совместимый с OpenAI)" else (selectedDefinition?.name ?: selectedPresetId),
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Provider Preset") },
+                        label = { Text("Готовый провайдер") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         colors = hermesFieldColors(),
                         modifier = Modifier
@@ -229,10 +229,10 @@ private fun AddProviderDialog(
                         onDismissRequest = { expanded = false },
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Custom (OpenAI Compatible)") },
+                            text = { Text("Свой (совместимый с OpenAI)") },
                             onClick = {
                                 selectedPresetId = "custom"
-                                customName = "Custom Provider"
+                                customName = "Свой провайдер"
                                 baseUrl = ""
                                 expanded = false
                             },
@@ -243,7 +243,7 @@ private fun AddProviderDialog(
                             DropdownMenuItem(
                                 text = {
                                     Text(
-                                        text = preset.name + if (alreadyAdded) " (Added)" else "",
+                                        text = preset.name + if (alreadyAdded) " (добавлен)" else "",
                                         color = if (alreadyAdded) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                                     )
                                 },
@@ -262,8 +262,8 @@ private fun AddProviderDialog(
                     OutlinedTextField(
                         value = customName,
                         onValueChange = { customName = it },
-                        label = { Text("Provider Name") },
-                        placeholder = { Text("e.g. Local Ollama / vLLM") },
+                        label = { Text("Название провайдера") },
+                        placeholder = { Text("например, Локальный Ollama / vLLM") },
                         singleLine = true,
                         colors = hermesFieldColors(),
                         modifier = Modifier.fillMaxWidth(),
@@ -273,11 +273,11 @@ private fun AddProviderDialog(
                 OutlinedTextField(
                     value = baseUrl,
                     onValueChange = { baseUrl = it },
-                    label = { Text("Base URL") },
+                    label = { Text("Базовый URL") },
                     placeholder = {
                         Text(if (isCustom) "http://192.168.1.100:11434/v1" else selectedDefinition?.defaultBaseUrl.orEmpty())
                     },
-                    supportingText = { Text("OpenAI-compatible /v1 endpoint") },
+                    supportingText = { Text("Адрес /v1, совместимый с OpenAI") },
                     singleLine = true,
                     colors = hermesFieldColors(),
                     modifier = Modifier.fillMaxWidth(),
@@ -286,8 +286,8 @@ private fun AddProviderDialog(
                 OutlinedTextField(
                     value = apiKey,
                     onValueChange = { apiKey = it },
-                    label = { Text("API Key") },
-                    placeholder = { Text(if (isCustom) "Optional for local endpoints" else "Paste API Key") },
+                    label = { Text("API-ключ") },
+                    placeholder = { Text(if (isCustom) "Для локальных серверов необязательно" else "Вставьте API-ключ") },
                     visualTransformation = PasswordVisualTransformation(),
                     singleLine = true,
                     colors = hermesFieldColors(),
@@ -301,18 +301,18 @@ private fun AddProviderDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    val finalName = if (isCustom) customName.ifBlank { "Custom Provider" } else (selectedDefinition?.name ?: "Provider")
+                    val finalName = if (isCustom) customName.ifBlank { "Свой провайдер" } else (selectedDefinition?.name ?: "Провайдер")
                     val finalUrl = baseUrl.ifBlank { selectedDefinition?.defaultBaseUrl.orEmpty() }
                     onAdd(selectedPresetId, finalName, finalUrl, apiKey, "")
                 },
                 enabled = baseUrl.isNotBlank() || !isCustom,
             ) {
-                Text("Add")
+                Text("Добавить")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text("Отмена")
             }
         },
     )
@@ -377,7 +377,7 @@ private fun ProviderCredentialCard(
                 IconButton(onClick = onRemove) {
                     Icon(
                         imageVector = Icons.Outlined.Delete,
-                        contentDescription = "Remove provider",
+                        contentDescription = "Удалить провайдера",
                         tint = MaterialTheme.colorScheme.error,
                     )
                 }
@@ -388,15 +388,15 @@ private fun ProviderCredentialCard(
                     onClick = { onStartOAuth(context) },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(if (apiKey.isNotBlank()) "Re-authenticate with ${profile.name}" else "Sign in with ${profile.name}")
+                    Text(if (apiKey.isNotBlank()) "Войти заново через ${profile.name}" else "Войти через ${profile.name}")
                 }
             }
 
             OutlinedTextField(
                 value = apiKey,
                 onValueChange = { apiKey = it },
-                label = { Text("${profile.name} API key") },
-                placeholder = { Text(if (profile.id.startsWith("custom_")) "Optional for local endpoints" else "Paste key") },
+                label = { Text("API-ключ ${profile.name}") },
+                placeholder = { Text(if (profile.id.startsWith("custom_")) "Для локальных серверов необязательно" else "Вставьте ключ") },
                 visualTransformation = PasswordVisualTransformation(),
                 singleLine = true,
                 colors = hermesFieldColors(),
@@ -424,7 +424,7 @@ private fun ProviderCredentialCard(
             OutlinedTextField(
                 value = baseUrl,
                 onValueChange = { baseUrl = it },
-                label = { Text("Base URL") },
+                label = { Text("Базовый URL") },
                 singleLine = true,
                 colors = hermesFieldColors(),
                 modifier = Modifier
@@ -470,15 +470,15 @@ private fun ModelProbeSection(
         if (running) {
             CircularProgressIndicator(strokeWidth = 2.dp, modifier = Modifier.size(16.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Testing $model…")
+            Text("Проверка $model…")
         } else {
-            Text("Test model")
+            Text("Проверить модель")
         }
     }
     if (state is ModelProbeUiState.Done) {
         val passed = state.results.count { it.passed }
         Text(
-            "${state.model}: $passed of ${state.results.size} checks passed",
+            "${state.model}: пройдено проверок: $passed из ${state.results.size}",
             style = MaterialTheme.typography.labelLarge,
         )
         state.results.forEach { result ->
@@ -506,9 +506,9 @@ private fun ModelProbeSection(
         state.routedToolReliability?.let { reliability ->
             Text(
                 if (reliability >= com.hermes.agent.data.llm.ModelCapabilityProbe.RELIABLE_TOOLS) {
-                    "Routing: cleared for tool-heavy requests."
+                    "Маршрутизация: допущена к запросам с большим числом инструментов."
                 } else {
-                    "Routing: tool-heavy requests will go to another model when one is available."
+                    "Маршрутизация: запросы с большим числом инструментов будут уходить к другой модели, если она есть."
                 },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -516,14 +516,14 @@ private fun ModelProbeSection(
         }
         if (toolCheck?.passed == false && toolCheck.inconclusive) {
             Text(
-                "The tool checks got no answer, so routing is unchanged. Try again when the provider responds.",
+                "Проверки инструментов не получили ответа, поэтому маршрутизация не изменилась. Попробуйте снова, когда провайдер ответит.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         } else if (toolCheck?.passed == false) {
             Text(
-                "This model did not call the test tool. It can chat, but actions such as " +
-                    "setting alarms or searching the web may not work with it.",
+                "Эта модель не вызвала тестовый инструмент. Общаться она может, но действия вроде " +
+                    "будильников или поиска в интернете с ней могут не работать.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error,
             )
@@ -549,15 +549,15 @@ private fun ProviderModelDropdown(
             value = selectedModel,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Model") },
+            label = { Text("Модель") },
             supportingText = {
                 Text(
                     when (state) {
-                        ModelDiscoveryUiState.Idle -> "Enter Base URL / API key to load available models."
-                        ModelDiscoveryUiState.Loading -> "Loading available models…"
-                        ModelDiscoveryUiState.Empty -> "No chat models were returned by this provider."
+                        ModelDiscoveryUiState.Idle -> "Введите базовый URL / API-ключ, чтобы загрузить доступные модели."
+                        ModelDiscoveryUiState.Loading -> "Загрузка доступных моделей…"
+                        ModelDiscoveryUiState.Empty -> "Этот провайдер не вернул ни одной модели для чата."
                         is ModelDiscoveryUiState.Error -> state.message
-                        is ModelDiscoveryUiState.Ready -> "${state.models.size} available · best choice preselected"
+                        is ModelDiscoveryUiState.Ready -> "Доступно: ${state.models.size} · лучшая выбрана заранее"
                     },
                 )
             },
@@ -589,6 +589,6 @@ private fun ProviderModelDropdown(
         OutlinedButton(
             onClick = onRetry,
             modifier = Modifier.fillMaxWidth(),
-        ) { Text("Retry loading models") }
+        ) { Text("Повторить загрузку моделей") }
     }
 }

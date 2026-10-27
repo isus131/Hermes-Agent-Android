@@ -57,7 +57,7 @@ object HermesPersona {
 
         // Listening wins: the user is talking to Hermes right now.
         if (isListening) {
-            return Presence(greeting = greeting, statusLine = "I'm listening…", mood = Mood.LISTENING)
+            return Presence(greeting = greeting, statusLine = "Слушаю…", mood = Mood.LISTENING)
         }
 
         // Busy: focused eyes + an honest "I'm on it" line.
@@ -65,7 +65,7 @@ object HermesPersona {
             val shortTask = busyTask.trim().let { if (it.length > 48) it.take(45) + "…" else it }
             return Presence(
                 greeting = greeting,
-                statusLine = "I'm busy working on \"$shortTask\" — ask me anything anyway.",
+                statusLine = "Я занят задачей «$shortTask» — но всё равно спрашивайте что угодно.",
                 mood = Mood.FOCUSED,
             )
         }
@@ -103,7 +103,7 @@ object HermesPersona {
         val quip = CELEBRATE_QUIPS[(seed.absoluteValue % CELEBRATE_QUIPS.size).toInt()]
         return Presence(
             greeting = base.greeting,
-            statusLine = "$quip Finished \"$shortTask\".",
+            statusLine = "$quip Задача «$shortTask» выполнена.",
             mood = Mood.CELEBRATE,
         )
     }
@@ -140,35 +140,35 @@ object HermesPersona {
 
     private fun bucketFor(hour: Int): Bucket = when (hour) {
         in 5..11 -> Bucket(
-            "Good morning", Mood.HAPPY,
+            "Доброе утро", Mood.HAPPY,
             listOf(
-                "Ready when you are — what's first today?",
-                "Coffee for you, tokens for me. Let's go.",
-                "The board is clear and I'm wide awake.",
+                "Готов, когда вы готовы — с чего начнём сегодня?",
+                "Вам кофе, мне токены. Поехали.",
+                "Доска пуста, а я бодр как никогда.",
             ),
         )
         in 12..16 -> Bucket(
-            "Good afternoon", Mood.NEUTRAL,
+            "Добрый день", Mood.NEUTRAL,
             listOf(
-                "All quiet — want me to take something off your plate?",
-                "Standing by. Delegation is my love language.",
-                "Midday check-in: nothing on fire.",
+                "Всё спокойно — снять с вас какую-нибудь задачу?",
+                "На связи. Поручения — мой язык любви.",
+                "Полуденная сверка: ничего не горит.",
             ),
         )
         in 17..21 -> Bucket(
-            "Good evening", Mood.NEUTRAL,
+            "Добрый вечер", Mood.NEUTRAL,
             listOf(
-                "Winding down? I can keep working while you rest.",
-                "Evening — want a recap of today's threads?",
-                "Still here, still sharp.",
+                "Закругляетесь? Я могу поработать, пока вы отдыхаете.",
+                "Вечер — подвести итоги сегодняшних разговоров?",
+                "Всё ещё здесь, всё ещё в форме.",
             ),
         )
         else -> Bucket(
-            "Up late", Mood.SLEEPY,
+            "Не спится", Mood.SLEEPY,
             listOf(
-                "I don't sleep, but you probably should.",
-                "Night shift engaged. What do you need?",
-                "It's quiet… too quiet. What are we building?",
+                "Я не сплю, а вот вам, наверное, стоит.",
+                "Ночная смена на месте. Что нужно?",
+                "Тихо… слишком тихо. Что строим?",
             ),
         )
     }
@@ -188,24 +188,24 @@ object HermesPersona {
     private val NON_NAMES = setOf("the", "user", "they", "there", "this", "that", "unknown")
 
     private val THINKING_LINES = listOf(
-        "Thinking… give me a second.",
-        "Composing a reply — neurons at work.",
-        "Hold on, connecting some dots…",
+        "Думаю… секундочку.",
+        "Сочиняю ответ — нейроны работают.",
+        "Погодите, соединяю точки…",
     )
 
     private val POKE_QUIPS = listOf(
-        "Hey! I felt that.",
-        "Careful — those are load-bearing eyes.",
-        "Blinking is my cardio. What's up?",
-        "You rang?",
-        "Poke registered. Deploying attention.",
+        "Эй! Я это почувствовал.",
+        "Осторожно — на этих глазах всё держится.",
+        "Моргание — моё кардио. Что такое?",
+        "Звали?",
+        "Тычок засчитан. Включаю внимание.",
     )
 
     private val CELEBRATE_QUIPS = listOf(
-        "Done! ✨",
-        "Nailed it. 🎉",
-        "One more off the board!",
-        "Ta-da —",
-        "Shipped it. 🚀",
+        "Готово! ✨",
+        "Получилось. 🎉",
+        "Ещё одна задача с доски!",
+        "Та-дам —",
+        "Отправлено. 🚀",
     )
 }

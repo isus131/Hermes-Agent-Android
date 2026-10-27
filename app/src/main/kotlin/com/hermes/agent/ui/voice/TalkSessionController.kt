@@ -149,7 +149,7 @@ class TalkSessionController @Inject constructor(
 
         if (!recognizer.isAvailable) {
             Timber.tag("TalkMode").w("No speech recogniser on this device — ending Talk session")
-            _error.value = "Speech recognition is unavailable on this device."
+            _error.value = "Распознавание речи на этом устройстве недоступно."
             stopSession()
             return
         }
@@ -171,7 +171,7 @@ class TalkSessionController @Inject constructor(
             },
             onError = { code ->
                 Timber.tag("TalkMode").w("Recogniser error %d — ending Talk session", code)
-                _error.value = "Voice input stopped (recogniser error $code)."
+                _error.value = "Голосовой ввод остановлен (ошибка распознавания $code)."
                 stopSession()
             },
         )

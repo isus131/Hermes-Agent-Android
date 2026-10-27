@@ -51,7 +51,7 @@ fun ThoughtChip(reasoning: StoredReasoning, modifier: Modifier = Modifier) {
                 )
                 Icon(
                     if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
-                    contentDescription = if (open) "Hide thinking" else "Show thinking",
+                    contentDescription = if (open) "Скрыть рассуждения" else "Показать рассуждения",
                     modifier = Modifier.size(16.dp),
                 )
             }

@@ -37,10 +37,10 @@ import java.text.NumberFormat
 import java.util.Locale
 
 private val WINDOWS = listOf(
-    UsageTimeWindow.TODAY to "Today",
-    UsageTimeWindow.LAST_7_DAYS to "7 days",
-    UsageTimeWindow.LAST_30_DAYS to "30 days",
-    UsageTimeWindow.ALL_TIME to "All time",
+    UsageTimeWindow.TODAY to "Сегодня",
+    UsageTimeWindow.LAST_7_DAYS to "7 дней",
+    UsageTimeWindow.LAST_30_DAYS to "30 дней",
+    UsageTimeWindow.ALL_TIME to "Всё время",
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -54,10 +54,10 @@ fun UsageInsightsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Usage & cost") },
+                title = { Text("Использование и расходы") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Navigate back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
             )
@@ -109,18 +109,18 @@ private fun SummaryBody(summary: UsageSummary) {
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            StatRow("Conversations", nf.format(summary.totalSessions))
-            StatRow("Messages", nf.format(summary.totalMessages))
-            StatRow("Tokens", nf.format(summary.totalTokens))
+            StatRow("Разговоры", nf.format(summary.totalSessions))
+            StatRow("Сообщения", nf.format(summary.totalMessages))
+            StatRow("Токены", nf.format(summary.totalTokens))
             StatRow(
-                "  prompt / completion",
+                "  запрос / ответ",
                 "${nf.format(summary.promptTokens)} / ${nf.format(summary.completionTokens)}",
             )
             HorizontalDivider()
-            StatRow("Estimated cost", cf.format(summary.estimatedCostUsd), emphasise = true)
+            StatRow("Примерная стоимость", cf.format(summary.estimatedCostUsd), emphasise = true)
             Text(
-                "An estimate from local token counts and a built-in price table, not a bill. " +
-                    "On-device turns cost nothing and are counted separately below.",
+                "Оценка по локальному подсчёту токенов и встроенной таблице цен, а не счёт. " +
+                    "Ходы на устройстве ничего не стоят и считаются отдельно ниже.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -128,14 +128,14 @@ private fun SummaryBody(summary: UsageSummary) {
     }
 
     if (summary.modelBreakdowns.isNotEmpty()) {
-        Text("By model", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+        Text("По моделям", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 summary.modelBreakdowns.forEach { m ->
                     Column {
                         Text(m.model, style = MaterialTheme.typography.bodyLarge)
                         Text(
-                            "${nf.format(m.totalRequests)} requests · ${nf.format(m.totalTokens)} tokens · " +
+                            "запросов: ${nf.format(m.totalRequests)} · токенов: ${nf.format(m.totalTokens)} · " +
                                 cf.format(m.estimatedCostUsd),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -147,11 +147,11 @@ private fun SummaryBody(summary: UsageSummary) {
     }
 
     if (summary.toolBreakdowns.isNotEmpty()) {
-        Text("By tool", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+        Text("По инструментам", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 summary.toolBreakdowns.forEach { t ->
-                    val failureNote = if (t.failureCount > 0) " · ${t.failureCount} failed" else ""
+                    val failureNote = if (t.failureCount > 0) " · ошибок: ${t.failureCount}" else ""
                     Column {
                         Text(t.toolName, style = MaterialTheme.typography.bodyLarge)
                         Text(
@@ -171,7 +171,7 @@ private fun SummaryBody(summary: UsageSummary) {
 
     if (summary.totalMessages == 0) {
         Text(
-            "No activity in this window.",
+            "За этот период активности нет.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
